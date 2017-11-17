@@ -2,6 +2,8 @@
 
 MicroPython - a lean and efficient Python implementation for microcontrollers and constrained systems https://micropython.org
 
+The IDE project is on https://github.com/armink/MpyOnRtt . This is only a software package for RT-Thread.
+
 Let's get started by RT-Thread……
 
 ## Run MicroPython by Finsh/MSH
