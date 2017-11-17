@@ -14,6 +14,6 @@ path   += [cwd + '/port']
 
 LOCAL_CCFLAGS = ' -include "port/mpy_project_cfg.h"'
 
-group = DefineGroup('MicroPython', src, depend = ['PKG_USING_WEBTERMINAL'], CPPPATH = path, LOCAL_CCFLAGS = LOCAL_CCFLAGS)
+group = DefineGroup('MicroPython', src, depend = ['PKG_USING_MICROPYTHON'], CPPPATH = path, LOCAL_CCFLAGS = LOCAL_CCFLAGS)
 
 Return('group')
