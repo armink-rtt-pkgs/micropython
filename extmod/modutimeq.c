@@ -26,6 +26,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 #include "py/objlist.h"
 #include "py/runtime.h"
@@ -35,7 +36,9 @@
 
 #define MODULO MICROPY_PY_UTIME_TICKS_PERIOD
 
+#ifndef DEBUG
 #define DEBUG 0
+#endif
 
 // the algorithm here is modelled on CPython's heapq.py
 

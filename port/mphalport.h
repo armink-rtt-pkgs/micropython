@@ -46,3 +46,4 @@ static inline void mp_hal_delay_ms(mp_uint_t delay) {
     rt_thread_delay(rt_tick_from_millisecond(delay));
 }
 
+extern void mp_hal_set_interrupt_char (int c);
