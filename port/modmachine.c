@@ -38,7 +38,6 @@
 #include "modmachine.h"
 
 #include <rthw.h>
-#include <board.h>
 
 #define PYB_RESET_SOFT      (0)
 #define PYB_RESET_POWER_ON  (1)
@@ -101,7 +100,8 @@ STATIC mp_obj_t machine_unique_id(void) {
 MP_DEFINE_CONST_FUN_OBJ_0(machine_unique_id_obj, machine_unique_id);
 
 STATIC mp_obj_t machine_reset(void) {
-    NVIC_SystemReset();
+    //TODO
+    MP_RTT_NOT_IMPL_PRINT;
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_0(machine_reset_obj, machine_reset);

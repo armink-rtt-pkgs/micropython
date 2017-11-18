@@ -65,7 +65,7 @@ MP_DEFINE_CONST_FUN_OBJ_0(mod_os_sync_obj, os_sync);
 
 STATIC mp_obj_t mp_os_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     //TODO
-    rt_kprintf("NOT implement, Please add for your board!\n");
+    MP_RTT_NOT_IMPL_PRINT;
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_KW(mp_os_mount_obj, 2, mp_os_mount);
