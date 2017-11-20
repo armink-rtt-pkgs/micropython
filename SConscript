@@ -1,4 +1,5 @@
 from building import *
+import rtconfig
 
 # get current directory
 cwd     = GetCurrentDir()
