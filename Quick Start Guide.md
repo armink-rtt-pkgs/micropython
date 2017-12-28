@@ -174,3 +174,7 @@ GC:
 | rtthread                            | rt-thread system call | yes      |
 
 ## 3.资源占用情况
+
+使用gcc工具链编译的情况下，开启micropython，bin文件增大300KB左右。
+
+目前默认给micropython分配的堆大小为8M。
