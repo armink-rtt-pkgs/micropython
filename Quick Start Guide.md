@@ -137,16 +137,16 @@ GC:
 | ubinascii                        | binary/ASCII conversions                 | yes      |
 | ucollections                     | collection and container types           | yes      |
 | uerrno                           | system error codes                       | no       |
-| uhashlib                         | hashing algorithms                       | no       |
+| uhashlib                         | hashing algorithms                       | yes      |
 | uheapq                           | heap queue algorithm                     | yes      |
 | uio                              | input/output streams                     | yes      |
 | ujson                            | JSON encoding and decoding               | yes      |
 | uos                              | basic “operating system” services        | no       |
-| ure                              | simple regular expressions               | no       |
+| ure                              | simple regular expressions               | yes      |
 | uselect                          | wait for events on a set of streams      | no       |
 | usocket                          | socket module                            | no       |
 | ustruct                          | pack and unpack primitive data types     | no       |
-| uzlib                            | zlib decompression                       | no       |
+| uzlib                            | zlib decompression                       | yes      |
 | _thread                          | multithreading support                   | no       |
 
 | micropython-specific libraries | 简介                                       | 当前版本是否支持 |
