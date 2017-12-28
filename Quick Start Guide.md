@@ -42,7 +42,7 @@ hello world!
 ```
 
 ### 1.4导入外部模块并运行
-####1.4.1 rtthread module
+#### 1.4.1 rtthread module
 
 Use the rtthread module:
 
@@ -63,7 +63,7 @@ SysMonitor  30  suspend 0x000000a4 0x00000200    32%   0x00000005 000
 timer        4  suspend 0x00000080 0x00000200    25%   0x00000009 000
 >>> 
 ```
-####1.4.2 time module
+#### 1.4.2 time module
 Use the [`time`](http://docs.micropython.org/en/latest/pyboard/library/utime.html#module-utime) module:
 ```
 >>> import time
@@ -74,7 +74,7 @@ Use the [`time`](http://docs.micropython.org/en/latest/pyboard/library/utime.htm
 >>> start = time.ticks_ms() # get value of millisecond counter
 >>> delta = time.ticks_diff(time.ticks_ms(), start) # compute time difference
 ```
-####1.4.3 pyb module
+#### 1.4.3 pyb module
 Use the [pyb](http://docs.micropython.org/en/latest/pyboard/library/pyb.html) module:
 ```
 >>> import pyb
