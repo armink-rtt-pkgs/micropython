@@ -145,7 +145,7 @@ GC:
 | ure                              | simple regular expressions               | yes      |
 | uselect                          | wait for events on a set of streams      | no       |
 | usocket                          | socket module                            | no       |
-| ustruct                          | pack and unpack primitive data types     | no       |
+| ustruct                          | pack and unpack primitive data types     | yes      |
 | uzlib                            | zlib decompression                       | yes      |
 | _thread                          | multithreading support                   | no       |
 
