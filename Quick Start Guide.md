@@ -177,4 +177,4 @@ GC:
 
 使用gcc工具链编译的情况下，开启micropython，bin文件增大300KB左右。
 
-目前默认给micropython分配的堆大小为8M。
+目前默认给micropython分配的堆大小为8M，可以在menuconfig中对micropython的堆大小进行配置。
