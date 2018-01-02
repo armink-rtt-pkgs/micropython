@@ -166,7 +166,7 @@ GC:
 | Interrupt related functions       |                                | yes      |
 | Power related functions           |                                | yes      |
 | Miscellaneous functions           |                                | yes      |
-| Classes                           |                                | yes      |
+| Classes                           |                                | no       |
 
 
 | rt-thread libraries for micropython | 简介                    | 当前版本是否支持 |
