@@ -118,6 +118,8 @@
 #define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_DOUBLE)
 #define MICROPY_READER_POSIX        (1)
 #define MICROPY_READER_VFS          (0)
+#define MICROPY_PY_PIN              (0)
+
 
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
