@@ -36,6 +36,8 @@
 #include "py/mphal.h"
 #include "modmachine.h"
 
+#if MICROPY_PY_PIN
+
 #define GPIO_MODE_IN                           ((uint32_t)0x00000000)   /*!< Input Floating Mode                   */
 #define GPIO_MODE_OUT_PP                       ((uint32_t)0x00000001)   /*!< Output Push Pull Mode                 */
 #define GPIO_MODE_OUT_OD                       ((uint32_t)0x00000011)   /*!< Output Open Drain Mode                */
@@ -240,3 +242,5 @@ const mp_obj_type_t machine_pin_type = {
     .protocol = &machine_pin_pin_p,
     .locals_dict = (mp_obj_t)&machine_pin_locals_dict,
 };
+
+#endif

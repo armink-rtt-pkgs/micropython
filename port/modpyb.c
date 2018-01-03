@@ -110,7 +110,9 @@ STATIC const mp_rom_map_elem_t pyb_module_globals_table[] = {
 //    { MP_ROM_QSTR(MP_QSTR_RTC), MP_ROM_PTR(&pyb_rtc_type) },
 //#endif
 //
+#if MICROPY_PY_PIN
     { MP_ROM_QSTR(MP_QSTR_Pin), MP_ROM_PTR(&machine_pin_type) },
+#endif
 //    { MP_ROM_QSTR(MP_QSTR_ExtInt), MP_ROM_PTR(&extint_type) },
 //
 //#if MICROPY_HW_ENABLE_SERVO
