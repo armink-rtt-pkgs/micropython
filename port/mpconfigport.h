@@ -109,7 +109,7 @@
 #define MICROPY_MODULE_WEAK_LINKS   (1)
 #define MICROPY_CAN_OVERRIDE_BUILTINS (1)
 #define MICROPY_USE_INTERNAL_ERRNO  (1)
-#define MICROPY_PY_STRUCT           (0)
+#define MICROPY_PY_STRUCT           (1)
 #define MICROPY_PY_RTTHREAD         (1)
 #define MICROPY_PY_SYS              (0)
 #define MICROPY_MODULE_FROZEN_MPY   (1)
@@ -121,11 +121,11 @@
 
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
-#define MICROPY_PY_UZLIB            (0)
+#define MICROPY_PY_UZLIB            (1)
 #define MICROPY_PY_UJSON            (1)
-#define MICROPY_PY_URE              (0)
+#define MICROPY_PY_URE              (1)
 #define MICROPY_PY_UHEAPQ           (1)
-#define MICROPY_PY_UHASHLIB         (0)
+#define MICROPY_PY_UHASHLIB         (1)
 #define MICROPY_PY_UBINASCII        (1)
 #define MICROPY_PY_UTIME            (1)
 #define MICROPY_PY_UTIME_MP_HAL     (1)
