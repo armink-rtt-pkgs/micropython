@@ -111,7 +111,7 @@
 #define MICROPY_USE_INTERNAL_ERRNO  (1)
 #define MICROPY_PY_STRUCT           (1)
 #define MICROPY_PY_RTTHREAD         (1)
-#define MICROPY_PY_SYS              (0)
+#define MICROPY_PY_SYS              (1)
 #define MICROPY_MODULE_FROZEN_MPY   (1)
 #define MICROPY_CPYTHON_COMPAT      (0)
 #define MICROPY_LONGINT_IMPL        (MICROPY_LONGINT_IMPL_MPZ)
