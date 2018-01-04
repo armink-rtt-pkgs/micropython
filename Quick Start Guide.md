@@ -130,9 +130,9 @@ GC:
 | -------------------------------- | ---------------------------------------- | -------- |
 | array                            | arrays of numeric data                   | yes      |
 | cmath                            | mathematical functions for complex numbers | yes      |
-| gc                               | control the garbage collector            | no       |
+| gc                               | control the garbage collector            | yes      |
 | math                             | mathematical functions                   | yes      |
-| sys                              | system specific functions                | no       |
+| sys                              | system specific functions                | yes      |
 | time                             | time related functions                   | yes      |
 | ubinascii                        | binary/ASCII conversions                 | yes      |
 | ucollections                     | collection and container types           | yes      |
