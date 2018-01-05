@@ -482,6 +482,16 @@ QDEF(MP_QSTR_MSG_DONTWAIT, (const byte*)"\x99\xc8\x0c" "MSG_DONTWAIT")
 QDEF(MP_QSTR_SO_BROADCAST, (const byte*)"\xf9\xc6\x0c" "SO_BROADCAST")
 QDEF(MP_QSTR_AF_UNIX, (const byte*)"\xf7\x01\x07" "AF_UNIX")
 QDEF(MP_QSTR_SO_ERROR, (const byte*)"\x3e\x2a\x08" "SO_ERROR")
+QDEF(MP_QSTR_uos, (const byte*)"\xec\x67\x03" "uos")
+QDEF(MP_QSTR_stat, (const byte*)"\xd7\x35\x04" "stat")
+QDEF(MP_QSTR_statvfs, (const byte*)"\x14\x19\x07" "statvfs")
+QDEF(MP_QSTR_unlink, (const byte*)"\xfe\x8f\x06" "unlink")
+QDEF(MP_QSTR_chdir, (const byte*)"\xb1\xb2\x05" "chdir")
+QDEF(MP_QSTR_getcwd, (const byte*)"\x03\xd0\x06" "getcwd")
+QDEF(MP_QSTR_dupterm, (const byte*)"\xaa\x5a\x07" "dupterm")
+QDEF(MP_QSTR_umount, (const byte*)"\xdd\x9e\x06" "umount")
+QDEF(MP_QSTR_uname, (const byte*)"\xb7\x9c\x05" "uname")
+QDEF(MP_QSTR_sysname, (const byte*)"\x9b\x36\x07" "sysname")
 
 
 
