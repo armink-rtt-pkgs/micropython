@@ -119,9 +119,10 @@
 #define MICROPY_READER_POSIX        (1)
 #define MICROPY_READER_VFS          (0)
 #define MICROPY_PY_PIN              (0)
-#define MICROPY_VFS                 (1)
 #define MICROPY_PY_OS_DUPTERM       (0)
+#define MICROPY_VFS                 (1)
 #define MICROPY_VFS_FAT             (0)
+
 
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
