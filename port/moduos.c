@@ -37,8 +37,6 @@
 #include "extmod/vfs.h"
 #include "extmod/vfs_fat.h"
 #include "genhdr/mpversion.h"
-#include "rng.h"
-#include "uart.h"
 #include "portmodules.h"
 
 /// \module os - basic "operating system" services
