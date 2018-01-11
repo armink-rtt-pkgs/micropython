@@ -492,6 +492,11 @@ QDEF(MP_QSTR_dupterm, (const byte*)"\xaa\x5a\x07" "dupterm")
 QDEF(MP_QSTR_umount, (const byte*)"\xdd\x9e\x06" "umount")
 QDEF(MP_QSTR_uname, (const byte*)"\xb7\x9c\x05" "uname")
 QDEF(MP_QSTR_sysname, (const byte*)"\x9b\x36\x07" "sysname")
+QDEF(MP_QSTR_unregister, (const byte*)"\x17\xd4\x0a" "unregister")
+QDEF(MP_QSTR_uselect, (const byte*)"\x58\x8e\x07" "uselect")
+QDEF(MP_QSTR_writeblocks, (const byte*)"\x02\xdf\x0b" "writeblocks")
+QDEF(MP_QSTR_writebyte, (const byte*)"\xd2\x1e\x09" "writebyte")
+QDEF(MP_QSTR_tell, (const byte*)"\x14\xb1\x04" "tell")
 
 
 

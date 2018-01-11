@@ -120,6 +120,9 @@
 #define MICROPY_READER_POSIX        (1)
 #define MICROPY_READER_VFS          (0)
 #define MICROPY_PY_PIN              (0)
+#define MICROPY_PY_OS_DUPTERM       (0)
+#define MICROPY_VFS                 (1)
+#define MICROPY_VFS_FAT             (0)
 
 
 // extended modules
@@ -137,6 +140,34 @@
 #define MICROPY_PY_URANDOM_EXTRA_FUNCS (1)
 #define MICROPY_PY_MACHINE          (1)
 #define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
+#define MICROPY_PY_USOCKET          (0)
+#define MICROPY_PY_USELECT          (0)
+
+#if MICROPY_PY_THREAD
+#define MICROPY_EVENT_POLL_HOOK \
+    do { \
+        extern void mp_handle_pending(void); \
+        mp_handle_pending(); \
+        if (pyb_thread_enabled) { \
+            MP_THREAD_GIL_EXIT(); \
+            pyb_thread_yield(); \
+            MP_THREAD_GIL_ENTER(); \
+        } else { \
+            __WFI(); \
+        } \
+    } while (0);
+
+#define MICROPY_THREAD_YIELD() pyb_thread_yield()
+#else
+#define MICROPY_EVENT_POLL_HOOK \
+    do { \
+        extern void mp_handle_pending(void); \
+        mp_handle_pending(); \
+        __WFI(); \
+    } while (0);
+
+#define MICROPY_THREAD_YIELD()
+#endif
 
 #if defined(__CC_ARM)
 //TODO
