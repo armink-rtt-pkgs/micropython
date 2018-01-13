@@ -58,5 +58,4 @@ if __name__ == "__main__":
             continue
         qstr_computer = make_bytes(1, 1, arg)
         print (qstr_computer)
-    
-    
+
