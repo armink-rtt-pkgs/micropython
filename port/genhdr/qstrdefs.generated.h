@@ -482,7 +482,6 @@ QDEF(MP_QSTR_MSG_DONTWAIT, (const byte*)"\x99\x0c" "MSG_DONTWAIT")
 QDEF(MP_QSTR_SO_BROADCAST, (const byte*)"\xf9\x0c" "SO_BROADCAST")
 QDEF(MP_QSTR_AF_UNIX, (const byte*)"\xf7\x07" "AF_UNIX")
 QDEF(MP_QSTR_SO_ERROR, (const byte*)"\x3e\x08" "SO_ERROR")
-
 QDEF(MP_QSTR_uos, (const byte*)"\xec\x03" "uos")
 QDEF(MP_QSTR_stat, (const byte*)"\xd7\x04" "stat")
 QDEF(MP_QSTR_statvfs, (const byte*)"\x14\x07" "statvfs")
