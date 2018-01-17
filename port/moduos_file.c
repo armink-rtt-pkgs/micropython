@@ -126,17 +126,24 @@ mp_obj_t mp_vfs_rmdir(uint n_args, const mp_obj_t *arg) {
 MP_DEFINE_CONST_FUN_OBJ_VAR(mp_vfs_rmdir_obj, 0, mp_vfs_rmdir);
 
 mp_obj_t mp_vfs_stat(mp_obj_t path_in) {
-    mp_obj_t path_out;
-    mp_vfs_mount_t *vfs = lookup_path(path_in, &path_out);
-    if (vfs == MP_VFS_ROOT) {
-        mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(10, NULL));
-        t->items[0] = MP_OBJ_NEW_SMALL_INT(MP_S_IFDIR); // st_mode
-        for (int i = 1; i <= 9; ++i) {
-            t->items[i] = MP_OBJ_NEW_SMALL_INT(0); // dev, nlink, uid, gid, size, atime, mtime, ctime
-        }
-        return MP_OBJ_FROM_PTR(t);
+    struct stat buf;
+    char *createpath = mp_obj_str_get_str(path_in);
+    int res = stat(createpath, &buf);
+    if (res != 0) {
+        mp_raise_OSError(MP_EPERM);
     }
-    return mp_vfs_proxy_call(vfs, MP_QSTR_stat, 1, &path_out);
+    mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(10, NULL));
+    t->items[0] = MP_OBJ_NEW_SMALL_INT(buf.st_mode); // st_mode
+    t->items[1] = MP_OBJ_NEW_SMALL_INT(buf.st_ino); // st_ino
+    t->items[2] = MP_OBJ_NEW_SMALL_INT(buf.st_dev); // st_dev
+    t->items[3] = MP_OBJ_NEW_SMALL_INT(buf.st_nlink); // st_nlink
+    t->items[4] = MP_OBJ_NEW_SMALL_INT(buf.st_uid); // st_uid
+    t->items[5] = MP_OBJ_NEW_SMALL_INT(buf.st_gid); // st_gid
+    t->items[6] = mp_obj_new_int_from_uint(buf.st_size); // st_size
+    t->items[7] = MP_OBJ_NEW_SMALL_INT(buf.st_atime); // st_atime
+    t->items[8] = MP_OBJ_NEW_SMALL_INT(buf.st_mtime); // st_mtime
+    t->items[9] = MP_OBJ_NEW_SMALL_INT(buf.st_ctime); // st_ctime
+    return MP_OBJ_FROM_PTR(t);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mp_vfs_stat_obj, mp_vfs_stat);
 
