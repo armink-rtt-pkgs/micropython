@@ -97,7 +97,7 @@ mp_obj_t mp_vfs_remove(uint n_args, const mp_obj_t *arg) {
     }
     for (index = 0; index < n_args; index++) {
         //rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
-        unlink(mp_obj_str_get_str(arg[index]));
+        rm(mp_obj_str_get_str(arg[index]));
     }
     // TODO
     return mp_const_none;
@@ -117,8 +117,8 @@ mp_obj_t mp_vfs_rmdir(uint n_args, const mp_obj_t *arg) {
         return mp_const_none;
     }
     for (index = 0; index < n_args; index++) {
-        rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
-        unlink(mp_obj_str_get_str(arg[index]));
+        //rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
+        rmdir(mp_obj_str_get_str(arg[index]));
     }
     // TODO
     return mp_const_none;
