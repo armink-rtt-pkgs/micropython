@@ -177,13 +177,8 @@ typedef struct _mp_state_vm_t {
     #endif
 
     #if MICROPY_VFS
-    struct _mp_vfs_mount_t *vfs_cur;           //当前文件系统的指针
-    struct _mp_vfs_mount_t *vfs_mount_table;   //这个是指向文件系统列表的指针
-    #endif
-
-    #if MICROPY_MODUOS_FILE
-    struct _mp_vfs_mount_t *vfs_cur;           //当前文件系统的指针
-    struct _mp_vfs_mount_t *vfs_mount_table;   //这个是指向文件系统列表的指针
+    struct _mp_vfs_mount_t *vfs_cur;
+    struct _mp_vfs_mount_t *vfs_mount_table;
     #endif
 
     //

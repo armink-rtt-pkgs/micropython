@@ -115,7 +115,7 @@ void mp_init(void) {
     #endif
 
     #if MICROPY_VFS
-    // initialise the VFS sub-system 在这里如果打开了VFS的选项，那么在虚拟机状态就添加当前vfs状态,我觉得也应该在这里去注册文件系统到vfs中
+    // initialise the VFS sub-system
     MP_STATE_VM(vfs_cur) = NULL;
     MP_STATE_VM(vfs_mount_table) = NULL;
     #endif
