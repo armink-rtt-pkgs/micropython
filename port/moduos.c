@@ -119,7 +119,7 @@ STATIC const mp_rom_map_elem_t os_module_globals_table[] = {
     //{ MP_ROM_QSTR(MP_QSTR_sep), MP_ROM_QSTR(MP_QSTR__slash_) },
 
 #if MICROPY_HW_ENABLE_RNG
-    {   MP_ROM_QSTR(MP_QSTR_urandom), MP_ROM_PTR(&os_urandom_obj)},
+    { MP_ROM_QSTR(MP_QSTR_urandom), MP_ROM_PTR(&os_urandom_obj)},
 #endif
 
     /// these are MicroPython extensions
