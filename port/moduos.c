@@ -49,8 +49,10 @@
 #endif
 #endif
 
-STATIC const qstr os_uname_info_fields[] = { MP_QSTR_sysname, MP_QSTR_nodename, MP_QSTR_release, MP_QSTR_version,
-        MP_QSTR_machine };
+STATIC const qstr os_uname_info_fields[] = {
+    MP_QSTR_sysname, MP_QSTR_nodename,
+    MP_QSTR_release, MP_QSTR_version,MP_QSTR_machine
+};
 STATIC const MP_DEFINE_STR_OBJ(os_uname_info_sysname_obj, "pyboard");
 STATIC const MP_DEFINE_STR_OBJ(os_uname_info_nodename_obj, "pyboard");
 STATIC const MP_DEFINE_STR_OBJ(os_uname_info_release_obj, MICROPY_VERSION_STRING);
