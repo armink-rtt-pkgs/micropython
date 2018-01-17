@@ -62,19 +62,103 @@ mp_obj_t mp_posix_getcwd(void) {
 }
 MP_DEFINE_CONST_FUN_OBJ_0(mp_posix_getcwd_obj, mp_posix_getcwd);
 
+#include <dfs_file.h>
+static struct dfs_fd fd;
+static struct dirent dirent;
 mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
-    extern void ls(const char *pathname);
+
+    mp_obj_t dir_list = mp_obj_new_list(0, NULL);
+
+    struct stat stat;
+    int length;
+    char *fullpath, *path;
+    char *pathname;
+
     if (n_args == 0) {
 #ifdef DFS_USING_WORKDIR
         extern char working_directory[];
-        ls(working_directory);
+        pathname = working_directory;
 #else
-        ls("/");
+        pathname = "/";
 #endif
-    } else {
-        ls(mp_obj_str_get_str(args[0]));
+    }else{
+
+       pathname = mp_obj_str_get_str(args[0]);
     }
-    return mp_const_none;
+
+    fullpath = NULL;
+    if (pathname == NULL)
+    {
+#ifdef DFS_USING_WORKDIR
+        extern char working_directory[];
+        /* open current working directory */
+        path = rt_strdup(working_directory);
+#else
+        path = rt_strdup("/");
+#endif
+        if (path == NULL)
+            return ; /* out of memory */
+    }
+    else
+    {
+        path = (char *)pathname;
+    }
+
+    /* list directory */
+    if (dfs_file_open(&fd, path, O_DIRECTORY) == 0)
+    {
+        do
+        {
+            memset(&dirent, 0, sizeof(struct dirent));
+            length = dfs_file_getdents(&fd, &dirent, sizeof(struct dirent));
+            if (length > 0)
+            {
+                memset(&stat, 0, sizeof(struct stat));
+
+                /* build full path for each file */
+                fullpath = dfs_normalize_path(path, dirent.d_name);
+                if (fullpath == NULL)
+                    break;
+
+                if (dfs_file_stat(fullpath, &stat) == 0)
+                {
+                    //rt_kprintf("%-20s", dirent.d_name);
+
+                    mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(3, NULL));
+                    t->items[0] = mp_obj_new_str(dirent.d_name,strlen(dirent.d_name),false);
+                    t->items[1] = MP_OBJ_NEW_SMALL_INT(MP_S_IFDIR);
+                    t->items[2] = MP_OBJ_NEW_SMALL_INT(0); // no inode number
+                    mp_obj_t next = MP_OBJ_FROM_PTR(t);
+                    mp_obj_t *items;
+                    mp_obj_get_array_fixed_n(next, 3, &items);
+                    mp_obj_list_append(dir_list, items[0]);
+
+
+                    if (S_ISDIR(stat.st_mode))
+                    {
+                        //rt_kprintf("%-25s\n", "<DIR>");
+                    }
+                    else
+                    {
+                        //rt_kprintf("%-25lu\n", stat.st_size);
+                    }
+                }
+                else
+                    rt_kprintf("BAD file: %s\n", dirent.d_name);
+                rt_free(fullpath);
+            }
+        }while(length > 0);
+
+        dfs_file_close(&fd);
+    }
+    else
+    {
+        rt_kprintf("No such directory\n");
+    }
+    if (pathname == NULL)
+        rt_free(path);
+
+    return dir_list;
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_posix_listdir_obj, 0, 1, mp_posix_listdir);
 
