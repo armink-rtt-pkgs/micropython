@@ -32,7 +32,7 @@
 #include "py/mperrno.h"
 #include "moduos_file.h"
 
-#if MICROPY_MODUOS_FILE
+#if MICROPY_PY_MODUOS_FILE
 
 mp_obj_t mp_posix_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
@@ -99,12 +99,18 @@ mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
         //rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
         rm(mp_obj_str_get_str(arg[index]));
     }
-    // TODO
+    // TODO  recursive deletion
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_remove_obj, 0, mp_posix_remove);
 
 mp_obj_t mp_posix_rename(mp_obj_t old_path_in, mp_obj_t new_path_in) {
+    char *old_path = mp_obj_str_get_str(old_path_in);
+    char *new_path = mp_obj_str_get_str(new_path_in);
+    int res = rename(old_path, new_path);
+    if (res != 0) {
+        mp_raise_OSError(MP_EPERM);
+    }
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mp_posix_rename_obj, mp_posix_rename);
@@ -120,7 +126,7 @@ mp_obj_t mp_posix_rmdir(uint n_args, const mp_obj_t *arg) {
         //rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
         rmdir(mp_obj_str_get_str(arg[index]));
     }
-    // TODO
+    // TODO  recursive deletion
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_rmdir_obj, 0, mp_posix_rmdir);

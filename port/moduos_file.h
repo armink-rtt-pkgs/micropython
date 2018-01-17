@@ -45,7 +45,6 @@ mp_obj_t mp_posix_umount(mp_obj_t mnt_in);
 mp_obj_t mp_posix_open(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 mp_obj_t mp_posix_chdir(mp_obj_t path_in);
 mp_obj_t mp_posix_getcwd(void);
-
 mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args);
 mp_obj_t mp_posix_mkdir(mp_obj_t path_in);
 mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg);

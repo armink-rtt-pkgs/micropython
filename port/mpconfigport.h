@@ -123,7 +123,7 @@
 #define MICROPY_PY_OS_DUPTERM       (1)
 #define MICROPY_VFS                 (0)
 #define MICROPY_VFS_FAT             (0)
-#define MICROPY_MODUOS_FILE         (1)
+#define MICROPY_PY_MODUOS_FILE      (1)
 
 
 // extended modules
