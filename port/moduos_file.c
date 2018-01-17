@@ -34,35 +34,35 @@
 
 #if MICROPY_MODUOS_FILE
 
-mp_obj_t mp_vfs_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+mp_obj_t mp_posix_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_KW(mp_vfs_mount_obj, 2, mp_vfs_mount);
+MP_DEFINE_CONST_FUN_OBJ_KW(mp_posix_mount_obj, 2, mp_posix_mount);
 
-mp_obj_t mp_vfs_umount(mp_obj_t mnt_in) {
+mp_obj_t mp_posix_umount(mp_obj_t mnt_in) {
 
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mp_vfs_umount_obj, mp_vfs_umount);
+MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_umount_obj, mp_posix_umount);
 
-mp_obj_t mp_vfs_chdir(mp_obj_t path_in) {
+mp_obj_t mp_posix_chdir(mp_obj_t path_in) {
     char *changepath = mp_obj_str_get_str(path_in);
     if (chdir(changepath) != 0) {
         rt_kprintf("No such directory: %s\n", changepath);
     }
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mp_vfs_chdir_obj, mp_vfs_chdir);
+MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_chdir_obj, mp_posix_chdir);
 
-mp_obj_t mp_vfs_getcwd(void) {
+mp_obj_t mp_posix_getcwd(void) {
     char buf[MICROPY_ALLOC_PATH_MAX + 1];
     getcwd(buf, sizeof(buf));
     return mp_obj_new_str(buf, strlen(buf), false);
 }
-MP_DEFINE_CONST_FUN_OBJ_0(mp_vfs_getcwd_obj, mp_vfs_getcwd);
+MP_DEFINE_CONST_FUN_OBJ_0(mp_posix_getcwd_obj, mp_posix_getcwd);
 
-mp_obj_t mp_vfs_listdir(size_t n_args, const mp_obj_t *args) {
+mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
     extern void ls(const char *pathname);
     if (n_args == 0) {
 #ifdef DFS_USING_WORKDIR
@@ -76,9 +76,9 @@ mp_obj_t mp_vfs_listdir(size_t n_args, const mp_obj_t *args) {
     }
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_vfs_listdir_obj, 0, 1, mp_vfs_listdir);
+MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_posix_listdir_obj, 0, 1, mp_posix_listdir);
 
-mp_obj_t mp_vfs_mkdir(mp_obj_t path_in) {
+mp_obj_t mp_posix_mkdir(mp_obj_t path_in) {
     char *createpath = mp_obj_str_get_str(path_in);
     int res = mkdir(createpath, 0);
     if (res != 0) {
@@ -86,9 +86,9 @@ mp_obj_t mp_vfs_mkdir(mp_obj_t path_in) {
     }
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mp_vfs_mkdir_obj, mp_vfs_mkdir);
+MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_mkdir_obj, mp_posix_mkdir);
 
-mp_obj_t mp_vfs_remove(uint n_args, const mp_obj_t *arg) {
+mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
     int index;
     if (n_args == 0) {
         rt_kprintf("Usage: rm FILE...\n");
@@ -102,14 +102,14 @@ mp_obj_t mp_vfs_remove(uint n_args, const mp_obj_t *arg) {
     // TODO
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_VAR(mp_vfs_remove_obj, 0, mp_vfs_remove);
+MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_remove_obj, 0, mp_posix_remove);
 
-mp_obj_t mp_vfs_rename(mp_obj_t old_path_in, mp_obj_t new_path_in) {
+mp_obj_t mp_posix_rename(mp_obj_t old_path_in, mp_obj_t new_path_in) {
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_2(mp_vfs_rename_obj, mp_vfs_rename);
+MP_DEFINE_CONST_FUN_OBJ_2(mp_posix_rename_obj, mp_posix_rename);
 
-mp_obj_t mp_vfs_rmdir(uint n_args, const mp_obj_t *arg) {
+mp_obj_t mp_posix_rmdir(uint n_args, const mp_obj_t *arg) {
     int index;
     if (n_args == 0) {
         rt_kprintf("Usage: rm FILE...\n");
@@ -123,9 +123,9 @@ mp_obj_t mp_vfs_rmdir(uint n_args, const mp_obj_t *arg) {
     // TODO
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_VAR(mp_vfs_rmdir_obj, 0, mp_vfs_rmdir);
+MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_rmdir_obj, 0, mp_posix_rmdir);
 
-mp_obj_t mp_vfs_stat(mp_obj_t path_in) {
+mp_obj_t mp_posix_stat(mp_obj_t path_in) {
     struct stat buf;
     char *createpath = mp_obj_str_get_str(path_in);
     int res = stat(createpath, &buf);
@@ -145,7 +145,7 @@ mp_obj_t mp_vfs_stat(mp_obj_t path_in) {
     t->items[9] = MP_OBJ_NEW_SMALL_INT(buf.st_ctime); // st_ctime
     return MP_OBJ_FROM_PTR(t);
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mp_vfs_stat_obj, mp_vfs_stat);
+MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_stat_obj, mp_posix_stat);
 
 
-#endif // MICROPY_VFS
+#endif //MICROPY_MODUOS_FILE

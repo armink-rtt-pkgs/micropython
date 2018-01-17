@@ -23,16 +23,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef MICROPY_INCLUDED_MODUOS_FILE_H
-#define MICROPY_INCLUDED_MODUOS_FILE_H
+#ifndef MICROPY_INCLUDED_PY_MODUOS_FILE_H
+#define MICROPY_INCLUDED_PY_MODUOS_FILE_H
 
 #include "py/lexer.h"
 #include "py/obj.h"
-
-// return values of mp_vfs_lookup_path
-// ROOT is 0 so that the default current directory is the root directory
-#define MP_VFS_NONE ((mp_vfs_mount_t*)1)
-#define MP_VFS_ROOT ((mp_vfs_mount_t*)0)
 
 // MicroPython's port-standardized versions of stat constants
 #define MP_S_IFDIR (0x4000)
@@ -45,41 +40,31 @@
 #define BP_IOCTL_SEC_COUNT      (4)
 #define BP_IOCTL_SEC_SIZE       (5)
 
-typedef struct _mp_vfs_mount_t {
-    const char *str; // mount point with leading /
-    size_t len;
-    mp_obj_t obj;
-    struct _mp_vfs_mount_t *next;
-} mp_vfs_mount_t;
+mp_obj_t mp_posix_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+mp_obj_t mp_posix_umount(mp_obj_t mnt_in);
+mp_obj_t mp_posix_open(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+mp_obj_t mp_posix_chdir(mp_obj_t path_in);
+mp_obj_t mp_posix_getcwd(void);
 
-mp_vfs_mount_t *mp_vfs_lookup_path(const char *path, const char **path_out);
-mp_import_stat_t mp_vfs_import_stat(const char *path);
-mp_obj_t mp_vfs_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
-mp_obj_t mp_vfs_umount(mp_obj_t mnt_in);
-mp_obj_t mp_vfs_open(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
-mp_obj_t mp_vfs_chdir(mp_obj_t path_in);
-mp_obj_t mp_vfs_getcwd(void);
-mp_obj_t mp_vfs_ilistdir(size_t n_args, const mp_obj_t *args);
-mp_obj_t mp_vfs_listdir(size_t n_args, const mp_obj_t *args);
-mp_obj_t mp_vfs_mkdir(mp_obj_t path_in);
-mp_obj_t mp_vfs_remove(uint n_args, const mp_obj_t *arg);
-mp_obj_t mp_vfs_rename(mp_obj_t old_path_in, mp_obj_t new_path_in);
-mp_obj_t mp_vfs_rmdir(uint n_args, const mp_obj_t *arg);
-mp_obj_t mp_vfs_stat(mp_obj_t path_in);
-mp_obj_t mp_vfs_statvfs(mp_obj_t path_in);
+mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args);
+mp_obj_t mp_posix_mkdir(mp_obj_t path_in);
+mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg);
+mp_obj_t mp_posix_rename(mp_obj_t old_path_in, mp_obj_t new_path_in);
+mp_obj_t mp_posix_rmdir(uint n_args, const mp_obj_t *arg);
+mp_obj_t mp_posix_stat(mp_obj_t path_in);
+mp_obj_t mp_posix_statvfs(mp_obj_t path_in);
 
-MP_DECLARE_CONST_FUN_OBJ_KW(mp_vfs_mount_obj);
-MP_DECLARE_CONST_FUN_OBJ_1(mp_vfs_umount_obj);
-MP_DECLARE_CONST_FUN_OBJ_KW(mp_vfs_open_obj);
-MP_DECLARE_CONST_FUN_OBJ_1(mp_vfs_chdir_obj);
-MP_DECLARE_CONST_FUN_OBJ_0(mp_vfs_getcwd_obj);
-MP_DECLARE_CONST_FUN_OBJ_VAR_BETWEEN(mp_vfs_ilistdir_obj);
-MP_DECLARE_CONST_FUN_OBJ_VAR_BETWEEN(mp_vfs_listdir_obj);
-MP_DECLARE_CONST_FUN_OBJ_1(mp_vfs_mkdir_obj);
-MP_DECLARE_CONST_FUN_OBJ_VAR(mp_vfs_remove_obj);
-MP_DECLARE_CONST_FUN_OBJ_2(mp_vfs_rename_obj);
-MP_DECLARE_CONST_FUN_OBJ_VAR(mp_vfs_rmdir_obj);
-MP_DECLARE_CONST_FUN_OBJ_1(mp_vfs_stat_obj);
-MP_DECLARE_CONST_FUN_OBJ_1(mp_vfs_statvfs_obj);
+MP_DECLARE_CONST_FUN_OBJ_KW(mp_posix_mount_obj);
+MP_DECLARE_CONST_FUN_OBJ_1(mp_posix_umount_obj);
+MP_DECLARE_CONST_FUN_OBJ_KW(mp_posix_open_obj);
+MP_DECLARE_CONST_FUN_OBJ_1(mp_posix_chdir_obj);
+MP_DECLARE_CONST_FUN_OBJ_0(mp_posix_getcwd_obj);
+MP_DECLARE_CONST_FUN_OBJ_VAR_BETWEEN(mp_posix_listdir_obj);
+MP_DECLARE_CONST_FUN_OBJ_1(mp_posix_mkdir_obj);
+MP_DECLARE_CONST_FUN_OBJ_VAR(mp_posix_remove_obj);
+MP_DECLARE_CONST_FUN_OBJ_2(mp_posix_rename_obj);
+MP_DECLARE_CONST_FUN_OBJ_VAR(mp_posix_rmdir_obj);
+MP_DECLARE_CONST_FUN_OBJ_1(mp_posix_stat_obj);
+MP_DECLARE_CONST_FUN_OBJ_1(mp_posix_statvfs_obj);
 
-#endif // MICROPY_INCLUDED_MODUOS_FILE_H
+#endif // MICROPY_INCLUDED_PY_MODUOS_FILE_H
