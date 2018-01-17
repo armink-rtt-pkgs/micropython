@@ -176,6 +176,13 @@ typedef struct _mp_state_vm_t {
     mp_obj_t lwip_slip_stream;
     #endif
 
+    #if !MICROPY_VFS  //If not difined MICROPY_VFS,only define MICROPY_MODUOS_FILE
+    #if MICROPY_MODUOS_FILE
+    struct _mp_vfs_mount_t *vfs_cur;
+    struct _mp_vfs_mount_t *vfs_mount_table;
+    #endif
+    #endif
+
     #if MICROPY_VFS
     struct _mp_vfs_mount_t *vfs_cur;
     struct _mp_vfs_mount_t *vfs_mount_table;
