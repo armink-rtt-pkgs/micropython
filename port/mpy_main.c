@@ -99,7 +99,7 @@ void mpy_main(const char *filename) {
         pyexec_frozen_module("frozentest.py");
         #endif
     }
-    mp_deinit();
+    mp_deinit();    //如果跳出了上面的循环就要退出mp，释放相关的资源
 
     rtt_getchar_deinit();
 }
