@@ -118,4 +118,28 @@ See [pyb.Pin](http://docs.micropython.org/en/latest/pyboard/library/pyb.Pin.html
 >>> p_in.value()                # get value, 0 or 1
 ```
 
+#### uos– basic “operating system” services
+
+See [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html).
+
+```
+>>> import uos
+>>> uos.                        # Tab 
+__name__        uname           chdir           getcwd
+listdir         mkdir           remove          rmdir
+stat            unlink          mount           umount
+>>> uos.mkdir("rtthread")
+>>> uos.getcwd()
+'/'
+>>> uos.chdir("rtthread")
+>>> uos.getcwd()
+'/rtthread'
+>>> uos.listdir()
+['web_root', 'rtthread', '11']
+>>> uos.rmdir("11")
+>>> uos.listdir()
+['web_root', 'rtthread']
+>>> 
+```
+
 ### Coming soon
