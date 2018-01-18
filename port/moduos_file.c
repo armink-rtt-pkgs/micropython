@@ -122,8 +122,6 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
 
                 if (dfs_file_stat(fullpath, &stat) == 0)
                 {
-                    //rt_kprintf("%-20s", dirent.d_name);
-
                     mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(3, NULL));
                     t->items[0] = mp_obj_new_str(dirent.d_name,strlen(dirent.d_name),false);
                     t->items[1] = MP_OBJ_NEW_SMALL_INT(MP_S_IFDIR);
@@ -132,19 +130,10 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
                     mp_obj_t *items;
                     mp_obj_get_array_fixed_n(next, 3, &items);
                     mp_obj_list_append(dir_list, items[0]);
-
-
-                    if (S_ISDIR(stat.st_mode))
-                    {
-                        //rt_kprintf("%-25s\n", "<DIR>");
-                    }
-                    else
-                    {
-                        //rt_kprintf("%-25lu\n", stat.st_size);
-                    }
                 }
-                else
+                else{
                     rt_kprintf("BAD file: %s\n", dirent.d_name);
+                }
                 rt_free(fullpath);
             }
         }while(length > 0);
