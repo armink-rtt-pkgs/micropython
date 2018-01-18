@@ -107,12 +107,10 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
     /* list directory */
     if (dfs_file_open(&fd, path, O_DIRECTORY) == 0)
     {
-        do
-        {
+        do {
             memset(&dirent, 0, sizeof(struct dirent));
             length = dfs_file_getdents(&fd, &dirent, sizeof(struct dirent));
-            if (length > 0)
-            {
+            if (length > 0) {
                 memset(&stat, 0, sizeof(struct stat));
 
                 /* build full path for each file */
@@ -120,23 +118,21 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
                 if (fullpath == NULL)
                     break;
 
-                if (dfs_file_stat(fullpath, &stat) == 0)
-                {
+                if (dfs_file_stat(fullpath, &stat) == 0) {
                     mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(3, NULL));
-                    t->items[0] = mp_obj_new_str(dirent.d_name,strlen(dirent.d_name),false);
+                    t->items[0] = mp_obj_new_str(dirent.d_name, strlen(dirent.d_name), false);
                     t->items[1] = MP_OBJ_NEW_SMALL_INT(MP_S_IFDIR);
                     t->items[2] = MP_OBJ_NEW_SMALL_INT(0); // no inode number
                     mp_obj_t next = MP_OBJ_FROM_PTR(t);
                     mp_obj_t *items;
                     mp_obj_get_array_fixed_n(next, 3, &items);
                     mp_obj_list_append(dir_list, items[0]);
-                }
-                else{
+                } else {
                     rt_kprintf("BAD file: %s\n", dirent.d_name);
                 }
                 rt_free(fullpath);
             }
-        }while(length > 0);
+        } while (length > 0);
 
         dfs_file_close(&fd);
     }
