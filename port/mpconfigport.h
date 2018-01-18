@@ -119,7 +119,7 @@
 #define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_DOUBLE)
 #define MICROPY_READER_POSIX        (1)
 #define MICROPY_READER_VFS          (0)
-#define MICROPY_PY_PIN              (0)
+#define MICROPY_PY_PIN              (1)
 #define MICROPY_PY_OS_DUPTERM       (1)
 #define MICROPY_VFS                 (0)
 #define MICROPY_VFS_FAT             (0)
@@ -141,7 +141,8 @@
 #define MICROPY_PY_URANDOM_EXTRA_FUNCS (1)
 #define MICROPY_PY_MACHINE          (1)
 #define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
-#define MICROPY_PY_USOCKET          (0)
+#define MICROPY_PY_USOCKET          (1)
+#define MICROPY_PY_NETWORK          (0)
 #define MICROPY_PY_USELECT          (0)
 
 #if MICROPY_PY_THREAD
@@ -244,10 +245,12 @@ extern const struct _mp_obj_module_t mp_module_usocket;
     { MP_ROM_QSTR(MP_QSTR_pyb), MP_ROM_PTR(&pyb_module) }, \
     MICROPY_PY_RTTHREAD_DEF \
     { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_uos) }, \
+    { MP_ROM_QSTR(MP_QSTR_usocket), MP_ROM_PTR(&mp_module_usocket) }, \
 
 #define MICROPY_PORT_BUILTIN_MODULE_WEAK_LINKS \
     { MP_ROM_QSTR(MP_QSTR_time), MP_ROM_PTR(&mp_module_time) }, \
     { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) }, \
+//    { MP_ROM_QSTR(MP_QSTR_socket), MP_ROM_PTR(&mp_module_usocket) }, \
 
 
 #define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __FUNCTION__)
