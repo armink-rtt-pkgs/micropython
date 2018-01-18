@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
+ * Copyright (c) 2017 SummerGift <zhangyuan@rt-thread.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,27 +30,24 @@
 #include "py/runtime.h"
 #include "py/objtuple.h"
 #include "py/objstr.h"
+#include "py/mperrno.h"
 #include "lib/timeutils/timeutils.h"
 #include "lib/oofatfs/ff.h"
 #include "lib/oofatfs/diskio.h"
 #include "extmod/misc.h"
-#include "extmod/vfs.h"
-#include "extmod/vfs_fat.h"
 #include "genhdr/mpversion.h"
 #include "portmodules.h"
 
-/// \module os - basic "operating system" services
-///
-/// The `os` module contains functions for filesystem access and `urandom`.
-///
-/// The filesystem has `/` as the root directory, and the available physical
-/// drives are accessible from here.  They are currently:
-///
-///     /flash      -- the internal flash filesystem
-///     /sd         -- the SD card (if it exists)
-///
-/// On boot up, the current directory is `/flash` if no SD card is inserted,
-/// otherwise it is `/sd`.
+#if !MICROPY_VFS
+#if MICROPY_PY_MODUOS_FILE
+#include "moduos_file.h"
+#endif
+#else
+#include "extmod/vfs.h"
+#if MICROPY_VFS_FAT
+#include "extmod/vfs_fat.h"
+#endif
+#endif
 
 STATIC const qstr os_uname_info_fields[] = {
     MP_QSTR_sysname, MP_QSTR_nodename,
@@ -77,13 +74,7 @@ STATIC mp_obj_t os_uname(void) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(os_uname_obj, os_uname);
 
-/// \function sync()
-/// Sync all filesystems.
 STATIC mp_obj_t os_sync(void) {
-    for (mp_vfs_mount_t *vfs = MP_STATE_VM(vfs_mount_table); vfs != NULL; vfs = vfs->next) {
-        // this assumes that vfs->obj is fs_user_mount_t with block device functions
-        disk_ioctl(MP_OBJ_TO_PTR(vfs->obj), CTRL_SYNC, NULL);
-    }
     return mp_const_none;
 }
 MP_DEFINE_CONST_FUN_OBJ_0(mod_os_sync_obj, os_sync);
@@ -106,25 +97,20 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(os_urandom_obj, os_urandom);
 
 STATIC const mp_rom_map_elem_t os_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_uos) },
-
     { MP_ROM_QSTR(MP_QSTR_uname), MP_ROM_PTR(&os_uname_obj) },
-
-    { MP_ROM_QSTR(MP_QSTR_chdir), MP_ROM_PTR(&mp_vfs_chdir_obj) },
-    { MP_ROM_QSTR(MP_QSTR_getcwd), MP_ROM_PTR(&mp_vfs_getcwd_obj) },
-    { MP_ROM_QSTR(MP_QSTR_ilistdir), MP_ROM_PTR(&mp_vfs_ilistdir_obj) },
-    { MP_ROM_QSTR(MP_QSTR_listdir), MP_ROM_PTR(&mp_vfs_listdir_obj) },
-    { MP_ROM_QSTR(MP_QSTR_mkdir), MP_ROM_PTR(&mp_vfs_mkdir_obj) },
-    { MP_ROM_QSTR(MP_QSTR_remove), MP_ROM_PTR(&mp_vfs_remove_obj) },
-    { MP_ROM_QSTR(MP_QSTR_rename),MP_ROM_PTR(&mp_vfs_rename_obj)},
-    { MP_ROM_QSTR(MP_QSTR_rmdir), MP_ROM_PTR(&mp_vfs_rmdir_obj) },
-    { MP_ROM_QSTR(MP_QSTR_stat), MP_ROM_PTR(&mp_vfs_stat_obj) },
-    { MP_ROM_QSTR(MP_QSTR_statvfs), MP_ROM_PTR(&mp_vfs_statvfs_obj) },
-    { MP_ROM_QSTR(MP_QSTR_unlink), MP_ROM_PTR(&mp_vfs_remove_obj) }, // unlink aliases to remove
-
+    { MP_ROM_QSTR(MP_QSTR_chdir), MP_ROM_PTR(&mp_posix_chdir_obj) },
+    { MP_ROM_QSTR(MP_QSTR_getcwd), MP_ROM_PTR(&mp_posix_getcwd_obj) },
+    { MP_ROM_QSTR(MP_QSTR_listdir), MP_ROM_PTR(&mp_posix_listdir_obj) },
+    { MP_ROM_QSTR(MP_QSTR_mkdir), MP_ROM_PTR(&mp_posix_mkdir_obj) },
+    { MP_ROM_QSTR(MP_QSTR_remove), MP_ROM_PTR(&mp_posix_remove_obj) },
+    { MP_ROM_QSTR(MP_QSTR_rename),MP_ROM_PTR(&mp_posix_rename_obj)},
+    { MP_ROM_QSTR(MP_QSTR_rmdir), MP_ROM_PTR(&mp_posix_rmdir_obj) },
+    { MP_ROM_QSTR(MP_QSTR_stat), MP_ROM_PTR(&mp_posix_stat_obj) },
+    { MP_ROM_QSTR(MP_QSTR_unlink), MP_ROM_PTR(&mp_posix_remove_obj) },     // unlink aliases to remove
     { MP_ROM_QSTR(MP_QSTR_sync), MP_ROM_PTR(&mod_os_sync_obj) },
 
     /// \constant sep - separation character used in paths
-    { MP_ROM_QSTR(MP_QSTR_sep), MP_ROM_QSTR(MP_QSTR__slash_) },
+    //{ MP_ROM_QSTR(MP_QSTR_sep), MP_ROM_QSTR(MP_QSTR__slash_) },
 
 #if MICROPY_HW_ENABLE_RNG
     { MP_ROM_QSTR(MP_QSTR_urandom), MP_ROM_PTR(&os_urandom_obj) },
@@ -132,8 +118,8 @@ STATIC const mp_rom_map_elem_t os_module_globals_table[] = {
 
     // these are MicroPython extensions
     //{ MP_ROM_QSTR(MP_QSTR_dupterm), MP_ROM_PTR(&mp_uos_dupterm_obj) },
-    //{ MP_ROM_QSTR(MP_QSTR_mount), MP_ROM_PTR(&mp_vfs_mount_obj) },
-    //{ MP_ROM_QSTR(MP_QSTR_umount), MP_ROM_PTR(&mp_vfs_umount_obj) },
+    { MP_ROM_QSTR(MP_QSTR_mount), MP_ROM_PTR(&mp_posix_mount_obj) },
+    { MP_ROM_QSTR(MP_QSTR_umount), MP_ROM_PTR(&mp_posix_umount_obj) },
     //{ MP_ROM_QSTR(MP_QSTR_VfsFat), MP_ROM_PTR(&mp_fat_vfs_type) },
 };
 
@@ -143,3 +129,4 @@ const mp_obj_module_t mp_module_uos = {
     .base = { &mp_type_module },
     .globals = (mp_obj_dict_t*)&os_module_globals,
 };
+
