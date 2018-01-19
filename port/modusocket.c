@@ -145,6 +145,7 @@ STATIC mp_obj_t socket_accept(mp_obj_t self_in) {
         mp_raise_OSError(new_client);
     }
 
+    socket2->fd = new_client;
     // make the return value
     mp_obj_tuple_t *client = mp_obj_new_tuple(2, NULL);
     client->items[0] = socket2;
@@ -250,10 +251,6 @@ STATIC mp_obj_t socket_recvfrom(mp_obj_t self_in, mp_obj_t len_in) {
     int ret;
     struct sockaddr_in sockaddr;
     uint32_t addr_len;
-    sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = htons(port);
-    inet_aton((char *)ip, (struct in_addr* )&(sockaddr.sin_addr));
-    memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
     ret = recvfrom(self->fd, vstr.buf, vstr.len, MSG_DONTWAIT, (struct sockaddr *)&sockaddr, &addr_len);
     if (ret == -1) {
