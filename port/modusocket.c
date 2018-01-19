@@ -158,18 +158,15 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_accept_obj, socket_accept);
 STATIC mp_obj_t socket_connect(mp_obj_t self_in, mp_obj_t addr_in) {
     posix_socket_obj_t *self = self_in;
 
-    // get address
-    uint8_t ip[MOD_NETWORK_IPADDR_BUF_SIZE];
-    mp_uint_t port = netutils_parse_inet_addr(addr_in, ip, NETUTILS_BIG);
-
     int _errno;
-    struct sockaddr_in sockaddr;
-    sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = htons(port);
-
     mp_obj_t *items;
+    struct sockaddr_in sockaddr;
     mp_obj_get_array_fixed_n(addr_in, 2, &items);
-    char *strip = mp_obj_str_get_str(items[0]);
+
+    sockaddr.sin_family = AF_INET;
+    sockaddr.sin_port = htons(mp_obj_get_int(items[1]));
+
+    const char *strip = mp_obj_str_get_str(items[0]);
     inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
@@ -224,16 +221,17 @@ STATIC mp_obj_t socket_sendto(mp_obj_t self_in, mp_obj_t data_in, mp_obj_t addr_
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data_in, &bufinfo, MP_BUFFER_READ);
 
-    // get address
-    uint8_t ip[MOD_NETWORK_IPADDR_BUF_SIZE];
-    mp_uint_t port = netutils_parse_inet_addr(addr_in, ip, NETUTILS_BIG);
+    mp_obj_t *items;
     struct sockaddr_in sockaddr;
+    mp_obj_get_array_fixed_n(addr_in, 2, &items);
     sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = htons(port);
-    inet_aton((char *)ip, (struct in_addr* )&(sockaddr.sin_addr));
+    sockaddr.sin_port = htons(mp_obj_get_int(items[1]));
+    const char *strip = mp_obj_str_get_str(items[0]);
+    inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
-    mp_int_t ret = sendto(self->fd, bufinfo.buf, bufinfo.len, MSG_DONTWAIT, (struct sockaddr *)&sockaddr, sizeof(struct sockaddr));
+    mp_int_t ret = sendto(self->fd, bufinfo.buf, bufinfo.len, MSG_DONTWAIT, (struct sockaddr *) &sockaddr,
+            sizeof(struct sockaddr));
     if (ret == -1) {
         mp_raise_OSError(ret);
     }
