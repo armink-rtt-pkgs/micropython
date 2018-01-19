@@ -109,7 +109,7 @@ STATIC mp_obj_t socket_bind(mp_obj_t self_in, mp_obj_t addr_in) {
     inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
-    if ((_errno = bind(self->fd, (struct sockaddr *)&sockaddr, sizeof(struct sockaddr))) < 0) {
+    if ((_errno = bind(self->fd, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr))) < 0) {
         mp_raise_OSError(_errno);
     }
 
