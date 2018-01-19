@@ -101,10 +101,14 @@ STATIC mp_obj_t socket_bind(mp_obj_t self_in, mp_obj_t addr_in) {
 
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = htons(port);
-    inet_aton((char *)ip, (struct in_addr* )&(sockaddr.sin_addr));
+
+    mp_obj_t *items;
+    mp_obj_get_array_fixed_n(addr_in, 2, &items);
+    char *strip = mp_obj_str_get_str(items[0]);
+    inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
-    if ((_errno = bind(self->fd, (struct sockaddr *)&sockaddr, sizeof(struct sockaddr))) < 0) {
+    if ((_errno = bind(self->fd, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr))) < 0) {
         mp_raise_OSError(_errno);
     }
 
@@ -163,10 +167,14 @@ STATIC mp_obj_t socket_connect(mp_obj_t self_in, mp_obj_t addr_in) {
     struct sockaddr_in sockaddr;
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = htons(port);
-    inet_aton((char *)ip, (struct in_addr* )&(sockaddr.sin_addr));
+
+    mp_obj_t *items;
+    mp_obj_get_array_fixed_n(addr_in, 2, &items);
+    char *strip = mp_obj_str_get_str(items[0]);
+    inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
-    if ((_errno = connect(self->fd, (struct sockaddr *)&sockaddr, sizeof(struct sockaddr))) <= 0) {
+    if ((_errno = connect(self->fd, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr))) < 0) {
         mp_raise_OSError(_errno);
     }
 
