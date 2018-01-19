@@ -95,16 +95,15 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_close_obj, socket_close);
 STATIC mp_obj_t socket_bind(mp_obj_t self_in, mp_obj_t addr_in) {
     posix_socket_obj_t *self = self_in;
     int _errno;
-    uint8_t ip[MOD_NETWORK_IPADDR_BUF_SIZE];
-    mp_uint_t port = netutils_parse_inet_addr(addr_in, ip, NETUTILS_BIG);
     struct sockaddr_in sockaddr;
+    mp_obj_t *items;
+
+    mp_obj_get_array_fixed_n(addr_in, 2, &items);
 
     sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = htons(port);
+    sockaddr.sin_port = htons(mp_obj_get_int(items[1]));
 
-    mp_obj_t *items;
-    mp_obj_get_array_fixed_n(addr_in, 2, &items);
-    char *strip = mp_obj_str_get_str(items[0]);
+    const char *strip = mp_obj_str_get_str(items[0]);
     inet_aton((char * )strip, (struct in_addr* )&(sockaddr.sin_addr));
     memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
 
