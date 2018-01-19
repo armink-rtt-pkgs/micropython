@@ -61,7 +61,6 @@ STATIC mp_obj_t socket_make_new(const mp_obj_type_t *type, size_t n_args, size_t
 
     mp_arg_check_num(n_args, n_kw, 0, 4, false);
 
-
     if (n_args >= 1) {
         domain = mp_obj_get_int(args[0]);
         if (n_args >= 2) {
@@ -73,8 +72,8 @@ STATIC mp_obj_t socket_make_new(const mp_obj_type_t *type, size_t n_args, size_t
 
     if (fd != -1) {
         s = m_new_obj_with_finaliser(posix_socket_obj_t);
-        s->base.type = (mp_obj_t)&socket_type;
         if (s) {
+            s->base.type = (mp_obj_t)&socket_type;
             s->fd = fd;
         }
     }
