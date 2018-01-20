@@ -142,4 +142,25 @@ stat            unlink          mount           umount
 >>> 
 ```
 
+#### usocket– socketmodule
+
+See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html).
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM) #TCP连接
+>>> s.bind(('192.168.12.32', 6001))
+>>> s.listen(5)
+>>> s.setblocking(True)
+>>> sock,addr=s.accept()              #阻塞等待tcp连接，并接收数据
+>>> sock.recv(10)                     #将收到的数据返回
+b'rt-thread\r'
+>>>
+>>> s1 = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
+>>> s1.connect(("192.168.10.110",6000))
+>>> s1.send("micropython")            #发送成功后返回发送字节数
+11
+>>> 
+```
+
 ### Coming soon
