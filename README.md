@@ -146,6 +146,8 @@ stat            unlink          mount           umount
 
 See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html).
 
+##### TCP Server
+
 ```
 >>> import usocket 
 >>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM) 
@@ -158,6 +160,8 @@ b'rt-thread\r'
 >>> s.close()
 >>> 
 ```
+
+##### TCP Client
 
 ```
 >>> import usocket 
