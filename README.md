@@ -150,7 +150,7 @@ See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html
 
 ```
 >>> import usocket 
->>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM) 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)  # Create STREAM TCP socket
 >>> s.bind(('192.168.12.32', 6001))   
 >>> s.listen(5)
 >>> s.setblocking(True)
