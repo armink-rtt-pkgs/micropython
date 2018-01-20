@@ -148,19 +148,24 @@ See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html
 
 ```
 >>> import usocket 
->>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM) #TCP连接
->>> s.bind(('192.168.12.32', 6001))   #绑定自身IP地址和端口号
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM) 
+>>> s.bind(('192.168.12.32', 6001))   
 >>> s.listen(5)
 >>> s.setblocking(True)
->>> sock,addr=s.accept()              #阻塞等待tcp连接，并接收数据
->>> sock.recv(10)                     #将收到的数据返回
+>>> sock,addr=s.accept()              
+>>> sock.recv(10)                    
 b'rt-thread\r'
->>>
->>> s1 = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
->>> s1.connect(("192.168.10.110",6000))  #连接目标IP地址和端口号
->>> s1.send("micropython")               #发送成功后返回发送字节数
-11
+>>> s.close()
 >>> 
+```
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
+>>> s.connect(("192.168.10.110",6000))  
+>>> s.send("micropython")               
+11
+>>> s.close()
 ```
 
 ### Coming soon
