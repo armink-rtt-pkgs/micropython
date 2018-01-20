@@ -142,4 +142,34 @@ stat            unlink          mount           umount
 >>> 
 ```
 
+#### usocket– socketmodule
+
+See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html).
+
+##### TCP Server
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)  # Create STREAM TCP socket
+>>> s.bind(('192.168.12.32', 6001))   
+>>> s.listen(5)
+>>> s.setblocking(True)
+>>> sock,addr=s.accept()              
+>>> sock.recv(10)                    
+b'rt-thread\r'
+>>> s.close()
+>>> 
+```
+
+##### TCP Client
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
+>>> s.connect(("192.168.10.110",6000))  
+>>> s.send("micropython")               
+11
+>>> s.close()
+```
+
 ### Coming soon
