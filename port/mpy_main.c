@@ -76,7 +76,14 @@ void mpy_main(const char *filename) {
     gc_init(heap, heap + sizeof(heap));
     #endif
 
+    /* MicroPython initialization */
     mp_init();
+
+    /* system path initialization */
+    mp_obj_list_init(mp_sys_path, 0);
+    mp_obj_list_append(mp_sys_path, MP_OBJ_NEW_QSTR(MP_QSTR_)); // current dir (or base dir of the script)
+    mp_obj_list_append(mp_sys_path, mp_obj_new_str(MICROPY_PY_PATH, strlen(MICROPY_PY_PATH), false));
+    mp_obj_list_init(mp_sys_argv, 0);
 
     if (filename) {
         pyexec_file(filename);
@@ -117,10 +124,6 @@ void gc_collect(void) {
 //mp_lexer_t *mp_lexer_new_from_file(const char *filename) {
 //    mp_raise_OSError(ENOENT);
 //}
-
-mp_import_stat_t mp_import_stat(const char *path) {
-    return MP_IMPORT_STAT_NO_EXIST;
-}
 
 mp_obj_t mp_builtin_open(size_t n_args, const mp_obj_t *args, mp_map_t *kwargs) {
     return mp_const_none;

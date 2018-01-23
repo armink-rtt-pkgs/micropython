@@ -206,12 +206,17 @@ typedef long mp_off_t;
 
 #define MP_PLAT_PRINT_STRN(str, len) mp_hal_stdout_tx_strn_cooked(str, len)
 
+// use vfs's functions for import stat and builtin open
+extern mp_import_stat_t mp_posix_import_stat(const char *path);
+#define mp_import_stat mp_posix_import_stat
+
 // extra built in names to add to the global namespace
 #define MICROPY_PORT_BUILTINS \
     { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
 
 #define MICROPY_HW_BOARD_NAME "RT-Thread Board"
-#define MICROPY_HW_MCU_NAME "stm32f4"
+#define MICROPY_HW_MCU_NAME   "stm32f4"
+#define MICROPY_PY_PATH       "/libs/mpy/"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)
