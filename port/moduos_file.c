@@ -222,21 +222,19 @@ mp_obj_t mp_posix_stat(mp_obj_t path_in) {
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_stat_obj, mp_posix_stat);
 
-//TODO
 mp_import_stat_t mp_posix_import_stat(const char *path) {
-    const char *path_out;
-    mp_vfs_mount_t *vfs = mp_vfs_lookup_path(path, &path_out);
-    if (vfs == MP_VFS_NONE || vfs == MP_VFS_ROOT) {
+
+    struct stat stat;
+
+    if (dfs_file_stat(path, &stat) == 0) {
+        if (S_ISDIR(stat.st_mode)) {
+            return MP_IMPORT_STAT_DIR;
+        } else {
+            return MP_IMPORT_STAT_FILE;
+        }
+    } else {
         return MP_IMPORT_STAT_NO_EXIST;
     }
-    #if MICROPY_VFS_FAT
-    // fast paths for known VFS types
-    if (mp_obj_get_type(vfs->obj) == &mp_fat_vfs_type) {
-        return fat_vfs_import_stat(MP_OBJ_TO_PTR(vfs->obj), path_out);
-    }
-    #endif
-    // TODO delegate to vfs.stat() method
-    return MP_IMPORT_STAT_NO_EXIST;
 }
 
 #endif //MICROPY_MODUOS_FILE
