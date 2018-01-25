@@ -61,7 +61,7 @@ STATIC mp_import_stat_t mp_import_stat_any(const char *path) {
         return st;
     }
     #endif
-    return mp_import_stat(path);
+    return mp_posix_import_stat(path);
 }
 
 STATIC mp_import_stat_t stat_file_py_or_mpy(vstr_t *path) {
