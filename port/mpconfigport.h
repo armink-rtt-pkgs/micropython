@@ -206,9 +206,7 @@ typedef long mp_off_t;
 
 #define MP_PLAT_PRINT_STRN(str, len) mp_hal_stdout_tx_strn_cooked(str, len)
 
-// use vfs's functions for import stat and builtin open
-extern mp_import_stat_t mp_posix_import_stat(const char *path);
-#define mp_import_stat mp_posix_import_stat
+#define mp_import_stat(x) mp_posix_import_stat(x)
 
 // extra built in names to add to the global namespace
 #define MICROPY_PORT_BUILTINS \
