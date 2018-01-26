@@ -9,9 +9,11 @@ src    += Glob('lib/mp-readline/*.c')
 src    += Glob('lib/utils/*.c')
 src    += Glob('extmod/*.c')
 src    += Glob('port/*.c')
+src    += Glob('lib/netutils/*.c')
 
 path    = [cwd + '/']
 path   += [cwd + '/port']
+path   += [cwd + '/lib/netutils']
 
 if rtconfig.CROSS_TOOL == 'keil':
     LOCAL_CCFLAGS = ' -I "port/mpy_project_cfg.h"'
