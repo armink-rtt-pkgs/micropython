@@ -383,25 +383,18 @@ STATIC const mp_obj_type_t socket_type = {
 
 /******************************************************************************/
 // usocket module
-
 // function usocket.getaddrinfo(host, port)
 STATIC mp_obj_t mod_usocket_getaddrinfo(mp_obj_t host_in, mp_obj_t port_in) {
     size_t hlen;
-    const char *host = mp_obj_str_get_data(host_in, &hlen);
-    const char port_in_s[6] = { 0 };
-    mp_int_t port = mp_obj_get_int(port_in);
     int ret;
+    const char *host = mp_obj_str_get_data(host_in, &hlen);
+    mp_int_t port = mp_obj_get_int(port_in);
+    struct addrinfo hint, *res = NULL;
+    memset(&hint, 0, sizeof(hint));
 
-    snprintf(port_in_s, sizeof(port_in_s), "%d", port);
-
-    struct sockaddr_in sockaddr, *res = NULL;
-    sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = htons(port);
-    memset(&(sockaddr.sin_zero), 0, sizeof(sockaddr.sin_zero));
-
-    ret = getaddrinfo(host, port_in_s, &sockaddr, &res);
-
-    if (!ret) {
+    ret = getaddrinfo(host, NULL, &hint, &res);
+    if (ret != 0) {
+        rt_kprintf("getaddrinfo err: %d '%s'\n", ret, host);
         nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "no available netif"));
     }
 
@@ -410,11 +403,16 @@ STATIC mp_obj_t mod_usocket_getaddrinfo(mp_obj_t host_in, mp_obj_t port_in) {
     tuple->items[1] = MP_OBJ_NEW_SMALL_INT(MOD_NETWORK_SOCK_STREAM);
     tuple->items[2] = MP_OBJ_NEW_SMALL_INT(0);
     tuple->items[3] = MP_OBJ_NEW_QSTR(MP_QSTR_);
-    tuple->items[4] = netutils_format_inet_addr((uint8_t *)inet_ntoa(res->sin_addr), res->sin_port, NETUTILS_BIG);
 
+    mp_obj_t tuple_addr[2] = {
+            tuple_addr[0] = netutils_format_ipv4_addr(((res->ai_addr->sa_data) + 2), NETUTILS_BIG),
+            tuple_addr[1] = mp_obj_new_int(port),
+    };
+
+    tuple->items[4] = mp_obj_new_tuple(2, tuple_addr);
     freeaddrinfo(res);
 
-    return mp_obj_new_list(1, (mp_obj_t*)&tuple);
+    return mp_obj_new_list(1, (mp_obj_t*) &tuple);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(mod_usocket_getaddrinfo_obj, mod_usocket_getaddrinfo);
 
