@@ -134,14 +134,14 @@ STATIC mp_obj_t socket_accept(mp_obj_t self_in) {
 
     // create new socket object
     posix_socket_obj_t *socket2 = m_new_obj_with_finaliser(posix_socket_obj_t);
-    socket2->base.type = (mp_obj_t)&socket_type;
+    socket2->base.type = (mp_obj_t) &socket_type;
 
     // accept incoming connection
     int new_client;
     struct sockaddr_in addr;
     socklen_t addrlen;
 
-    if ((new_client = accept(self->fd, (struct sockaddr *)&addr, &addrlen)) < 0) {
+    if ((new_client = accept(self->fd, (struct sockaddr *) &addr, &addrlen)) < 0) {
         mp_raise_OSError(new_client);
     }
 
@@ -149,8 +149,13 @@ STATIC mp_obj_t socket_accept(mp_obj_t self_in) {
     // make the return value
     mp_obj_tuple_t *client = mp_obj_new_tuple(2, NULL);
     client->items[0] = socket2;
-    client->items[1] = netutils_format_inet_addr((uint8_t *)inet_ntoa(addr.sin_addr), ntohs(addr.sin_port), NETUTILS_BIG);
 
+    mp_obj_t tuple[2] = {
+        tuple[0] = netutils_format_ipv4_addr((uint8_t *)&addr.sin_addr, NETUTILS_BIG),
+        tuple[1] = mp_obj_new_int(ntohs(addr.sin_port)),
+    };
+
+    client->items[1] = mp_obj_new_tuple(2, tuple);
     return client;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_accept_obj, socket_accept);
