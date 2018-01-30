@@ -73,9 +73,15 @@ STATIC mp_obj_t socket_make_new(const mp_obj_type_t *type, size_t n_args, size_t
     if (fd != -1) {
         s = m_new_obj_with_finaliser(posix_socket_obj_t);
         if (s) {
-            s->base.type = (mp_obj_t)&socket_type;
+            s->base.type = (mp_obj_t) &socket_type;
             s->fd = fd;
+        } else {
+            rt_kprintf("m_new_obj_with_finaliser error.\n");
+            mp_raise_OSError(MP_EAGAIN);
         }
+    } else {
+        rt_kprintf("Get fd error fd = -1\n");
+        mp_raise_OSError(MP_EAGAIN);
     }
 
     return s;
@@ -199,6 +205,26 @@ STATIC mp_obj_t socket_send(mp_obj_t self_in, mp_obj_t buf_in) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_send_obj, socket_send);
 
+//socket.write(buf)
+//Write the buffer of bytes to the socket.
+//This function will try to write all data to a socket (no short writes ).
+//This may be not possible with a non-blocking socket though, and returned value will be less than the length of buf.
+//Return value: number of bytes written.
+
+STATIC mp_obj_t socket_write(mp_obj_t self_in, mp_obj_t buf_in) {
+    posix_socket_obj_t *self = self_in;
+    mp_buffer_info_t bufinfo;
+    mp_get_buffer_raise(buf_in, &bufinfo, MP_BUFFER_READ);
+    int _errno;
+
+    _errno = send(self->fd, bufinfo.buf, bufinfo.len, 0);
+    if (_errno == -1) {
+        mp_raise_OSError(_errno);
+    }
+    return mp_obj_new_int_from_uint(_errno);
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_write_obj, socket_write);
+
 // method socket.recv(bufsize)
 STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
     posix_socket_obj_t *self = self_in;
@@ -218,6 +244,32 @@ STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
     return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_recv_obj, socket_recv);
+
+// method socket.recv(bufsize)
+STATIC mp_obj_t socket_readline(mp_obj_t self_in) {
+    posix_socket_obj_t *self = self_in;
+    int ret;
+    char buf[128];
+    char getchar = NULL;
+    char *p = buf;
+    memset(buf, 0, sizeof(buf));
+
+    while (getchar != '\n') {
+        ret = recv(self->fd, &getchar, 1, 0);
+        if (ret == -1) {
+            mp_raise_OSError(ret);
+        }
+        if (ret == 0) {
+            return mp_const_empty_bytes;
+        }
+        if (ret == 1) {
+            *p++ = getchar;
+        }
+    }
+
+    return mp_obj_new_str(buf, strlen(buf), false);
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_readline_obj, socket_readline);
 
 // method socket.sendto(bytes, address)
 STATIC mp_obj_t socket_sendto(mp_obj_t self_in, mp_obj_t data_in, mp_obj_t addr_in) {
@@ -363,6 +415,9 @@ STATIC const mp_rom_map_elem_t socket_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_setsockopt), MP_ROM_PTR(&socket_setsockopt_obj) },
     { MP_ROM_QSTR(MP_QSTR_settimeout), MP_ROM_PTR(&socket_settimeout_obj) },
     { MP_ROM_QSTR(MP_QSTR_setblocking), MP_ROM_PTR(&socket_setblocking_obj) },
+    { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&socket_write_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readline), MP_ROM_PTR(&socket_readline_obj) },
+
 };
 
 STATIC MP_DEFINE_CONST_DICT(socket_locals_dict, socket_locals_dict_table);
