@@ -76,7 +76,7 @@ STATIC mp_obj_t socket_make_new(const mp_obj_type_t *type, size_t n_args, size_t
             s->base.type = (mp_obj_t) &socket_type;
             s->fd = fd;
         } else {
-            rt_kprintf("m_new_obj_with_finaliser  error.\n");
+            rt_kprintf("m_new_obj_with_finaliser error.\n");
             mp_raise_OSError(MP_EAGAIN);
         }
     } else {
@@ -207,7 +207,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_send_obj, socket_send);
 
 //socket.write(buf)
 //Write the buffer of bytes to the socket.
-//This function will try to write all data to a socket (no ¡°short writes¡±).
+//This function will try to write all data to a socket (no short writes ).
 //This may be not possible with a non-blocking socket though, and returned value will be less than the length of buf.
 //Return value: number of bytes written.
 
