@@ -144,8 +144,8 @@
 #define MICROPY_PY_USOCKET          (1)
 #define MICROPY_PY_NETWORK          (0)
 #define MICROPY_PY_USELECT          (0)
-#define MICROPY_PY_USSL             (1)
-#define MICROPY_SSL_MBEDTLS         (1)
+#define MICROPY_PY_USSL             (0)
+#define MICROPY_SSL_MBEDTLS         (0)
 
 //#define MBEDTLS_CONFIG_FILE  "tls_config.h"
 
