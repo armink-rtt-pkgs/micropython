@@ -147,8 +147,6 @@
 #define MICROPY_PY_USSL             (0)
 #define MICROPY_SSL_MBEDTLS         (0)
 
-//#define MBEDTLS_CONFIG_FILE  "tls_config.h"
-
 #if MICROPY_PY_THREAD
 #define MICROPY_EVENT_POLL_HOOK \
     do { \
