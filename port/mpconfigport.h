@@ -144,6 +144,8 @@
 #define MICROPY_PY_USOCKET          (1)
 #define MICROPY_PY_NETWORK          (0)
 #define MICROPY_PY_USELECT          (0)
+#define MICROPY_PY_USSL             (0)
+#define MICROPY_SSL_MBEDTLS         (0)
 
 #if MICROPY_PY_THREAD
 #define MICROPY_EVENT_POLL_HOOK \
