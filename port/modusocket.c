@@ -422,16 +422,36 @@ STATIC const mp_rom_map_elem_t socket_locals_dict_table[] = {
 
 STATIC MP_DEFINE_CONST_DICT(socket_locals_dict, socket_locals_dict_table);
 
-mp_uint_t socket_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg, int *errcode) {
+STATIC mp_uint_t socket_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg, int *errcode) {
     posix_socket_obj_t *self = self_in;
+    return ioctl(self->fd, request, (void *) arg);
+}
 
-    return ioctl(self->fd, request, (void *)arg);
+STATIC mp_uint_t stream_read(mp_obj_t self_in, void *buf, mp_uint_t size, int *errcode) {
+    posix_socket_obj_t *self = self_in;
+    int err = recv(self->fd, buf, size, 0);
+    if (err < 0) {
+        *errcode = err;
+        return -1;
+    }
+    return err;
+}
+
+STATIC mp_uint_t steam_write(mp_obj_t self_in, const void *buf, mp_uint_t size, int *errcode) {
+    posix_socket_obj_t *self = self_in;
+    int err = send(self->fd, buf, size, 0);
+    if (err < 0) {
+        *errcode = err;
+        return -1;
+    }
+    return err;
 }
 
 STATIC const mp_stream_p_t socket_stream_p = {
+    .read = stream_read,
+    .write = steam_write,
     .ioctl = socket_ioctl,
-    .is_text = false,
-};
+    .is_text = false, };
 
 STATIC const mp_obj_type_t socket_type = {
     { &mp_type_type },
