@@ -115,7 +115,7 @@
 #define MICROPY_PY_RTTHREAD         (1)
 #define MICROPY_PY_SYS              (1)
 #define MICROPY_MODULE_FROZEN_MPY   (1)
-#define MICROPY_CPYTHON_COMPAT      (0)
+#define MICROPY_CPYTHON_COMPAT      (1)
 #define MICROPY_LONGINT_IMPL        (MICROPY_LONGINT_IMPL_MPZ)
 #define MICROPY_FLOAT_IMPL          (MICROPY_FLOAT_IMPL_DOUBLE)
 #define MICROPY_READER_POSIX        (1)
@@ -239,6 +239,7 @@ extern const struct _mp_obj_module_t mp_module_machine;
 extern const struct _mp_obj_module_t mp_module_uos;
 extern const struct _mp_obj_module_t mp_module_uselect;
 extern const struct _mp_obj_module_t mp_module_usocket;
+extern const struct _mp_obj_module_t mp_module_io;
 
 #if MICROPY_PY_RTTHREAD
 #define MICROPY_PY_RTTHREAD_DEF { MP_ROM_QSTR(MP_QSTR_rtthread), MP_ROM_PTR(&mp_module_rtthread) },
@@ -273,6 +274,8 @@ extern const struct _mp_obj_module_t mp_module_usocket;
     { MP_ROM_QSTR(MP_QSTR_json), MP_ROM_PTR(&mp_module_ujson) }, \
     { MP_ROM_QSTR(MP_QSTR_heapq), MP_ROM_PTR(&mp_module_uheapq) }, \
     { MP_ROM_QSTR(MP_QSTR_hashlib), MP_ROM_PTR(&mp_module_uhashlib) }, \
+    { MP_ROM_QSTR(MP_QSTR_io), MP_ROM_PTR(&mp_module_io) }, \
+
 
 #define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __FUNCTION__)
 
