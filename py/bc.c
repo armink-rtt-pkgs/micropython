@@ -25,9 +25,19 @@
  * THE SOFTWARE.
  */
 
-#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+
+#include "py/mpconfig.h"
+#include "py/misc.h"
+#include "py/mpstate.h"
+
+#if MICROPY_DEBUG_VERBOSE // print debugging info
+#define DEBUG_printf DEBUG_printf
+#else // don't print debugging info
+#define DEBUG_printf(...) (void)0
+#endif
 
 #include "py/runtime.h"
 #include "py/bc0.h"
@@ -35,6 +45,7 @@
 
 #if MICROPY_DEBUG_VERBOSE // print debugging info
 #define DEBUG_PRINT (1)
+#define DEBUG_printf DEBUG_printf
 #else // don't print debugging info
 #define DEBUG_PRINT (0)
 #define DEBUG_printf(...) (void)0
