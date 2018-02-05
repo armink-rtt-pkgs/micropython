@@ -464,37 +464,43 @@ STATIC const mp_obj_type_t socket_type = {
 /******************************************************************************/
 // usocket module
 // function usocket.getaddrinfo(host, port)
-STATIC mp_obj_t mod_usocket_getaddrinfo(mp_obj_t host_in, mp_obj_t port_in) {
-    size_t hlen;
-    int ret;
-    const char *host = mp_obj_str_get_data(host_in, &hlen);
-    mp_int_t port = mp_obj_get_int(port_in);
-    struct addrinfo hint, *res = NULL;
-    memset(&hint, 0, sizeof(hint));
+STATIC mp_obj_t mod_usocket_getaddrinfo(uint n_args, const mp_obj_t *arg) {
+    if (n_args == 3) {
+        rt_kprintf("Usage: usocket.getaddrinfo(\"host\",port,x,x). n_args must be 2 or 4.\n");
+        rt_kprintf("argument num/types mismatch\n");
+        mp_raise_OSError(MP_EAGAIN);
+        return mp_const_none;
+    } else if (n_args == 2 || n_args == 4) {
+        size_t hlen;
+        int ret;
+        const char *host = mp_obj_str_get_data(arg[0], &hlen);
+        mp_int_t port = mp_obj_get_int(arg[1]);
+        struct addrinfo hint, *res = NULL;
+        memset(&hint, 0, sizeof(hint));
 
-    ret = getaddrinfo(host, NULL, &hint, &res);
-    if (ret != 0) {
-        rt_kprintf("getaddrinfo err: %d '%s'\n", ret, host);
-        nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "no available netif"));
+        ret = getaddrinfo(host, NULL, &hint, &res);
+        if (ret != 0) {
+            rt_kprintf("getaddrinfo err: %d '%s'\n", ret, host);
+            nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "no available netif"));
+        }
+
+        mp_obj_tuple_t *tuple = mp_obj_new_tuple(5, NULL);
+        tuple->items[0] = MP_OBJ_NEW_SMALL_INT(MOD_NETWORK_AF_INET);
+        tuple->items[1] = MP_OBJ_NEW_SMALL_INT(MOD_NETWORK_SOCK_STREAM);
+        tuple->items[2] = MP_OBJ_NEW_SMALL_INT(0);
+        tuple->items[3] = MP_OBJ_NEW_QSTR(MP_QSTR_);
+
+        mp_obj_t tuple_addr[2] = { tuple_addr[0] = netutils_format_ipv4_addr(((res->ai_addr->sa_data) + 2),
+                NETUTILS_BIG), tuple_addr[1] = mp_obj_new_int(port), };
+
+        tuple->items[4] = mp_obj_new_tuple(2, tuple_addr);
+        freeaddrinfo(res);
+
+        return mp_obj_new_list(1, (mp_obj_t*) &tuple);
     }
-
-    mp_obj_tuple_t *tuple = mp_obj_new_tuple(5, NULL);
-    tuple->items[0] = MP_OBJ_NEW_SMALL_INT(MOD_NETWORK_AF_INET);
-    tuple->items[1] = MP_OBJ_NEW_SMALL_INT(MOD_NETWORK_SOCK_STREAM);
-    tuple->items[2] = MP_OBJ_NEW_SMALL_INT(0);
-    tuple->items[3] = MP_OBJ_NEW_QSTR(MP_QSTR_);
-
-    mp_obj_t tuple_addr[2] = {
-            tuple_addr[0] = netutils_format_ipv4_addr(((res->ai_addr->sa_data) + 2), NETUTILS_BIG),
-            tuple_addr[1] = mp_obj_new_int(port),
-    };
-
-    tuple->items[4] = mp_obj_new_tuple(2, tuple_addr);
-    freeaddrinfo(res);
-
-    return mp_obj_new_list(1, (mp_obj_t*) &tuple);
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_2(mod_usocket_getaddrinfo_obj, mod_usocket_getaddrinfo);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_usocket_getaddrinfo_obj, 2, 4, mod_usocket_getaddrinfo);
+
 
 STATIC const mp_rom_map_elem_t mp_module_usocket_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_usocket) },
