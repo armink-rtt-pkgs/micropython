@@ -136,6 +136,21 @@ void MP_WEAK __assert_func(const char *file, int line, const char *func, const c
 }
 #endif
 
+#include <stdarg.h>
+
+int DEBUG_printf(const char *format, ...)
+{
+    static char log_buf[512];
+    va_list args;
+
+    /* args point to the first variable parameter */
+    va_start(args, format);
+    /* must use vprintf to print */
+    rt_vsprintf(log_buf, format, args);
+    rt_kprintf("%s", log_buf);
+    va_end(args);
+}
+
 #if defined(RT_USING_FINSH) && defined(FINSH_USING_MSH)
 #include <finsh.h>
 static void python(uint8_t argc, char **argv) {
