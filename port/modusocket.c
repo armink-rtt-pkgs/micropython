@@ -490,8 +490,10 @@ STATIC mp_obj_t mod_usocket_getaddrinfo(uint n_args, const mp_obj_t *arg) {
         tuple->items[2] = MP_OBJ_NEW_SMALL_INT(0);
         tuple->items[3] = MP_OBJ_NEW_QSTR(MP_QSTR_);
 
-        mp_obj_t tuple_addr[2] = { tuple_addr[0] = netutils_format_ipv4_addr(((res->ai_addr->sa_data) + 2),
-                NETUTILS_BIG), tuple_addr[1] = mp_obj_new_int(port), };
+        mp_obj_t tuple_addr[2] = { 
+            tuple_addr[0] = netutils_format_ipv4_addr(((res->ai_addr->sa_data) + 2),NETUTILS_BIG), 
+            tuple_addr[1] = mp_obj_new_int(port), 
+        };
 
         tuple->items[4] = mp_obj_new_tuple(2, tuple_addr);
         freeaddrinfo(res);
