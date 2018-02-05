@@ -140,7 +140,7 @@ void MP_WEAK __assert_func(const char *file, int line, const char *func, const c
 
 int DEBUG_printf(const char *format, ...)
 {
-	static char log_buf[512];
+    static char log_buf[512];
     va_list args;
 
     /* args point to the first variable parameter */
