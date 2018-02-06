@@ -26,18 +26,21 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <dfs_posix.h>
+
+#include "lib/netutils/netutils.h"
+#include "modnetwork.h"
 
 #include "py/objtuple.h"
 #include "py/objlist.h"
 #include "py/runtime.h"
 #include "py/mperrno.h"
-#include "lib/netutils/netutils.h"
-#include "modnetwork.h"
-
-#include <stdio.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <dfs_posix.h>
+#include "py/stream.h"
+#include "py/objstr.h"
+#include "py/builtin.h"
 
 #if MICROPY_PY_USOCKET
 
@@ -224,6 +227,11 @@ STATIC mp_obj_t socket_write(mp_obj_t self_in, mp_obj_t buf_in) {
     return mp_obj_new_int_from_uint(_errno);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_write_obj, socket_write);
+
+STATIC mp_uint_t socket_read(mp_obj_t o_in, void *buf, mp_uint_t size, int *errcode) {
+    MP_RTT_NOT_IMPL_PRINT
+    return mp_const_none;
+}
 
 // method socket.recv(bufsize)
 STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
@@ -415,8 +423,10 @@ STATIC const mp_rom_map_elem_t socket_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_setsockopt), MP_ROM_PTR(&socket_setsockopt_obj) },
     { MP_ROM_QSTR(MP_QSTR_settimeout), MP_ROM_PTR(&socket_settimeout_obj) },
     { MP_ROM_QSTR(MP_QSTR_setblocking), MP_ROM_PTR(&socket_setblocking_obj) },
-    { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&socket_write_obj) },
-    { MP_ROM_QSTR(MP_QSTR_readline), MP_ROM_PTR(&socket_readline_obj) },
+    { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&mp_stream_write_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readline), MP_ROM_PTR(&mp_stream_unbuffered_readline_obj) },
+    { MP_ROM_QSTR(MP_QSTR_read), MP_ROM_PTR(&mp_stream_read_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readinto), MP_ROM_PTR(&mp_stream_readinto_obj) },
 
 };
 
