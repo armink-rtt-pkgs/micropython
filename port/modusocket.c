@@ -229,7 +229,7 @@ STATIC mp_obj_t socket_write(mp_obj_t self_in, mp_obj_t buf_in) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_write_obj, socket_write);
 
 STATIC mp_uint_t socket_read(mp_obj_t o_in, void *buf, mp_uint_t size, int *errcode) {
-	return mp_const_none;
+    return mp_const_none;
 }
 
 // method socket.recv(bufsize)
