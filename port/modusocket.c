@@ -26,18 +26,22 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <dfs_posix.h>
 
 #include "py/objtuple.h"
 #include "py/objlist.h"
 #include "py/runtime.h"
 #include "py/mperrno.h"
+#include "py/stream.h"
+#include "py/objstr.h"
+#include "py/builtin.h"
+
 #include "lib/netutils/netutils.h"
 #include "modnetwork.h"
 
-#include <stdio.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <dfs_posix.h>
 
 #if MICROPY_PY_USOCKET
 
@@ -245,32 +249,6 @@ STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_recv_obj, socket_recv);
 
-// method socket.recv(bufsize)
-STATIC mp_obj_t socket_readline(mp_obj_t self_in) {
-    posix_socket_obj_t *self = self_in;
-    int ret;
-    char buf[128];
-    char getchar = NULL;
-    char *p = buf;
-    memset(buf, 0, sizeof(buf));
-
-    while (getchar != '\n') {
-        ret = recv(self->fd, &getchar, 1, 0);
-        if (ret == -1) {
-            mp_raise_OSError(ret);
-        }
-        if (ret == 0) {
-            return mp_const_empty_bytes;
-        }
-        if (ret == 1) {
-            *p++ = getchar;
-        }
-    }
-
-    return mp_obj_new_str(buf, strlen(buf), false);
-}
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_readline_obj, socket_readline);
-
 // method socket.sendto(bytes, address)
 STATIC mp_obj_t socket_sendto(mp_obj_t self_in, mp_obj_t data_in, mp_obj_t addr_in) {
     posix_socket_obj_t *self = self_in;
@@ -415,9 +393,10 @@ STATIC const mp_rom_map_elem_t socket_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_setsockopt), MP_ROM_PTR(&socket_setsockopt_obj) },
     { MP_ROM_QSTR(MP_QSTR_settimeout), MP_ROM_PTR(&socket_settimeout_obj) },
     { MP_ROM_QSTR(MP_QSTR_setblocking), MP_ROM_PTR(&socket_setblocking_obj) },
-    { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&socket_write_obj) },
-    { MP_ROM_QSTR(MP_QSTR_readline), MP_ROM_PTR(&socket_readline_obj) },
-
+    { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&mp_stream_write_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readline), MP_ROM_PTR(&mp_stream_unbuffered_readline_obj) },
+    { MP_ROM_QSTR(MP_QSTR_read), MP_ROM_PTR(&mp_stream_read_obj) },
+    { MP_ROM_QSTR(MP_QSTR_readinto), MP_ROM_PTR(&mp_stream_readinto_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(socket_locals_dict, socket_locals_dict_table);
