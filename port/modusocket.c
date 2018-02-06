@@ -31,9 +31,6 @@
 #include <sys/socket.h>
 #include <dfs_posix.h>
 
-#include "lib/netutils/netutils.h"
-#include "modnetwork.h"
-
 #include "py/objtuple.h"
 #include "py/objlist.h"
 #include "py/runtime.h"
@@ -41,6 +38,10 @@
 #include "py/stream.h"
 #include "py/objstr.h"
 #include "py/builtin.h"
+
+#include "lib/netutils/netutils.h"
+#include "modnetwork.h"
+
 
 #if MICROPY_PY_USOCKET
 
@@ -228,11 +229,6 @@ STATIC mp_obj_t socket_write(mp_obj_t self_in, mp_obj_t buf_in) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_write_obj, socket_write);
 
-STATIC mp_uint_t socket_read(mp_obj_t o_in, void *buf, mp_uint_t size, int *errcode) {
-    MP_RTT_NOT_IMPL_PRINT
-    return mp_const_none;
-}
-
 // method socket.recv(bufsize)
 STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
     posix_socket_obj_t *self = self_in;
@@ -252,32 +248,6 @@ STATIC mp_obj_t socket_recv(mp_obj_t self_in, mp_obj_t len_in) {
     return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(socket_recv_obj, socket_recv);
-
-// method socket.recv(bufsize)
-STATIC mp_obj_t socket_readline(mp_obj_t self_in) {
-    posix_socket_obj_t *self = self_in;
-    int ret;
-    char buf[128];
-    char getchar = NULL;
-    char *p = buf;
-    memset(buf, 0, sizeof(buf));
-
-    while (getchar != '\n') {
-        ret = recv(self->fd, &getchar, 1, 0);
-        if (ret == -1) {
-            mp_raise_OSError(ret);
-        }
-        if (ret == 0) {
-            return mp_const_empty_bytes;
-        }
-        if (ret == 1) {
-            *p++ = getchar;
-        }
-    }
-
-    return mp_obj_new_str(buf, strlen(buf), false);
-}
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(socket_readline_obj, socket_readline);
 
 // method socket.sendto(bytes, address)
 STATIC mp_obj_t socket_sendto(mp_obj_t self_in, mp_obj_t data_in, mp_obj_t addr_in) {
