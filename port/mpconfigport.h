@@ -128,7 +128,6 @@
 #define MICROPY_PY_UERRNO           (1)
 #define MICROPY_PY_SYS_STDFILES     (1)
 
-
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
 #define MICROPY_PY_UZLIB            (1)
