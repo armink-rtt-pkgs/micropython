@@ -126,6 +126,7 @@
 #define MICROPY_VFS_FAT             (0)
 #define MICROPY_PY_MODUOS_FILE      (1)
 #define MICROPY_PY_UERRNO           (1)
+#define MICROPY_PY_SYS_STDFILES     (1)
 
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
