@@ -1153,6 +1153,16 @@ typedef double mp_float_t;
 #define MICROPY_PORT_ROOT_POINTERS
 #endif
 
+// Non-standard .pend_throw() method for generators, allowing for
+// Future-like behavior with respect to exception handling: an
+// exception set with .pend_throw() will activate on the next call
+// to generator's .send() or .__next__(). (This is useful to implement
+// async schedulers.)
+#ifndef MICROPY_PY_GENERATOR_PEND_THROW
+#define MICROPY_PY_GENERATOR_PEND_THROW (1)
+#endif
+
+
 /*****************************************************************************/
 /* Miscellaneous settings                                                    */
 
