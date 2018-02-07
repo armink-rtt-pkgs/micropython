@@ -4,7 +4,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2013, 2014 Damien P. George
- * Copyright (c) 2014 Paul Sokolovsky
+ * Copyright (c) 2014-2017 Paul Sokolovsky
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -104,7 +104,16 @@ mp_vm_return_kind_t mp_obj_gen_resume(mp_obj_t self_in, mp_obj_t send_value, mp_
             mp_raise_TypeError("can't send non-None value to a just-started generator");
         }
     } else {
-        *self->code_state.sp = send_value;
+        #if MICROPY_PY_GENERATOR_PEND_THROW
+        // If exception is pending (set using .pend_throw()), process it now.
+        if (*self->code_state.sp != mp_const_none) {
+            throw_value = *self->code_state.sp;
+            *self->code_state.sp = MP_OBJ_NULL;
+        } else
+        #endif
+        {
+            *self->code_state.sp = send_value;
+        }
     }
     mp_obj_dict_t *old_globals = mp_globals_get();
     mp_globals_set(self->globals);
@@ -125,9 +134,9 @@ mp_vm_return_kind_t mp_obj_gen_resume(mp_obj_t self_in, mp_obj_t send_value, mp_
 
         case MP_VM_RETURN_YIELD:
             *ret_val = *self->code_state.sp;
-            if (*ret_val == MP_OBJ_STOP_ITERATION) {
-                self->code_state.ip = 0;
-            }
+            #if MICROPY_PY_GENERATOR_PEND_THROW
+            *self->code_state.sp = mp_const_none;
+            #endif
             break;
 
         case MP_VM_RETURN_EXCEPTION: {
