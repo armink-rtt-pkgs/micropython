@@ -126,6 +126,8 @@
 #define MICROPY_VFS_FAT             (0)
 #define MICROPY_PY_MODUOS_FILE      (1)
 #define MICROPY_PY_UERRNO           (1)
+#define MICROPY_PY_SYS_STDFILES     (1)
+
 
 // extended modules
 #define MICROPY_PY_UCTYPES          (1)
@@ -144,7 +146,7 @@
 #define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
 #define MICROPY_PY_USOCKET          (1)
 #define MICROPY_PY_NETWORK          (0)
-#define MICROPY_PY_USELECT          (0)
+#define MICROPY_PY_USELECT          (1)
 #define MICROPY_PY_USSL             (0)
 #define MICROPY_SSL_MBEDTLS         (0)
 
@@ -164,13 +166,7 @@
 
 #define MICROPY_THREAD_YIELD() pyb_thread_yield()
 #else
-#define MICROPY_EVENT_POLL_HOOK \
-    do { \
-        extern void mp_handle_pending(void); \
-        mp_handle_pending(); \
-        __WFI(); \
-    } while (0);
-
+#define MICROPY_EVENT_POLL_HOOK
 #define MICROPY_THREAD_YIELD()
 #endif
 
@@ -261,6 +257,7 @@ extern const struct _mp_obj_module_t mp_module_io;
     MICROPY_PY_RTTHREAD_DEF \
     { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_uos) }, \
     SOCKET_BUILTIN_MODULE \
+    { MP_ROM_QSTR(MP_QSTR_utime), MP_ROM_PTR(&mp_module_time) }, \
 
 #define MICROPY_PORT_BUILTIN_MODULE_WEAK_LINKS \
     { MP_ROM_QSTR(MP_QSTR_time), MP_ROM_PTR(&mp_module_time) }, \
