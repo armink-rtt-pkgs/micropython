@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
+ * Copyright (c) 2014-2017 Paul Sokolovsky
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#ifndef MICROPY_INCLUDED_PY_OBJNAMEDTUPLE_H
+#define MICROPY_INCLUDED_PY_OBJNAMEDTUPLE_H
 
-#include "py/mpconfig.h"
+#include "py/objtuple.h"
 
-// All the qstr definitions in this file are available as constants.
-// That is, they are in ROM and you can reference them simply as MP_QSTR_xxxx.
+typedef struct _mp_obj_namedtuple_type_t {
+    mp_obj_type_t base;
+    size_t n_fields;
+    qstr fields[];
+} mp_obj_namedtuple_type_t;
 
-// qstr configuration passed to makeqstrdata.py of the form QCFG(key, value)
-QCFG(BYTES_IN_LEN, MICROPY_QSTR_BYTES_IN_LEN)
-QCFG(BYTES_IN_HASH, MICROPY_QSTR_BYTES_IN_HASH)
+typedef struct _mp_obj_namedtuple_t {
+    mp_obj_tuple_t tuple;
+} mp_obj_namedtuple_t;
 
-Q()
-Q(*)
-Q(_)
-Q(/)
-Q(%#o)
-Q(%#x)
-Q({:#b})
-Q( )
-Q(\n)
-Q(maximum recursion depth exceeded)
-Q(<module>)
-Q(<lambda>)
-Q(<listcomp>)
-Q(<dictcomp>)
-Q(<setcomp>)
-Q(<genexpr>)
-Q(<string>)
-Q(<stdin>)
-Q(utf-8)
+size_t mp_obj_namedtuple_find_field(const mp_obj_namedtuple_type_t *type, qstr name);
+mp_obj_namedtuple_type_t *mp_obj_new_namedtuple_base(size_t n_fields, mp_obj_t *fields);
+
+#endif // MICROPY_INCLUDED_PY_OBJNAMEDTUPLE_H

@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
+ * Copyright (c) 2013-2017 Damien P. George
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,28 @@
  * THE SOFTWARE.
  */
 
-#include "py/mpconfig.h"
+#include "py/mpstate.h"
 
-// All the qstr definitions in this file are available as constants.
-// That is, they are in ROM and you can reference them simply as MP_QSTR_xxxx.
+#if !MICROPY_NLR_SETJMP
+// When not using setjmp, nlr_push_tail is called from inline asm so needs special care
+#if MICROPY_NLR_X86 && MICROPY_NLR_OS_WINDOWS
+// On these 32-bit platforms make sure nlr_push_tail doesn't have a leading underscore
+unsigned int nlr_push_tail(nlr_buf_t *nlr) asm("nlr_push_tail");
+#else
+// LTO can't see inside inline asm functions so explicitly mark nlr_push_tail as used
+__attribute__((used)) unsigned int nlr_push_tail(nlr_buf_t *nlr);
+#endif
+#endif
 
-// qstr configuration passed to makeqstrdata.py of the form QCFG(key, value)
-QCFG(BYTES_IN_LEN, MICROPY_QSTR_BYTES_IN_LEN)
-QCFG(BYTES_IN_HASH, MICROPY_QSTR_BYTES_IN_HASH)
+unsigned int nlr_push_tail(nlr_buf_t *nlr) {
+    nlr_buf_t **top = &MP_STATE_THREAD(nlr_top);
+    nlr->prev = *top;
+    MP_NLR_SAVE_PYSTACK(nlr);
+    *top = nlr;
+    return 0; // normal return
+}
 
-Q()
-Q(*)
-Q(_)
-Q(/)
-Q(%#o)
-Q(%#x)
-Q({:#b})
-Q( )
-Q(\n)
-Q(maximum recursion depth exceeded)
-Q(<module>)
-Q(<lambda>)
-Q(<listcomp>)
-Q(<dictcomp>)
-Q(<setcomp>)
-Q(<genexpr>)
-Q(<string>)
-Q(<stdin>)
-Q(utf-8)
+void nlr_pop(void) {
+    nlr_buf_t **top = &MP_STATE_THREAD(nlr_top);
+    *top = (*top)->prev;
+}

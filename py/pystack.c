@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013, 2014 Damien P. George
+ * Copyright (c) 2017 Damien P. George
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,33 @@
  * THE SOFTWARE.
  */
 
-#include "py/mpconfig.h"
+#include <stdio.h>
 
-// All the qstr definitions in this file are available as constants.
-// That is, they are in ROM and you can reference them simply as MP_QSTR_xxxx.
+#include "py/runtime.h"
 
-// qstr configuration passed to makeqstrdata.py of the form QCFG(key, value)
-QCFG(BYTES_IN_LEN, MICROPY_QSTR_BYTES_IN_LEN)
-QCFG(BYTES_IN_HASH, MICROPY_QSTR_BYTES_IN_HASH)
+#if MICROPY_ENABLE_PYSTACK
 
-Q()
-Q(*)
-Q(_)
-Q(/)
-Q(%#o)
-Q(%#x)
-Q({:#b})
-Q( )
-Q(\n)
-Q(maximum recursion depth exceeded)
-Q(<module>)
-Q(<lambda>)
-Q(<listcomp>)
-Q(<dictcomp>)
-Q(<setcomp>)
-Q(<genexpr>)
-Q(<string>)
-Q(<stdin>)
-Q(utf-8)
+void mp_pystack_init(void *start, void *end) {
+    MP_STATE_THREAD(pystack_start) = start;
+    MP_STATE_THREAD(pystack_end) = end;
+    MP_STATE_THREAD(pystack_cur) = start;
+}
+
+void *mp_pystack_alloc(size_t n_bytes) {
+    n_bytes = (n_bytes + (MICROPY_PYSTACK_ALIGN - 1)) & ~(MICROPY_PYSTACK_ALIGN - 1);
+    #if MP_PYSTACK_DEBUG
+    n_bytes += MICROPY_PYSTACK_ALIGN;
+    #endif
+    if (MP_STATE_THREAD(pystack_cur) + n_bytes > MP_STATE_THREAD(pystack_end)) {
+        // out of memory in the pystack
+        mp_raise_recursion_depth();
+    }
+    void *ptr = MP_STATE_THREAD(pystack_cur);
+    MP_STATE_THREAD(pystack_cur) += n_bytes;
+    #if MP_PYSTACK_DEBUG
+    *(size_t*)(MP_STATE_THREAD(pystack_cur) - MICROPY_PYSTACK_ALIGN) = n_bytes;
+    #endif
+    return ptr;
+}
+
+#endif
