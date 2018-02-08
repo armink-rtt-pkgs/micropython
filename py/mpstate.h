@@ -176,13 +176,6 @@ typedef struct _mp_state_vm_t {
     mp_obj_t lwip_slip_stream;
     #endif
 
-    #if !MICROPY_VFS  //If not difined MICROPY_VFS,only define MICROPY_MODUOS_FILE
-    #if MICROPY_MODUOS_FILE
-    struct _mp_vfs_mount_t *vfs_cur;
-    struct _mp_vfs_mount_t *vfs_mount_table;
-    #endif
-    #endif
-
     #if MICROPY_VFS
     struct _mp_vfs_mount_t *vfs_cur;
     struct _mp_vfs_mount_t *vfs_mount_table;
@@ -222,7 +215,6 @@ typedef struct _mp_state_thread_t {
     mp_obj_dict_t *dict_locals;
     mp_obj_dict_t *dict_globals;
 
-    // Note: nlr asm code has the offset of this hard-coded
     nlr_buf_t *nlr_top; // ROOT POINTER
 
     // Stack top at the start of program
@@ -230,6 +222,12 @@ typedef struct _mp_state_thread_t {
 
     #if MICROPY_STACK_CHECK
     size_t stack_limit;
+    #endif
+
+    #if MICROPY_ENABLE_PYSTACK
+    uint8_t *pystack_start;
+    uint8_t *pystack_end;
+    uint8_t *pystack_cur;
     #endif
 } mp_state_thread_t;
 
