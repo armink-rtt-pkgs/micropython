@@ -58,7 +58,7 @@ MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_chdir_obj, mp_posix_chdir);
 mp_obj_t mp_posix_getcwd(void) {
     char buf[MICROPY_ALLOC_PATH_MAX + 1];
     getcwd(buf, sizeof(buf));
-    return mp_obj_new_str(buf, strlen(buf), false);
+    return mp_obj_new_str(buf, strlen(buf));
 }
 MP_DEFINE_CONST_FUN_OBJ_0(mp_posix_getcwd_obj, mp_posix_getcwd);
 
@@ -120,7 +120,7 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
 
                 if (dfs_file_stat(fullpath, &stat) == 0) {
                     mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(3, NULL));
-                    t->items[0] = mp_obj_new_str(dirent.d_name, strlen(dirent.d_name), false);
+                    t->items[0] = mp_obj_new_str(dirent.d_name, strlen(dirent.d_name));
                     t->items[1] = MP_OBJ_NEW_SMALL_INT(MP_S_IFDIR);
                     t->items[2] = MP_OBJ_NEW_SMALL_INT(0); // no inode number
                     mp_obj_t next = MP_OBJ_FROM_PTR(t);

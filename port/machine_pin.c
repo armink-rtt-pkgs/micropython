@@ -178,7 +178,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(machine_pin_value_obj, 1, 2, machine_
 // pin.name()
 STATIC mp_obj_t machine_pin_name(size_t n_args, const mp_obj_t *args) {
     machine_pin_obj_t *self = (machine_pin_obj_t *)args[0];
-    return mp_obj_new_str(self->name, strlen(self->name), false);
+    return mp_obj_new_str(self->name, strlen(self->name));
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(machine_pin_name_obj, 1, 2, machine_pin_name);
 
