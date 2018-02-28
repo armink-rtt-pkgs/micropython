@@ -422,7 +422,9 @@ STATIC mp_uint_t socket_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg
         if (FD_ISSET(socket->fd, &wfds)) ret |= MP_STREAM_POLL_WR;
         if (FD_ISSET(socket->fd, &efds)) ret |= MP_STREAM_POLL_HUP;		
         return ret;
-    }
+    }else{
+		return ioctl(socket->fd, request, (void *) arg);
+	}
 
     *errcode = MP_EINVAL;
     return MP_STREAM_ERROR;
