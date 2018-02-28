@@ -57,8 +57,8 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
 }
 #endif
 
-static char *stack_top;
-static char heap[MICROPY_HEAP_SIZE];
+static char *stack_top = RT_NULL;
+static char *heap = RT_NULL;
 
 void mpy_main(const char *filename) {
     int stack_dummy;
@@ -70,10 +70,15 @@ void mpy_main(const char *filename) {
 
     mp_stack_set_top(stack_top);
     // Make MicroPython's stack limit somewhat smaller than full stack available
-    mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 512);
+	mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 512);
 
     #if MICROPY_ENABLE_GC
-    gc_init(heap, heap + sizeof(heap));
+    heap = rt_malloc(MICROPY_HEAP_SIZE);
+    if (!heap) {
+        rt_kprintf("No memory for MicroPython Heap!\n");
+        return;
+    }
+    gc_init(heap, heap + MICROPY_HEAP_SIZE);
     #endif
 
     /* MicroPython initialization */
@@ -108,6 +113,9 @@ void mpy_main(const char *filename) {
     }
     mp_deinit();
 
+    rt_free(heap);
+//    rt_free(stack_top);
+
     rtt_getchar_deinit();
 }
 
@@ -126,6 +134,7 @@ void gc_collect(void) {
 //}
 
 NORETURN void nlr_jump_fail(void *val) {
+    DEBUG_printf("nlr_jump_fail\n");
     while (1);
 }
 
