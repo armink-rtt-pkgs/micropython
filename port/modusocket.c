@@ -416,12 +416,14 @@ STATIC mp_uint_t socket_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg
             *errcode = MP_EIO;
             return MP_STREAM_ERROR;
         }
-		
+        
         mp_uint_t ret = 0;
         if (FD_ISSET(socket->fd, &rfds)) ret |= MP_STREAM_POLL_RD;
         if (FD_ISSET(socket->fd, &wfds)) ret |= MP_STREAM_POLL_WR;
-        if (FD_ISSET(socket->fd, &efds)) ret |= MP_STREAM_POLL_HUP;		
+        if (FD_ISSET(socket->fd, &efds)) ret |= MP_STREAM_POLL_HUP;     
         return ret;
+    }else{
+        return ioctl(socket->fd, request, (void *) arg);
     }
 
     *errcode = MP_EINVAL;
@@ -520,7 +522,7 @@ STATIC const mp_rom_map_elem_t mp_module_usocket_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SOCK_RAW), MP_ROM_INT(MOD_NETWORK_SOCK_RAW) },
     { MP_ROM_QSTR(MP_QSTR_SOL_SOCKET), MP_ROM_INT(SOL_SOCKET) },
     { MP_ROM_QSTR(MP_QSTR_SO_REUSEADDR), MP_ROM_INT(SO_REUSEADDR) },
-    	
+        
     /*
     { MP_ROM_QSTR(MP_QSTR_IPPROTO_IP), MP_ROM_INT(MOD_NETWORK_IPPROTO_IP) },
     { MP_ROM_QSTR(MP_QSTR_IPPROTO_ICMP), MP_ROM_INT(MOD_NETWORK_IPPROTO_ICMP) },
