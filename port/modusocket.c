@@ -398,12 +398,36 @@ STATIC const mp_rom_map_elem_t socket_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_read), MP_ROM_PTR(&mp_stream_read_obj) },
     { MP_ROM_QSTR(MP_QSTR_readinto), MP_ROM_PTR(&mp_stream_readinto_obj) },
 };
-
 STATIC MP_DEFINE_CONST_DICT(socket_locals_dict, socket_locals_dict_table);
 
 STATIC mp_uint_t socket_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg, int *errcode) {
-    posix_socket_obj_t *self = self_in;
-    return ioctl(self->fd, request, (void *) arg);
+    posix_socket_obj_t * socket = self_in;
+    if (request == MP_STREAM_POLL) {
+        fd_set rfds; FD_ZERO(&rfds);
+        fd_set wfds; FD_ZERO(&wfds);
+        fd_set efds; FD_ZERO(&efds);
+        struct timeval timeout = { .tv_sec = 0, .tv_usec = 0 };
+        if (arg & MP_STREAM_POLL_RD) FD_SET(socket->fd, &rfds);
+        if (arg & MP_STREAM_POLL_WR) FD_SET(socket->fd, &wfds);
+        if (arg & MP_STREAM_POLL_HUP) FD_SET(socket->fd, &efds);
+
+        int r = select((socket->fd)+1, &rfds, &wfds, &efds, &timeout);
+        if (r < 0) {
+            *errcode = MP_EIO;
+            return MP_STREAM_ERROR;
+        }
+        
+        mp_uint_t ret = 0;
+        if (FD_ISSET(socket->fd, &rfds)) ret |= MP_STREAM_POLL_RD;
+        if (FD_ISSET(socket->fd, &wfds)) ret |= MP_STREAM_POLL_WR;
+        if (FD_ISSET(socket->fd, &efds)) ret |= MP_STREAM_POLL_HUP;     
+        return ret;
+    }else{
+        return ioctl(socket->fd, request, (void *) arg);
+    }
+
+    *errcode = MP_EINVAL;
+    return MP_STREAM_ERROR;
 }
 
 STATIC mp_uint_t stream_read(mp_obj_t self_in, void *buf, mp_uint_t size, int *errcode) {
@@ -498,7 +522,7 @@ STATIC const mp_rom_map_elem_t mp_module_usocket_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_SOCK_RAW), MP_ROM_INT(MOD_NETWORK_SOCK_RAW) },
     { MP_ROM_QSTR(MP_QSTR_SOL_SOCKET), MP_ROM_INT(SOL_SOCKET) },
     { MP_ROM_QSTR(MP_QSTR_SO_REUSEADDR), MP_ROM_INT(SO_REUSEADDR) },
-    	
+        
     /*
     { MP_ROM_QSTR(MP_QSTR_IPPROTO_IP), MP_ROM_INT(MOD_NETWORK_IPPROTO_IP) },
     { MP_ROM_QSTR(MP_QSTR_IPPROTO_ICMP), MP_ROM_INT(MOD_NETWORK_IPPROTO_ICMP) },

@@ -165,8 +165,8 @@
 
 #define MICROPY_THREAD_YIELD() pyb_thread_yield()
 #else
-#define MICROPY_EVENT_POLL_HOOK
-#define MICROPY_THREAD_YIELD()
+#define MICROPY_EVENT_POLL_HOOK rt_thread_delay(1);
+#define MICROPY_THREAD_YIELD() rt_thread_delay(1)
 #endif
 
 #if defined(__CC_ARM)
