@@ -172,7 +172,7 @@
 #if defined(__CC_ARM)
 //TODO
 #elif defined(__ICCARM__)
-//#include <sys/types.h>
+#include <sys/types.h>
 #define MICROPY_NO_ALLOCA           1
 #define NORETURN                    __noreturn
 #define MP_WEAK                     __weak
@@ -210,8 +210,8 @@ typedef long mp_off_t;
 #define MICROPY_PORT_BUILTINS \
     { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
 
-#define MICROPY_HW_BOARD_NAME "RT-Thread Board"
-#define MICROPY_HW_MCU_NAME   "stm32f4"
+#define MICROPY_HW_BOARD_NAME "Universal python platform"
+#define MICROPY_HW_MCU_NAME   "RT-Thread"
 #define MICROPY_PY_PATH       "/libs/mpy/"
 
 #ifdef __linux__
@@ -273,5 +273,5 @@ extern const struct _mp_obj_module_t mp_module_io;
     { MP_ROM_QSTR(MP_QSTR_io), MP_ROM_PTR(&mp_module_io) }, \
 
 
-#define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __FUNCTION__)
+#define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __LINE__)
 
