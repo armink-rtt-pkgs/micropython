@@ -47,7 +47,7 @@ mp_obj_t mp_posix_umount(mp_obj_t mnt_in) {
 MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_umount_obj, mp_posix_umount);
 
 mp_obj_t mp_posix_chdir(mp_obj_t path_in) {
-    char *changepath = mp_obj_str_get_str(path_in);
+    const char *changepath = mp_obj_str_get_str(path_in);
     if (chdir(changepath) != 0) {
         rt_kprintf("No such directory: %s\n", changepath);
     }
@@ -72,7 +72,7 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
     struct stat stat;
     int length;
     char *fullpath, *path;
-    char *pathname;
+    const char *pathname;
 
     if (n_args == 0) {
 #ifdef DFS_USING_WORKDIR
@@ -81,8 +81,7 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
 #else
         pathname = "/";
 #endif
-    }else{
-
+    } else {
        pathname = mp_obj_str_get_str(args[0]);
     }
 
@@ -97,7 +96,7 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
         path = rt_strdup("/");
 #endif
         if (path == NULL)
-            return ; /* out of memory */
+            mp_raise_OSError(MP_ENOMEM); /* out of memory */
     }
     else
     {
@@ -148,7 +147,7 @@ mp_obj_t mp_posix_listdir(size_t n_args, const mp_obj_t *args) {
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_posix_listdir_obj, 0, 1, mp_posix_listdir);
 
 mp_obj_t mp_posix_mkdir(mp_obj_t path_in) {
-    char *createpath = mp_obj_str_get_str(path_in);
+    const char *createpath = mp_obj_str_get_str(path_in);
     int res = mkdir(createpath, 0);
     if (res != 0) {
         mp_raise_OSError(MP_EEXIST);
@@ -174,8 +173,8 @@ mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
 MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_remove_obj, 0, mp_posix_remove);
 
 mp_obj_t mp_posix_rename(mp_obj_t old_path_in, mp_obj_t new_path_in) {
-    char *old_path = mp_obj_str_get_str(old_path_in);
-    char *new_path = mp_obj_str_get_str(new_path_in);
+    const char *old_path = mp_obj_str_get_str(old_path_in);
+    const char *new_path = mp_obj_str_get_str(new_path_in);
     int res = rename(old_path, new_path);
     if (res != 0) {
         mp_raise_OSError(MP_EPERM);
@@ -202,7 +201,7 @@ MP_DEFINE_CONST_FUN_OBJ_VAR(mp_posix_rmdir_obj, 0, mp_posix_rmdir);
 
 mp_obj_t mp_posix_stat(mp_obj_t path_in) {
     struct stat buf;
-    char *createpath = mp_obj_str_get_str(path_in);
+    const char *createpath = mp_obj_str_get_str(path_in);
     int res = stat(createpath, &buf);
     if (res != 0) {
         mp_raise_OSError(MP_EPERM);
