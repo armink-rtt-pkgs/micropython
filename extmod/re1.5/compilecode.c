@@ -5,6 +5,7 @@
 #include "re1.5.h"
 
 #define REL(at, to) (to - at - 2)
+#define PC (prog->bytelen)
 
 #if defined(__ICCARM__)
 #define EMIT(at, byte) (code ? (code[at] = byte) : (at))
@@ -15,8 +16,6 @@
     ((code ? memmove(code + at + num, code + at, pc - at) : (void)0), pc += num)
 #define EMIT(at, byte) (code ? (code[at] = byte) : (void)(at))
 #endif /* defined(__ICCARM__) */
-
-#define PC (prog->bytelen)
 
 static const char *_compilecode(const char *re, ByteProg *prog, int sizecode)
 {
