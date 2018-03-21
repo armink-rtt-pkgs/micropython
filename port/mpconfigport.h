@@ -42,6 +42,7 @@
 #endif
 
 #define MICROPY_STACK_CHECK         (1)
+#define MICROPY_PY_MICROPYTHON_STACK_USE (1)
 #define MICROPY_QSTR_BYTES_IN_HASH  (1)
 #define MICROPY_QSTR_EXTRA_POOL     mp_qstr_frozen_const_pool
 #define MICROPY_ALLOC_PATH_MAX      (256)
