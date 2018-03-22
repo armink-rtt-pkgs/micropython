@@ -178,3 +178,49 @@ GC:
 使用gcc工具链编译的情况下，开启micropython，bin文件增大300KB左右。
 
 目前默认给micropython分配的堆大小为8K，可以在menuconfig中对micropython的堆大小进行配置。
+
+## 4.测试脚本
+
+### 4.1 闪灯
+
+- i.MX RT1050: 第 52 号 pin 为 LED D18，与 phy 复位引脚公用
+
+```python
+import time
+from machine import Pin
+
+LED = Pin(("LED1", 52), Pin.OUT_PP)
+while True:
+    LED.value(1)
+    time.sleep_ms(500)
+    LED.value(0)
+    time.sleep_ms(500)
+```
+
+### 4.2 按键灯
+
+- i.MX RT1050: 第 125 号 pin 为 SW8
+
+```python
+import time
+from machine import Pin
+
+led = Pin(("LED1", 52), Pin.OUT_PP)
+key = Pin(("KEY", 125), Pin.IN, Pin.PULL_UP)
+while True:
+    if key.value():
+        led.value(0)
+    else:
+        led.value(1)
+```
+
+### 4.3 socket
+
+```python
+import usocket
+socket = usocket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+addr = usocket.getaddrinfo('www.micropython.org', 80)[0][-1]
+s.connect(addr)
+s.bind(("127.0.0.1", 8000))
+```
