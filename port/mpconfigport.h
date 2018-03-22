@@ -103,7 +103,6 @@
 #define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
 #define MICROPY_PY_MATH             (1)
 #define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (1)
-#define MICROPY_PY_CMATH            (1)
 #define MICROPY_PY_IO               (1)
 #define MICROPY_PY_IO_FILEIO        (1)
 #define MICROPY_PY_MICROPYTHON_MEM_INFO (1)
@@ -113,7 +112,6 @@
 #define MICROPY_USE_INTERNAL_ERRNO  (1)
 #define MICROPY_USE_INTERNAL_PRINTF (0)
 #define MICROPY_PY_STRUCT           (1)
-#define MICROPY_PY_RTTHREAD         (1)
 #define MICROPY_PY_SYS              (1)
 #define MICROPY_MODULE_FROZEN_MPY   (1)
 #define MICROPY_CPYTHON_COMPAT      (1)
@@ -126,27 +124,74 @@
 #define MICROPY_VFS                 (0)
 #define MICROPY_VFS_FAT             (0)
 #define MICROPY_PY_MODUOS_FILE      (1)
-#define MICROPY_PY_UERRNO           (1)
 #define MICROPY_PY_SYS_STDFILES     (1)
-
-// extended modules
-#define MICROPY_PY_UCTYPES          (1)
-#define MICROPY_PY_UZLIB            (1)
-#define MICROPY_PY_UJSON            (1)
-#define MICROPY_PY_URE              (1)
-#define MICROPY_PY_UHEAPQ           (1)
-#define MICROPY_PY_UHASHLIB         (1)
-#define MICROPY_PY_UBINASCII        (1)
 #define MICROPY_PY_UTIME            (1)
-#define MICROPY_PY_UTIME_MP_HAL     (1)
-#define MICROPY_PY_UTIMEQ           (1)
-#define MICROPY_PY_URANDOM          (1)
-#define MICROPY_PY_URANDOM_EXTRA_FUNCS (1)
 #define MICROPY_PY_MACHINE          (1)
 #define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
-#define MICROPY_PY_USOCKET          (1)
-#define MICROPY_PY_NETWORK          (0)
+#define MICROPY_PY_UTIME_MP_HAL     (1)
+#define MICROPY_PY_UTIMEQ           (1)
+#define MICROPY_PY_RTTHREAD         (1)
+
+/*****************************************************************************/
+/* System Module                                                             */
+
+#ifdef MICROPYTHON_USING_USELECT
 #define MICROPY_PY_USELECT          (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UCTYPES
+#define MICROPY_PY_UCTYPES          (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UERRNO
+#define MICROPY_PY_UERRNO           (1)
+#endif
+
+/*****************************************************************************/
+/* Tools Module                                                              */
+
+#ifdef MICROPYTHON_USING_CMATH
+#define MICROPY_PY_CMATH            (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UBINASCII
+#define MICROPY_PY_UBINASCII        (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UHASHLIB
+#define MICROPY_PY_UHASHLIB         (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UHEAPQ
+#define MICROPY_PY_UHEAPQ           (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UJSON
+#define MICROPY_PY_UJSON            (1)
+#endif
+
+#ifdef MICROPYTHON_USING_URE
+#define MICROPY_PY_URE              (1)
+#endif
+
+#ifdef MICROPYTHON_USING_UZLIB
+#define MICROPY_PY_UZLIB            (1)
+#endif
+
+#ifdef MICROPYTHON_USING_URANDOM
+#define MICROPY_PY_URANDOM             (1)
+#define MICROPY_PY_URANDOM_EXTRA_FUNCS (1)
+#endif
+
+/*****************************************************************************/
+/* Network Module                                                            */
+
+#ifdef MICROPYTHON_USING_USOCKET
+#define MICROPY_PY_USOCKET          (1)
+#endif
+
+/*****************************************************************************/
+/* Third-party Module                                                        */
 #define MICROPY_PY_USSL             (0)
 #define MICROPY_SSL_MBEDTLS         (0)
 
@@ -249,9 +294,9 @@ extern const struct _mp_obj_module_t mp_module_usocket;
 extern const struct _mp_obj_module_t mp_module_io;
 
 #if MICROPY_PY_RTTHREAD
-#define MICROPY_PY_RTTHREAD_DEF { MP_ROM_QSTR(MP_QSTR_rtthread), MP_ROM_PTR(&mp_module_rtthread) },
+#define MICROPY_PY_RTTHREAD_MODULE { MP_ROM_QSTR(MP_QSTR_rtthread), MP_ROM_PTR(&mp_module_rtthread) },
 #else
-#define MICROPY_PY_RTTHREAD_DEF
+#define MICROPY_PY_RTTHREAD_MODULE
 #endif
 
 #if MICROPY_PY_USOCKET
@@ -265,7 +310,7 @@ extern const struct _mp_obj_module_t mp_module_io;
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_ROM_QSTR(MP_QSTR_machine), MP_ROM_PTR(&mp_module_machine) }, \
     { MP_ROM_QSTR(MP_QSTR_pyb), MP_ROM_PTR(&pyb_module) }, \
-    MICROPY_PY_RTTHREAD_DEF \
+    MICROPY_PY_RTTHREAD_MODULE \
     { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_uos) }, \
     SOCKET_BUILTIN_MODULE \
     { MP_ROM_QSTR(MP_QSTR_utime), MP_ROM_PTR(&mp_module_time) }, \
@@ -275,15 +320,6 @@ extern const struct _mp_obj_module_t mp_module_io;
     { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) }, \
     SOCKET_BUILTIN_MODULE_WEAK_LINKS \
     { MP_ROM_QSTR(MP_QSTR_struct), MP_ROM_PTR(&mp_module_ustruct) }, \
-    { MP_ROM_QSTR(MP_QSTR_binascii), MP_ROM_PTR(&mp_module_ubinascii) }, \
-    { MP_ROM_QSTR(MP_QSTR_collections), MP_ROM_PTR(&mp_module_collections) }, \
-    { MP_ROM_QSTR(MP_QSTR_re), MP_ROM_PTR(&mp_module_ure) }, \
-    { MP_ROM_QSTR(MP_QSTR_zlib), MP_ROM_PTR(&mp_module_uzlib) }, \
-    { MP_ROM_QSTR(MP_QSTR_json), MP_ROM_PTR(&mp_module_ujson) }, \
-    { MP_ROM_QSTR(MP_QSTR_heapq), MP_ROM_PTR(&mp_module_uheapq) }, \
-    { MP_ROM_QSTR(MP_QSTR_hashlib), MP_ROM_PTR(&mp_module_uhashlib) }, \
-    { MP_ROM_QSTR(MP_QSTR_io), MP_ROM_PTR(&mp_module_io) }, \
-
 
 #define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __LINE__)
 
