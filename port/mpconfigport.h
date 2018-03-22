@@ -27,7 +27,6 @@
 #include <rtthread.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <libc/libc_errno.h>
 
 // options to control how MicroPython is built
 
@@ -172,12 +171,23 @@
 #endif
 
 #if defined(__CC_ARM)
-//TODO
+#include <sys/types.h>
+#define __LITTLE_ENDIAN__
+#define MICROPY_NO_ALLOCA           1
+#define MP_WEAK                     RT_WEAK
+#define MP_NOINLINE
+#define MP_ALWAYSINLINE
+#define MP_LIKELY(x)               x
+#define MP_UNLIKELY(x)             x
+#undef __arm__
+#undef __thumb__
+#undef __thumb2__
 #elif defined(__ICCARM__)
+#include <libc/libc_errno.h>
 #include <sys/types.h>
 #define MICROPY_NO_ALLOCA           1
 #define NORETURN                    __noreturn
-#define MP_WEAK                     __weak
+#define MP_WEAK                     RT_WEAK
 #define MP_NOINLINE
 #define MP_ALWAYSINLINE
 #define MP_LIKELY(x)               x

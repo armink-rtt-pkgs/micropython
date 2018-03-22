@@ -20,7 +20,7 @@ LOCAL_CCFLAGS = ''
 if rtconfig.CROSS_TOOL == 'gcc':
     LOCAL_CCFLAGS += ' -std=c99'
 elif rtconfig.CROSS_TOOL == 'keil':
-    LOCAL_CCFLAGS += ' --c99'
+    LOCAL_CCFLAGS += ' --c99 --gnu'
 
 group = DefineGroup('MicroPython', src, depend = ['PKG_USING_MICROPYTHON'], CPPPATH = path, LOCAL_CCFLAGS = LOCAL_CCFLAGS)
 

@@ -141,7 +141,7 @@ NORETURN void nlr_jump_fail(void *val) {
 #ifndef NDEBUG
 void MP_WEAK __assert_func(const char *file, int line, const char *func, const char *expr) {
     printf("Assertion '%s' failed, at file %s:%d\n", expr, file, line);
-    __fatal_error("Assertion failed");
+    RT_ASSERT(0);
 }
 #endif
 
@@ -158,6 +158,8 @@ int DEBUG_printf(const char *format, ...)
     rt_vsprintf(log_buf, format, args);
     rt_kprintf("%s", log_buf);
     va_end(args);
+
+    return 0;
 }
 
 #if defined(RT_USING_FINSH) && defined(FINSH_USING_MSH)

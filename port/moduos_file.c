@@ -26,6 +26,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <dfs_posix.h>
 
 #include "py/runtime.h"
 #include "py/objstr.h"
@@ -157,6 +158,8 @@ mp_obj_t mp_posix_mkdir(mp_obj_t path_in) {
 MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_mkdir_obj, mp_posix_mkdir);
 
 mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
+    extern void rm(const char *filename);
+
     int index;
     if (n_args == 0) {
         rt_kprintf("Usage: rm FILE...\n");
