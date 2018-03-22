@@ -15,11 +15,7 @@ path    = [cwd + '/']
 path   += [cwd + '/port']
 path   += [cwd + '/lib/netutils']
 
-if rtconfig.CROSS_TOOL == 'keil':
-    LOCAL_CCFLAGS = ' -I "port/mpy_project_cfg.h"'
-else :
-    LOCAL_CCFLAGS = ' -include "port/mpy_project_cfg.h"'
-
+LOCAL_CCFLAGS = ''
 
 if rtconfig.CROSS_TOOL == 'gcc':
     LOCAL_CCFLAGS += ' -std=c99'

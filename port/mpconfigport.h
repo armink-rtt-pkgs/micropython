@@ -26,6 +26,7 @@
 
 #include <rtthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <libc/libc_errno.h>
 
 // options to control how MicroPython is built

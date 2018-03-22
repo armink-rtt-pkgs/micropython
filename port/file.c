@@ -24,18 +24,19 @@
  * THE SOFTWARE.
  */
 
+#include "py/mpconfig.h"
+#include "py/runtime.h"
+#include "py/stream.h"
+#include "py/builtin.h"
+#include "py/mphal.h"
+#include "fdfile.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#include "py/runtime.h"
-#include "py/stream.h"
-#include "py/builtin.h"
-#include "py/mphal.h"
-#include "fdfile.h"
 
 #if MICROPY_PY_IO
 
