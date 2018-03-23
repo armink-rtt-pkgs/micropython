@@ -103,8 +103,6 @@
 #define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
 #define MICROPY_PY_MATH             (1)
 #define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (1)
-#define MICROPY_PY_IO               (1)
-#define MICROPY_PY_IO_FILEIO        (1)
 #define MICROPY_PY_MICROPYTHON_MEM_INFO (1)
 #define MICROPY_STREAMS_NON_BLOCK   (1)
 #define MICROPY_MODULE_WEAK_LINKS   (1)
@@ -123,8 +121,6 @@
 #define MICROPY_PY_OS_DUPTERM       (1)
 #define MICROPY_VFS                 (0)
 #define MICROPY_VFS_FAT             (0)
-#define MICROPY_PY_MODUOS_FILE      (1)
-#define MICROPY_PY_SYS_STDFILES     (1)
 #define MICROPY_PY_UTIME            (1)
 #define MICROPY_PY_MACHINE          (1)
 #define MICROPY_PY_MACHINE_PIN_MAKE_NEW mp_pin_make_new
@@ -134,6 +130,17 @@
 
 /*****************************************************************************/
 /* System Module                                                             */
+
+#ifdef MICROPYTHON_USING_OS
+#define MICROPY_PY_IO               (1)
+#define MICROPY_PY_IO_FILEIO        (1)
+#define MICROPY_PY_MODUOS           (1)
+#define MICROPY_PY_MODUOS_FILE      (1)
+#define MICROPY_PY_SYS_STDFILES     (1)
+#else
+#define MICROPY_PY_IO               (0)
+#define MICROPY_PY_MODUOS           (0)
+#endif /* MICROPYTHON_USING_OS */
 
 #ifdef MICROPYTHON_USING_USELECT
 #define MICROPY_PY_USELECT          (1)
@@ -261,23 +268,12 @@ typedef long mp_off_t;
 
 #define MP_PLAT_PRINT_STRN(str, len) mp_hal_stdout_tx_strn_cooked(str, len)
 
-#define mp_import_stat(x) mp_posix_import_stat(x)
-
-// extra built in names to add to the global namespace
-#define MICROPY_PORT_BUILTINS \
-    { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
-
 #define MICROPY_HW_BOARD_NAME "Universal python platform"
 #define MICROPY_HW_MCU_NAME   "RT-Thread"
 #define MICROPY_PY_PATH       "/libs/mpy/"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)
-#endif
-
-#ifdef __thumb__
-#define MICROPY_MIN_USE_CORTEX_CPU (1)
-#define MICROPY_MIN_USE_STM32_MCU (1)
 #endif
 
 #define MP_STATE_PORT                  MP_STATE_VM
@@ -294,31 +290,46 @@ extern const struct _mp_obj_module_t mp_module_usocket;
 extern const struct _mp_obj_module_t mp_module_io;
 
 #if MICROPY_PY_RTTHREAD
-#define MICROPY_PY_RTTHREAD_MODULE { MP_ROM_QSTR(MP_QSTR_rtthread), MP_ROM_PTR(&mp_module_rtthread) },
+#define RTTHREAD_PORT_BUILTIN_MODULES { MP_ROM_QSTR(MP_QSTR_rtthread), MP_ROM_PTR(&mp_module_rtthread) },
 #else
-#define MICROPY_PY_RTTHREAD_MODULE
-#endif
+#define RTTHREAD_PORT_BUILTIN_MODULES
+#endif /* MICROPY_PY_RTTHREAD */
+
+#if MICROPY_PY_MODUOS
+#define MODUOS_PORT_BUILTINS                     { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
+#define MODUOS_PORT_BUILTIN_MODULES              { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) },
+#define MODUOS_PORT_BUILTIN_MODULE_WEAK_LINKS    { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) },
+#define mp_import_stat(x)                        mp_posix_import_stat(x)
+#else
+#define MODUOS_PORT_BUILTINS
+#define MODUOS_PORT_BUILTIN_MODULES
+#define MODUOS_PORT_BUILTIN_MODULE_WEAK_LINKS
+#endif /* MICROPY_PY_MODUOS */
 
 #if MICROPY_PY_USOCKET
-#define SOCKET_BUILTIN_MODULE               { MP_ROM_QSTR(MP_QSTR_usocket), MP_ROM_PTR(&mp_module_usocket) },
-#define SOCKET_BUILTIN_MODULE_WEAK_LINKS    { MP_ROM_QSTR(MP_QSTR_socket), MP_ROM_PTR(&mp_module_usocket) },
+#define SOCKET_PORT_BUILTIN_MODULES              { MP_ROM_QSTR(MP_QSTR_usocket), MP_ROM_PTR(&mp_module_usocket) },
+#define SOCKET_PORT_BUILTIN_MODULE_WEAK_LINKS    { MP_ROM_QSTR(MP_QSTR_socket), MP_ROM_PTR(&mp_module_usocket) },
 #else
-#define SOCKET_BUILTIN_MODULE
-#define SOCKET_BUILTIN_MODULE_WEAK_LINKS
-#endif
+#define SOCKET_PORT_BUILTIN_MODULES
+#define SOCKET_PORT_BUILTIN_MODULE_WEAK_LINKS
+#endif /* MICROPY_PY_USOCKET */
+
+// extra built in names to add to the global namespace
+#define MICROPY_PORT_BUILTINS \
+    MODUOS_PORT_BUILTINS \
 
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_ROM_QSTR(MP_QSTR_machine), MP_ROM_PTR(&mp_module_machine) }, \
     { MP_ROM_QSTR(MP_QSTR_pyb), MP_ROM_PTR(&pyb_module) }, \
-    MICROPY_PY_RTTHREAD_MODULE \
-    { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_uos) }, \
-    SOCKET_BUILTIN_MODULE \
+    RTTHREAD_PORT_BUILTIN_MODULES \
+    MODUOS_PORT_BUILTIN_MODULES \
+    SOCKET_PORT_BUILTIN_MODULES \
     { MP_ROM_QSTR(MP_QSTR_utime), MP_ROM_PTR(&mp_module_time) }, \
 
 #define MICROPY_PORT_BUILTIN_MODULE_WEAK_LINKS \
     { MP_ROM_QSTR(MP_QSTR_time), MP_ROM_PTR(&mp_module_time) }, \
-    { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) }, \
-    SOCKET_BUILTIN_MODULE_WEAK_LINKS \
+    MODUOS_PORT_BUILTIN_MODULE_WEAK_LINKS \
+    SOCKET_PORT_BUILTIN_MODULE_WEAK_LINKS \
     { MP_ROM_QSTR(MP_QSTR_struct), MP_ROM_PTR(&mp_module_ustruct) }, \
 
 #define MP_RTT_NOT_IMPL_PRINT rt_kprintf("Not implement on %s:%ld, Please add for your board!\n", __FILE__, __LINE__)

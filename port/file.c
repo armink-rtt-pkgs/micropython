@@ -25,6 +25,9 @@
  */
 
 #include "py/mpconfig.h"
+
+#if MICROPY_PY_IO
+
 #include "py/runtime.h"
 #include "py/stream.h"
 #include "py/builtin.h"
@@ -38,7 +41,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#if MICROPY_PY_IO
 
 #ifdef _WIN32
 #define fsync _commit

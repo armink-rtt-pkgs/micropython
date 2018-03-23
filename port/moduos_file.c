@@ -24,6 +24,10 @@
  * THE SOFTWARE.
  */
 
+#include "py/mpconfig.h"
+
+#if MICROPY_PY_MODUOS_FILE
+
 #include <stdint.h>
 #include <string.h>
 #include <dfs_posix.h>
@@ -33,7 +37,6 @@
 #include "py/mperrno.h"
 #include "moduos_file.h"
 
-#if MICROPY_PY_MODUOS_FILE
 
 mp_obj_t mp_posix_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 

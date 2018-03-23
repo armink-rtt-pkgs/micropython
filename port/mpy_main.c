@@ -129,9 +129,11 @@ void gc_collect(void) {
     gc_dump_info();
 }
 
-//mp_lexer_t *mp_lexer_new_from_file(const char *filename) {
-//    mp_raise_OSError(ENOENT);
-//}
+#if !MICROPY_PY_MODUOS_FILE
+mp_import_stat_t mp_import_stat(const char *path) {
+    return MP_IMPORT_STAT_NO_EXIST;
+}
+#endif
 
 NORETURN void nlr_jump_fail(void *val) {
     DEBUG_printf("nlr_jump_fail\n");

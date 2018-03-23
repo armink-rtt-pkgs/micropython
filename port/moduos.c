@@ -24,6 +24,10 @@
  * THE SOFTWARE.
  */
 
+#include "py/mpconfig.h"
+
+#if MICROPY_PY_MODUOS
+
 #include <stdint.h>
 #include <string.h>
 
@@ -131,3 +135,4 @@ const mp_obj_module_t mp_module_uos = {
     .globals = (mp_obj_dict_t*)&os_module_globals,
 };
 
+#endif /* MICROPY_PY_MODUOS */

@@ -56,13 +56,6 @@ STATIC mp_obj_t mod_stacks_analyze(void) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_stacks_analyze_obj, mod_stacks_analyze);
 
-//STATIC mp_obj_t os_sync(void) {
-//    //TODO
-//    MP_RTT_NOT_IMPL_PRINT;
-//    return mp_const_none;
-//}
-//MP_DEFINE_CONST_FUN_OBJ_0(mod_os_sync_obj, os_sync);
-
 STATIC mp_obj_t mp_os_mount(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     //TODO
     MP_RTT_NOT_IMPL_PRINT;

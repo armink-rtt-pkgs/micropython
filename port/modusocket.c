@@ -24,6 +24,10 @@
  * THE SOFTWARE.
  */
 
+#include "py/mpconfig.h"
+
+#if MICROPY_PY_USOCKET
+
 #include <stdio.h>
 #include <string.h>
 #include <stdio.h>
@@ -41,9 +45,6 @@
 
 #include "lib/netutils/netutils.h"
 #include "modnetwork.h"
-
-
-#if MICROPY_PY_USOCKET
 
 /******************************************************************************/
 // socket class
