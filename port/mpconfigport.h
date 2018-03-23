@@ -131,7 +131,7 @@
 /*****************************************************************************/
 /* System Module                                                             */
 
-#ifdef MICROPYTHON_USING_OS
+#ifdef MICROPYTHON_USING_UOS
 #define MICROPY_PY_IO               (1)
 #define MICROPY_PY_IO_FILEIO        (1)
 #define MICROPY_PY_MODUOS           (1)
@@ -140,7 +140,7 @@
 #else
 #define MICROPY_PY_IO               (0)
 #define MICROPY_PY_MODUOS           (0)
-#endif /* MICROPYTHON_USING_OS */
+#endif /* MICROPYTHON_USING_UOS */
 
 #ifdef MICROPYTHON_USING_USELECT
 #define MICROPY_PY_USELECT          (1)
