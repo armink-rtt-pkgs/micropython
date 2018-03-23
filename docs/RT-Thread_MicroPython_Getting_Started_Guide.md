@@ -1,6 +1,4 @@
-# 《RT-Thread MicroPython 入门指南》
-
----
+# RT-Thread MicroPython 入门指南
 
 ## 1. 简介
 ### 1.1 主要特性
@@ -50,9 +48,11 @@ RT-Thread MicroPython mini 版本最小资源占用要求为：
 
 ### 2.4 运行 MicroPython
 
-- 在 Finsh/MSH 命令行内输入 python 即可进入 MicroPython 的交互命令行 REPL(Read-Evaluate-Print-Loop)，可在终端看到如下界面：
+- 在 Finsh/MSH 命令行内输入 `python` 即可进入 MicroPython 的交互命令行 REPL(Read-Evaluate-Print-Loop)，可在终端看到如下界面：
 
 ![elect_micropytho](./figures/run_python.png)
+
+使用 `Ctrl-D` 或输入 `quit()` 以及 `exit()`  即可退出 REPL ，回到 RT-Thread Finsh/MSH。
 
 ## 3. MicroPython 基本功能 
 ### 3.1 Python 语法与内建函数 
@@ -65,9 +65,9 @@ RT-Thread MicroPython mini 版本最小资源占用要求为：
 
 #### 3.1.2 交互命令行的粘贴模式
 
-
-- `MicroPython`  比一般的 python 交互环境多了一个特别的**粘贴模式**，可以一次输入多行 python 代码。
-- 在命令行提示符状态下，按下 `Ctrl-E` 组合键，就会出现提示：`paste mode; Ctrl-C to cancel, Ctrl-D to finish` 。粘贴需要运行的代码后，按下 `Ctlr-D` 快捷键即可退出，同时输入的代码也会自动执行。
+- `MicroPython`  比一般的 python 交互环境多了一个特别的**粘贴模式**，可以一次粘贴输入多行 python 代码。
+- 在命令行提示符状态下，按下 `Ctrl-E` 组合键，就会出现提示：`paste mode; Ctrl-C to cancel, Ctrl-D to finish` 。粘贴需要运行的代码后，按下 `Ctlr-D` 即可退出粘贴模式，同时输入的代码也会自动执行。
+- 程序正在执行时，如果想取消，可以使用 `Ctrl-C`。
 
 输入代码：
 
@@ -111,11 +111,11 @@ while True:
     time.sleep_ms(500)
 ```
 
-针对自己的开发板修改引脚号，将以上脚本使用  3.1 章节介绍的**粘贴模式**输入，即可看到 LED 灯按照指定的频率闪烁。
+针对自己的开发板修改引脚号，将以上脚本使用 3.1.2 章节介绍的**粘贴模式**输入，即可看到 LED 灯按照指定的频率闪烁。使用 `Ctrl-C` 可以取消当前正在运行程序。
 
 ### 4.2 按键灯
 
-- i.MX RT1050 开发板中: 第 [125 号 pin](https://github.com/RT-Thread/rt-thread/blob/8ed3470d2a485c49ec4f5d4a5ec53e94edf7a2c8/bsp/imxrt1052-evk/drivers/drv_pin.c#L184) 为 SW8
+- i.MX RT1050 开发板中: [第 125 号 pin](https://github.com/RT-Thread/rt-thread/blob/8ed3470d2a485c49ec4f5d4a5ec53e94edf7a2c8/bsp/imxrt1052-evk/drivers/drv_pin.c#L184) 为 SW8
 
 ```python
 from machine import Pin
@@ -132,8 +132,7 @@ while True:
 针对自己的开发板修改引脚号，使用**粘贴模式**输入以上脚本，即可通过按键 KEY 控制 LED 灯的亮灭。
 
 ## 5.更多资料参考
-1. 《RT-Thread MicroPython 开发指南》
 
-2. 《RT-Thread MicroPython 网络编程指南》   
-
-3. 《RT-Thread MicroPython 包管理指南》 
+- 1. 《RT-Thread MicroPython 开发指南》
+- 2. 《RT-Thread MicroPython 网络编程指南》   
+- 3. 《RT-Thread MicroPython 包管理指南》 
