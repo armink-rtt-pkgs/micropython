@@ -47,3 +47,12 @@ static inline void mp_hal_delay_ms(mp_uint_t delay) {
 }
 
 extern void mp_hal_set_interrupt_char (int c);
+extern void mp_pin_od_write(void *machine_pin, int stat);
+extern void mp_hal_pin_open_set(void *machine_pin, int mode);
+
+// needed for machine.I2C
+#define mp_hal_delay_us_fast(us) mp_hal_delay_us(us)
+#define mp_hal_pin_od_low(pin)   mp_pin_od_write(pin, PIN_LOW)
+#define mp_hal_pin_od_high(pin)  mp_pin_od_write(pin, PIN_HIGH)
+#define mp_hal_pin_open_drain(p) mp_hal_pin_open_set(p, PIN_MODE_OUTPUT_OD)
+
