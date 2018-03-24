@@ -40,21 +40,21 @@ typedef mp_machine_soft_i2c_obj_t machine_i2c_obj_t;
 STATIC void mp_hal_i2c_delay(machine_i2c_obj_t *self) {
     // We need to use an accurate delay to get acceptable I2C
     // speeds (eg 1us should be not much more than 1us).
-    mp_hal_delay_us_fast(self->us_delay);
+    // mp_hal_delay_us_fast(self->us_delay);
 }
 
 STATIC void mp_hal_i2c_scl_low(machine_i2c_obj_t *self) {
-    mp_hal_pin_od_low(self->scl);
+    //mp_hal_pin_od_low(self->scl);
 }
 
 STATIC int mp_hal_i2c_scl_release(machine_i2c_obj_t *self) {
     uint32_t count = self->us_timeout;
 
-    mp_hal_pin_od_high(self->scl);
+    //mp_hal_pin_od_high(self->scl);
     mp_hal_i2c_delay(self);
     // For clock stretching, wait for the SCL pin to be released, with timeout.
     for (; mp_hal_pin_read(self->scl) == 0 && count; --count) {
-        mp_hal_delay_us_fast(1);
+        // mp_hal_delay_us_fast(1);
     }
     if (count == 0) {
         return -MP_ETIMEDOUT;
@@ -63,11 +63,11 @@ STATIC int mp_hal_i2c_scl_release(machine_i2c_obj_t *self) {
 }
 
 STATIC void mp_hal_i2c_sda_low(machine_i2c_obj_t *self) {
-    mp_hal_pin_od_low(self->sda);
+    //mp_hal_pin_od_low(self->sda);
 }
 
 STATIC void mp_hal_i2c_sda_release(machine_i2c_obj_t *self) {
-    mp_hal_pin_od_high(self->sda);
+    //mp_hal_pin_od_high(self->sda);
 }
 
 STATIC int mp_hal_i2c_sda_read(machine_i2c_obj_t *self) {
@@ -101,8 +101,8 @@ STATIC void mp_hal_i2c_init(machine_i2c_obj_t *self, uint32_t freq) {
     if (self->us_delay == 0) {
         self->us_delay = 1;
     }
-    mp_hal_pin_open_drain(self->scl);
-    mp_hal_pin_open_drain(self->sda);
+    //mp_hal_pin_open_drain(self->scl);
+    //mp_hal_pin_open_drain(self->sda);
     mp_hal_i2c_stop(self); // ignore error
 }
 
