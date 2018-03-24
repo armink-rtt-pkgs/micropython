@@ -32,7 +32,7 @@ RT-Thread MicroPython mini 版本最小资源占用要求为：
 - 1、ROM < 190KB
 - 2、RAM < 8KB
 
-常见的许多开发板都可以运行 MicroPython，如 `stm32f429-apollo`、`imxrt1052-evk`  、`stm32f10x` 、`iot-camera` 等。 
+常见的许多开发板都可以运行 MicroPython，如 `stm32f10x` 、`stm32f40x` 、`stm32f429-apollo`、`imxrt1052-evk`  、`iot-camera` 等。 
 
 ### 2.2 MicroPython 软件包的安装
 
@@ -44,7 +44,7 @@ RT-Thread MicroPython mini 版本最小资源占用要求为：
 
 ### 2.3 选择开发环境
 
-- 目前 MicroPython 支持三种开发环境，分别为 `MDK / IAR / GCC`，选择合适的开发环境，将 MicroPython 加入到工程中，进行编译、下载。
+- 目前 MicroPython 支持三种开发环境，分别为 `MDK / IAR / GCC`，选择合适的开发环境，使用 env 工具将 MicroPython 软件包开启后，需重新生成工程，再进行编译、下载。
 
 ### 2.4 运行 MicroPython
 
