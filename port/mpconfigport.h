@@ -124,6 +124,8 @@
 #define MICROPY_PY_UTIME_MP_HAL     (1)
 #define MICROPY_PY_UTIMEQ           (1)
 #define MICROPY_PY_RTTHREAD         (1)
+#define MICROPY_PY_MACHINE_I2C      (1)
+
 
 /*****************************************************************************/
 /* System Module                                                             */
