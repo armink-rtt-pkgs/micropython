@@ -53,6 +53,14 @@
 
 const mp_obj_base_t machine_pin_obj_template = {&machine_pin_type};
 
+void mp_pin_od_write(void *machine_pin, int stat) {
+    rt_pin_write(((machine_pin_obj_t *)machine_pin)->pin, stat);
+}
+
+void mp_hal_pin_open_set(void *machine_pin, int mode) {
+    rt_pin_mode(((machine_pin_obj_t *)machine_pin)->pin, mode);
+}
+
 STATIC mp_obj_t machine_pin_obj_init_helper(machine_pin_obj_t *self, size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 
 STATIC void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
