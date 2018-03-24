@@ -82,7 +82,11 @@ STATIC int parse_compile_execute(const void *source, mp_parse_input_kind_t input
                 const vstr_t *vstr = source;
                 lex = mp_lexer_new_from_str_len(MP_QSTR__lt_stdin_gt_, vstr->buf, vstr->len, 0);
             } else if (exec_flags & EXEC_FLAG_SOURCE_IS_FILENAME) {
+                #if MICROPY_PY_IO
                 lex = mp_lexer_new_from_file(source);
+                #else
+                mp_raise_msg(&mp_type_RuntimeError, "script compilation not supported");
+                #endif
             } else {
                 lex = (mp_lexer_t*)source;
             }

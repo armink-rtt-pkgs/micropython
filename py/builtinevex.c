@@ -137,8 +137,12 @@ STATIC mp_obj_t eval_exec_helper(size_t n_args, const mp_obj_t *args, mp_parse_i
     // MP_PARSE_SINGLE_INPUT is used to indicate a file input
     mp_lexer_t *lex;
     if (MICROPY_PY_BUILTINS_EXECFILE && parse_input_kind == MP_PARSE_SINGLE_INPUT) {
+        #if MICROPY_PY_IO
         lex = mp_lexer_new_from_file(str);
         parse_input_kind = MP_PARSE_FILE_INPUT;
+        #else
+        mp_raise_msg(&mp_type_RuntimeError, "script compilation not supported");
+        #endif
     } else {
         lex = mp_lexer_new_from_str_len(MP_QSTR__lt_string_gt_, str, str_len, 0);
     }

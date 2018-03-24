@@ -222,7 +222,7 @@ STATIC void do_load(mp_obj_t module_obj, vstr_t *file) {
     #endif
 
     // If we can compile scripts then load the file and compile and execute it.
-    #if MICROPY_ENABLE_COMPILER
+    #if MICROPY_ENABLE_COMPILER && MICROPY_PY_IO
     {
         mp_lexer_t *lex = mp_lexer_new_from_file(file_str);
         do_load_from_lexer(module_obj, lex);
