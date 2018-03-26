@@ -55,8 +55,8 @@ const mp_obj_base_t machine_pin_obj_template = {&machine_pin_type};
 
 void mp_pin_od_write(void *machine_pin, int stat) {
     if (stat == PIN_LOW) {
-        rt_pin_mode(((machine_pin_obj_t *) machine_pin)->pin, PIN_MODE_OUTPUT);
-        rt_pin_write(((machine_pin_obj_t *) machine_pin)->pin, stat);
+        rt_pin_mode(((machine_pin_obj_t *)machine_pin)->pin, PIN_MODE_OUTPUT);
+        rt_pin_write(((machine_pin_obj_t *)machine_pin)->pin, stat);
     } else {
         rt_pin_mode(((machine_pin_obj_t *)machine_pin)->pin, PIN_MODE_INPUT_PULLUP);
     }
