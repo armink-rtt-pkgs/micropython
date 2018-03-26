@@ -25,6 +25,7 @@
  */
 
 #include <rtthread.h>
+#include <drivers/pin.h>
 
 static inline mp_uint_t mp_hal_ticks_us(void) {
     return rt_tick_get() * 1000;
