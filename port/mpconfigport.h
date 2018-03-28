@@ -204,10 +204,11 @@
 #define MICROPY_SSL_MBEDTLS         (0)
 
 /*****************************************************************************/
-/* Hardware Module                                                              */
+/* Hardware Module                                                           */
 
 #ifdef MICROPYTHON_USING_MACHINE_I2C
 #define MICROPY_PY_MACHINE_I2C      (1)
+#define MICROPY_PY_MACHINE_I2C_MAKE_NEW machine_hard_i2c_make_new
 #endif
 
 #if MICROPYTHON_USING_MACHINE_SPI
