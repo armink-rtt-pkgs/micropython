@@ -34,50 +34,53 @@
 
 #ifdef MICROPYTHON_USING_MACHINE_I2C
 
-#define I2CBUS_NAME             "i2c0"
-
 STATIC const mp_obj_type_t machine_hard_i2c_type;
-STATIC struct rt_i2c_bus_device *i2c_bus;
 
 typedef struct _machine_hard_i2c_obj_t {
     mp_obj_base_t base;
-    uint32_t *timeout;
+    struct rt_i2c_bus_device *i2c_bus;
 } machine_hard_i2c_obj_t;
 
-#if defined(RT_USING_I2C)
+#ifndef RT_USING_I2C
+#error "Please define the RT_USING_I2C on 'rtconfig.h'"
+#endif
 
 STATIC void machine_hard_i2c_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
+    machine_hard_i2c_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    mp_printf(print,"I2C(%s, timeout=%u)",
+            self->i2c_bus->parent.parent.name,
+            self->i2c_bus->timeout);
     return;
 }
 
 int machine_hard_i2c_readfrom(mp_obj_base_t *self_in, uint16_t addr, uint8_t *dest, size_t len, bool stop) {
-    return rt_i2c_master_recv(i2c_bus, addr, 0, dest, len);
+    machine_hard_i2c_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    return rt_i2c_master_recv(self->i2c_bus, addr, 0, dest, len);
 }
 
 int machine_hard_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_t *src, size_t len, bool stop) {
-    return rt_i2c_master_send(i2c_bus, addr, 0, src, len);
+    machine_hard_i2c_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    return rt_i2c_master_send(self->i2c_bus, addr, 0, src, len);
 }
-
-#endif
 
 /******************************************************************************/
 /* MicroPython bindings for machine API                                       */
 
 mp_obj_t machine_hard_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
     char iic_device[10];
-    snprintf(iic_device, 10, "i2c%d", mp_obj_get_int(all_args[0]));
-    i2c_bus = rt_i2c_bus_device_find(iic_device);
+
+    snprintf(iic_device, sizeof(iic_device), "i2c%d", mp_obj_get_int(all_args[0]));
+    struct rt_i2c_bus_device *i2c_bus = rt_i2c_bus_device_find(iic_device);
 
     if (i2c_bus == RT_NULL) {
         rt_kprintf("can't find %s device\r\n", iic_device);
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "I2C(%s) doesn't exist", iic_device));
-    } else {
-        rt_kprintf("find %s device\r\n", iic_device);
     }
 
     // create new hard I2C object
     machine_hard_i2c_obj_t *self = m_new_obj(machine_hard_i2c_obj_t);
     self->base.type = &machine_hard_i2c_type;
+    self->i2c_bus = i2c_bus;
     return (mp_obj_t) self;
 }
 
