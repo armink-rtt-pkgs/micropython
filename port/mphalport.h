@@ -47,6 +47,8 @@ static inline void mp_hal_delay_ms(mp_uint_t delay) {
     rt_thread_delay(rt_tick_from_millisecond(delay));
 }
 
+#define MP_HAL_PIN_FMT                 "%s"
+
 extern void mp_hal_set_interrupt_char (int c);
 extern void mp_pin_od_write(void *machine_pin, int stat);
 extern void mp_hal_pin_open_set(void *machine_pin, int mode);
