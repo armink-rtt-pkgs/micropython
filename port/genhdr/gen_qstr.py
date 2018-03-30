@@ -48,7 +48,7 @@ def make_bytes(cfg_bytes_len, cfg_bytes_hash, qstr):
         assert False
     qlen_str = ('\\x%02x' * cfg_bytes_len) % tuple(((qlen >> (8 * i)) & 0xff) for i in range(cfg_bytes_len))
     qhash_str = ('\\x%02x' * cfg_bytes_hash) % tuple(((qhash >> (8 * i)) & 0xff) for i in range(cfg_bytes_hash))
-    return '(const byte*)"%s%s" "%s"' % (qhash_str, qlen_str, qdata)
+    return 'QDEF(MP_QSTR_%s, (const byte*)"%s%s" "%s")' % (qdata,qhash_str, qlen_str, qdata)
     
 if __name__ == "__main__":
     print ("This program will gen qstr for micropython:")
