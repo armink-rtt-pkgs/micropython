@@ -66,6 +66,10 @@ void mp_hal_pin_open_set(void *machine_pin, int mode) {
     rt_pin_mode(((machine_pin_obj_t *)machine_pin)->pin, mode);
 }
 
+char* mp_hal_pin_get_name(void *machine_pin) {
+    return ((machine_pin_obj_t *)machine_pin)->name;
+}
+
 STATIC mp_obj_t machine_pin_obj_init_helper(machine_pin_obj_t *self, size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 
 STATIC void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {

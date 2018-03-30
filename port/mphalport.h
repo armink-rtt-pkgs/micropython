@@ -57,3 +57,7 @@ extern void mp_hal_pin_open_set(void *machine_pin, int mode);
 #define mp_hal_pin_od_high(pin)  mp_pin_od_write(pin, PIN_HIGH)
 #define mp_hal_pin_open_drain(p) mp_hal_pin_open_set(p, PIN_MODE_OUTPUT_OD)
 
+// needed for soft machine.SPI
+#define mp_hal_pin_output(p)     mp_hal_pin_open_set(p, PIN_MODE_OUTPUT)
+#define mp_hal_pin_input(p)      mp_hal_pin_open_set(p, PIN_MODE_INPUT)
+#define mp_hal_pin_name(p)       mp_hal_pin_get_name(p)
