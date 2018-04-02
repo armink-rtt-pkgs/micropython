@@ -191,4 +191,19 @@ b'\x12'                               # starting at memory-address 8 in the slav
                                       # starting at address 2 in the slave
 ```
 
+#####  SPI
+
+```
+>>> from machine import Pin, SPI
+>>> clk = Pin(("clk", 43), Pin.OUT_PP)
+>>> mosi = Pin(("mosi", 44), Pin.OUT_PP)
+>>> miso = Pin(("miso", 45), Pin.IN)
+>>> spi = SPI(-1,500000,polarity = 0,phase = 0,bits = 8,firstbit = 0,sck = clk,mosi = mosi,miso = miso)
+>>> print(spi)
+SoftSPI(baudrate=500000, polarity=0, phase=0, sck=clk, mosi=mosi, miso=miso)
+>>> spi.write("hello rt-thread!")
+>>> spi.read(10)
+b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+```
+
 ### Coming soon
