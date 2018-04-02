@@ -211,7 +211,7 @@
 #define MICROPY_PY_MACHINE_I2C_MAKE_NEW machine_hard_i2c_make_new
 #endif
 
-#if MICROPYTHON_USING_MACHINE_SPI
+#ifdef MICROPYTHON_USING_MACHINE_SPI
 #define MICROPY_PY_MACHINE_SPI      (1)
 #endif
 
