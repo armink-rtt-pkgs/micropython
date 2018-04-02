@@ -49,15 +49,27 @@
 #if MICROPY_PY_MACHINE
 
 STATIC mp_obj_t machine_info(uint n_args, const mp_obj_t *args) {
-    extern int cmd_free(int argc, char **argv);
+#ifdef RT_USING_FINSH
     extern long list_thread(void);
+#endif
     // RT-Thread info
     {
         printf("---------------------------------------------\n");
         printf("RT-Thread\n");
         printf("---------------------------------------------\n");
-        cmd_free(0, NULL);
+
+#ifdef RT_USING_FINSH
+        extern void list_mem(void);
+        extern void list_memheap(void);
+
+#ifdef RT_USING_MEMHEAP_AS_HEAP
+        list_memheap();
+#else
+        list_mem();
+#endif
+
         list_thread();
+#endif
         printf("---------------------------------------------\n");
     }
 

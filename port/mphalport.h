@@ -63,3 +63,5 @@ extern void mp_hal_pin_open_set(void *machine_pin, int mode);
 #define mp_hal_pin_output(p)     mp_hal_pin_open_set(p, PIN_MODE_OUTPUT)
 #define mp_hal_pin_input(p)      mp_hal_pin_open_set(p, PIN_MODE_INPUT)
 #define mp_hal_pin_name(p)       mp_hal_pin_get_name(p)
+#define mp_hal_pin_high(p)       mp_hal_pin_write(p, 1)
+
