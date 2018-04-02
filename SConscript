@@ -14,8 +14,6 @@ src    += Glob('drivers/bus/*.c')
 
 path    = [cwd + '/']
 path   += [cwd + '/port']
-path   += [cwd + '/lib/netutils']
-path   += [cwd + '/drivers/bus']
 
 LOCAL_CCFLAGS = ''
 
