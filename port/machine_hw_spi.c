@@ -46,7 +46,7 @@ STATIC void machine_hard_spi_print(const mp_print_t *print, mp_obj_t self_in, mp
 }
 
 mp_obj_t machine_hard_spi_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
-    char spi_dev_name[10];
+    char spi_dev_name[RT_NAME_MAX];
 
     snprintf(spi_dev_name, sizeof(spi_dev_name), "spi%d", mp_obj_get_int(all_args[0]));
 
