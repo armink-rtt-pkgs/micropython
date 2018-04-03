@@ -33,60 +33,67 @@
 
 #ifdef MICROPYTHON_USING_MACHINE_SPI
 
-/******************************************************************************/
-// Implementation of hard SPI for machine module
-
-typedef struct _spi_t {
-} spi_t;
+STATIC const mp_obj_type_t machine_hard_spi_type;
 
 typedef struct _machine_hard_spi_obj_t {
     mp_obj_base_t base;
-    const spi_t *spi;
+    struct rt_spi_device *spi_device;
 } machine_hard_spi_obj_t;
-
 
 STATIC void machine_hard_spi_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
+    mp_printf(print," SPI(device port : %s)",self->spi_device->parent.parent.name);
 }
 
 mp_obj_t machine_hard_spi_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
+    char spi_dev_name[10];
+
+    snprintf(spi_dev_name, sizeof(spi_dev_name), "spi%d", mp_obj_get_int(all_args[0]));
+
+    struct rt_spi_device *rt_spi_device = (struct rt_spi_device *) rt_device_find(spi_dev_name);
+    if (rt_spi_device == RT_NULL || rt_spi_device->parent.type != RT_Device_Class_SPIDevice) {
+        rt_kprintf("ERROR: SPI device %s not found!\n", spi_dev_name);
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "SPI(%s) doesn't exist", spi_dev_name));
+    }
+
+    // create new hard SPI object
+    machine_hard_spi_obj_t *self = m_new_obj(machine_hard_spi_obj_t);
+    self->base.type = &machine_hard_spi_type;
+    self->spi_device = rt_spi_device;
+    return (mp_obj_t) self;
 }
 
 STATIC void machine_hard_spi_init(mp_obj_base_t *self_in, size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
-
-    enum { ARG_baudrate, ARG_polarity, ARG_phase, ARG_bits, ARG_firstbit };
-    static const mp_arg_t allowed_args[] = {
-        { MP_QSTR_baudrate, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = -1} },
-        { MP_QSTR_polarity, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = -1} },
-        { MP_QSTR_phase,    MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = -1} },
-        { MP_QSTR_bits,     MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = -1} },
-        { MP_QSTR_firstbit, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = -1} },
-    };
-    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
-    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
-
 }
 
 STATIC void machine_hard_spi_deinit(mp_obj_base_t *self_in) {
     machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
-
 }
 
 STATIC void machine_hard_spi_transfer(mp_obj_base_t *self_in, size_t len, const uint8_t *src, uint8_t *dest) {
+    machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
+
+    if (src && dest) {
+        rt_spi_send_then_recv(self->spi_device, src, len, dest, len);
+    } else if (src) {
+		rt_spi_send(self->spi_device, src, len);	
+    } else {
+        rt_spi_recv(self->spi_device, dest, len);
+    }
 }
 
 STATIC const mp_machine_spi_p_t machine_hard_spi_p = {
-    .init = machine_hard_spi_init,
-    .deinit = machine_hard_spi_deinit,
+    .init = NULL,
+    .deinit = NULL,
     .transfer = machine_hard_spi_transfer,
 };
 
-const mp_obj_type_t machine_hard_spi_type = {
+STATIC const mp_obj_type_t machine_hard_spi_type = {
     { &mp_type_type },
     .name = MP_QSTR_SPI,
     .print = machine_hard_spi_print,
-    .make_new = machine_hard_spi_make_new, // delegate to master constructor
+    .make_new = machine_hard_spi_make_new,
     .protocol = &machine_hard_spi_p,
     .locals_dict = (mp_obj_t)&mp_machine_spi_locals_dict,
 };
