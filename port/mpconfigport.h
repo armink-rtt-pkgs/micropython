@@ -142,6 +142,12 @@
 #define MICROPY_PY_MODUOS           (0)
 #endif /* MICROPYTHON_USING_UOS */
 
+#ifdef MICROPYTHON_USING_THREAD
+#define MICROPY_PY_THREAD           (1)
+#else
+#define MICROPY_PY_THREAD           (0)
+#endif /* MICROPYTHON_USING_THREAD */
+
 #ifdef MICROPYTHON_USING_USELECT
 #define MICROPY_PY_USELECT          (1)
 #endif
@@ -215,25 +221,8 @@
 #define MICROPY_PY_MACHINE_SPI      (1)
 #endif
 
-#if MICROPY_PY_THREAD
-#define MICROPY_EVENT_POLL_HOOK \
-    do { \
-        extern void mp_handle_pending(void); \
-        mp_handle_pending(); \
-        if (pyb_thread_enabled) { \
-            MP_THREAD_GIL_EXIT(); \
-            pyb_thread_yield(); \
-            MP_THREAD_GIL_ENTER(); \
-        } else { \
-            __WFI(); \
-        } \
-    } while (0);
-
-#define MICROPY_THREAD_YIELD() pyb_thread_yield()
-#else
 #define MICROPY_EVENT_POLL_HOOK rt_thread_delay(1);
 #define MICROPY_THREAD_YIELD() rt_thread_delay(1)
-#endif
 
 #if defined(__CC_ARM)
 #include <sys/types.h>

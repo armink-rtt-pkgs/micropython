@@ -68,6 +68,10 @@ void mpy_main(const char *filename) {
 
     rtt_getchar_init();
 
+#if MICROPY_PY_THREAD
+    mp_thread_init();
+#endif
+
     mp_stack_set_top(stack_top);
     // Make MicroPython's stack limit somewhat smaller than full stack available
 	mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 512);
@@ -111,10 +115,14 @@ void mpy_main(const char *filename) {
         pyexec_frozen_module("frozentest.py");
         #endif
     }
+
+#if MICROPY_PY_THREAD
+    mp_thread_deinit();
+#endif
+
     mp_deinit();
 
     rt_free(heap);
-//    rt_free(stack_top);
 
     rtt_getchar_deinit();
 }
@@ -125,6 +133,11 @@ void gc_collect(void) {
     void *dummy;
     gc_collect_start();
     gc_collect_root(&dummy, ((mp_uint_t)stack_top - (mp_uint_t)&dummy) / sizeof(mp_uint_t));
+
+#if MICROPY_PY_THREAD
+    mp_thread_gc_others();
+#endif
+
     gc_collect_end();
     gc_dump_info();
 }
