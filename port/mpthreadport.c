@@ -32,50 +32,35 @@
 #include "py/mpthread.h"
 #include "mpthreadport.h"
 
+#include <rthw.h>
+
 #if MICROPY_PY_THREAD
 
 #define MP_THREAD_MIN_STACK_SIZE                        (4 * 1024)
 #define MP_THREAD_DEFAULT_STACK_SIZE                    (MP_THREAD_MIN_STACK_SIZE + 1024)
 #define MP_THREAD_PRIORITY                              (RT_THREAD_PRIORITY_MAX / 2)
 
-// this structure forms a linked list, one node per active thread
-typedef struct _thread_t {
-    rt_thread_t id;         // system id of thread
-    int ready;              // whether the thread is ready and running
-    void *arg;              // thread Python args, a GC root pointer
-    struct _thread_t *next;
-} thread_t;
+typedef struct {
+    rt_thread_t thread;
+    rt_list_t list;
+} mp_thread, *mp_thread_t;
+
+typedef struct {
+    rt_mutex_t mutex;
+    rt_list_t list;
+} mp_mutex, *mp_mutex_t;
 
 // the mutex controls access to the linked list
 STATIC mp_thread_mutex_t thread_mutex;
-STATIC thread_t thread_entry0;
-STATIC thread_t *thread; // root pointer, handled by mp_thread_gc_others
+STATIC rt_list_t thread_list, mutex_list;
 
 void mp_thread_init(void) {
     mp_thread_set_state(&mp_state_ctx.thread);
-    // create the first entry in the linked list of all threads
-    thread = &thread_entry0;
-    thread->id = rt_thread_self();
-    thread->ready = 1;
-    thread->arg = NULL;
-    thread->next = NULL;
-    mp_thread_mutex_init(&thread_mutex);
-}
 
-void mp_thread_gc_others(void) {
-    mp_thread_mutex_lock(&thread_mutex, 1);
-    for (thread_t *th = thread; th != NULL; th = th->next) {
-        gc_collect_root((void**)&th, 1);
-        gc_collect_root(&th->arg, 1); // probably not needed
-        if (th->id == rt_thread_self()) {
-            continue;
-        }
-        if (!th->ready) {
-            continue;
-        }
-        rt_thread_delete(th->id);
-    }
-    mp_thread_mutex_unlock(&thread_mutex);
+    rt_list_init(&thread_list);
+    rt_list_init(&mutex_list);
+
+    mp_thread_mutex_init(&thread_mutex);
 }
 
 mp_state_thread_t *mp_thread_get_state(void) {
@@ -87,14 +72,6 @@ void mp_thread_set_state(void *state) {
 }
 
 void mp_thread_start(void) {
-    mp_thread_mutex_lock(&thread_mutex, 1);
-    for (thread_t *th = thread; th != NULL; th = th->next) {
-        if (th->id == rt_thread_self()) {
-            th->ready = 1;
-            break;
-        }
-    }
-    mp_thread_mutex_unlock(&thread_mutex);
 }
 
 STATIC void *(*ext_thread_entry)(void*) = NULL;
@@ -103,8 +80,23 @@ STATIC void rtthread_entry(void *arg) {
     if (ext_thread_entry) {
         ext_thread_entry(arg);
     }
-    while(1) {
-        rt_thread_delay(RT_TICK_PER_SECOND);
+
+    /* remove node on list */
+    {
+        struct rt_list_node *list = &thread_list, *node = NULL;
+        mp_thread_t cur_thread_node = NULL;
+
+        mp_thread_mutex_lock(&thread_mutex, 1);
+
+        for (node = list->next; node != list; node = node->next) {
+            cur_thread_node = rt_list_entry(node, mp_thread, list);
+            if (cur_thread_node->thread == rt_thread_self()) {
+                rt_list_remove(node);
+                break;
+            }
+        }
+
+        mp_thread_mutex_unlock(&thread_mutex);
     }
 }
 
@@ -119,28 +111,34 @@ void mp_thread_create_ex(void *(*entry)(void*), void *arg, size_t *stack_size, i
     }
 
     // allocate linked-list node (must be outside thread_mutex lock)
-    thread_t *th = m_new_obj(thread_t);
-    if (th == NULL) {
-        nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "can't create thread obj"));
+    mp_thread *node = rt_malloc(sizeof(mp_thread));
+    if (node == NULL) {
+        nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "can't create thread list node"));
     }
 
     mp_thread_mutex_lock(&thread_mutex, 1);
 
     // create thread
-    rt_thread_t id = rt_thread_create(name, rtthread_entry, arg, *stack_size, priority, 0);
-    if (id == NULL) {
+    rt_thread_t th = rt_thread_create(name, rtthread_entry, arg, *stack_size, priority, 0);
+    if (th == NULL) {
         mp_thread_mutex_unlock(&thread_mutex);
         nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "can't create thread"));
     }
 
     // add thread to linked list of all threads
-    th->id = id;
-    th->ready = 0;
-    th->arg = arg;
-    th->next = thread;
-    thread = th;
+    {
+        rt_base_t level;
 
-    rt_thread_startup(id);
+        level = rt_hw_interrupt_disable();
+
+
+        node->thread = th;
+        rt_list_insert_before(&thread_list, &(node->list));
+
+        rt_hw_interrupt_enable(level);
+    }
+
+    rt_thread_startup(th);
 
     mp_thread_mutex_unlock(&thread_mutex);
 }
@@ -156,27 +154,30 @@ void mp_thread_create(void *(*entry)(void*), void *arg, size_t *stack_size) {
 }
 
 void mp_thread_finish(void) {
-    mp_thread_mutex_lock(&thread_mutex, 1);
-    for (thread_t *th = thread; th != NULL; th = th->next) {
-        if (th->id == rt_thread_self()) {
-            th->ready = 0;
-            break;
-        }
-    }
-    mp_thread_mutex_unlock(&thread_mutex);
 }
 
 void mp_thread_mutex_init(mp_thread_mutex_t *mutex) {
     static uint8_t count = 0;
     char name[RT_NAME_MAX];
+    rt_base_t level;
+
+    level = rt_hw_interrupt_disable();
+
+    mp_mutex *node = rt_malloc(sizeof(mp_mutex));
+    if (node == NULL) {
+        nlr_raise(mp_obj_new_exception_msg(&mp_type_OSError, "can't create mutex list node"));
+    }
 
     /* build name */
     rt_snprintf(name, sizeof(name), "mp%02d", count ++);
 
-    /* only init once */
-    if (mutex->parent.parent.type != (RT_Object_Class_Mutex | RT_Object_Class_Static)) {
-        rt_mutex_init((rt_mutex_t) mutex, name, RT_IPC_FLAG_FIFO);
-    }
+    rt_mutex_init((rt_mutex_t) mutex, name, RT_IPC_FLAG_FIFO);
+
+    // add mutex to linked list of all mutexs
+    node->mutex = (rt_mutex_t)mutex;
+    rt_list_insert_before(&mutex_list, &(node->list));
+
+    rt_hw_interrupt_enable(level);
 }
 
 int mp_thread_mutex_lock(mp_thread_mutex_t *mutex, int wait) {
@@ -188,15 +189,33 @@ void mp_thread_mutex_unlock(mp_thread_mutex_t *mutex) {
 }
 
 void mp_thread_deinit(void) {
-    mp_thread_mutex_lock(&thread_mutex, 1);
-    for (thread_t *th = thread; th != NULL; th = th->next) {
-        // don't delete the current task
-        if (th->id == rt_thread_self()) {
-            continue;
+    rt_base_t level;
+
+    level = rt_hw_interrupt_disable();
+    /* remove all thread node on list */
+    {
+        struct rt_list_node *list = &thread_list, *node = NULL;
+        mp_thread_t cur_thread_node = NULL;
+
+        for (node = list->next; node != list; node = node->next) {
+            cur_thread_node = rt_list_entry(node, mp_thread, list);
+            rt_thread_delete(cur_thread_node->thread);
+            rt_free(cur_thread_node);
         }
-        rt_thread_delete(th->id);
     }
-    mp_thread_mutex_unlock(&thread_mutex);
+    /* remove all mutex node on list */
+    {
+        struct rt_list_node *list = &mutex_list, *node = NULL;
+        mp_mutex_t cur_mutex_node = NULL;
+
+        for (node = list->next; node != list; node = node->next) {
+            cur_mutex_node = rt_list_entry(node, mp_mutex, list);
+            rt_mutex_detach(cur_mutex_node->mutex);
+            rt_free(cur_mutex_node);
+        }
+    }
+
+    rt_hw_interrupt_enable(level);
     // allow RT-Thread to clean-up the threads
     rt_thread_delay(200);
 }
