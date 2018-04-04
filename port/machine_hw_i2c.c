@@ -67,7 +67,7 @@ int machine_hard_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_
 /* MicroPython bindings for machine API                                       */
 
 mp_obj_t machine_hard_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
-    char iic_device[10];
+    char iic_device[RT_NAME_MAX];
 
     snprintf(iic_device, sizeof(iic_device), "i2c%d", mp_obj_get_int(all_args[0]));
     struct rt_i2c_bus_device *i2c_bus = rt_i2c_bus_device_find(iic_device);
