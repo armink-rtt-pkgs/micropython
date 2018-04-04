@@ -126,6 +126,19 @@
 #define MICROPY_PY_RTTHREAD         (1)
 
 /*****************************************************************************/
+/* Hardware Module                                                           */
+
+#ifdef MICROPYTHON_USING_MACHINE_I2C
+#define MICROPY_PY_MACHINE_I2C      (1)
+#define MICROPY_PY_MACHINE_I2C_MAKE_NEW machine_hard_i2c_make_new
+#endif
+
+#ifdef MICROPYTHON_USING_MACHINE_SPI
+#define MICROPY_PY_MACHINE_SPI      (1)
+#define MICROPY_PY_MACHINE_SPI_MAKE_NEW machine_hard_spi_make_new
+#endif
+
+/*****************************************************************************/
 /* System Module                                                             */
 
 #ifdef MICROPYTHON_USING_UOS
@@ -208,19 +221,6 @@
 
 #define MICROPY_PY_USSL             (0)
 #define MICROPY_SSL_MBEDTLS         (0)
-
-/*****************************************************************************/
-/* Hardware Module                                                           */
-
-#ifdef MICROPYTHON_USING_MACHINE_I2C
-#define MICROPY_PY_MACHINE_I2C      (1)
-#define MICROPY_PY_MACHINE_I2C_MAKE_NEW machine_hard_i2c_make_new
-#endif
-
-#ifdef MICROPYTHON_USING_MACHINE_SPI
-#define MICROPY_PY_MACHINE_SPI      (1)
-#define MICROPY_PY_MACHINE_SPI_MAKE_NEW machine_hard_spi_make_new
-#endif
 
 #define MICROPY_EVENT_POLL_HOOK rt_thread_delay(1);
 #define MICROPY_THREAD_YIELD() rt_thread_delay(1)
