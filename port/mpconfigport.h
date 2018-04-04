@@ -213,6 +213,7 @@
 
 #ifdef MICROPYTHON_USING_MACHINE_SPI
 #define MICROPY_PY_MACHINE_SPI      (1)
+#define MICROPY_PY_MACHINE_SPI_MAKE_NEW machine_hard_spi_make_new
 #endif
 
 #if MICROPY_PY_THREAD

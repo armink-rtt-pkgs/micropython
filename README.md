@@ -58,14 +58,14 @@ Use the [`time`](http://docs.micropython.org/en/latest/pyboard/library/utime.htm
 >>> delta = time.ticks_diff(time.ticks_ms(), start) # compute time difference
 ```
 
-### pyb - functions related to the board
+### machine - functions related to the hardware
 
-See [pyb](http://docs.micropython.org/en/latest/pyboard/library/pyb.html).
+See [machine](http://docs.micropython.org/en/latest/pyboard/library/machine.html).
 
 ```
->>> import pyb
+>>> import machine
 >>>
->>> pyb.info()              # show information about the board
+>>> machine.info()              # show information about the board
 ---------------------------------------------
 RT-Thread
 ---------------------------------------------
@@ -90,22 +90,14 @@ GC:
   16064 total
   464 : 15600
   1=14 2=6 m=3
->>> pyb.enable_irq()        # enable interrupt
->>> pyb.disable_irq()       # disable interrupt, WARNING: this operation is dangerous
->>> time_start = pyb.millis()          # return the number of milliseconds
->>> pyb.elapsed_millis(time_start)     # calculate the elapsed time of milliseconds
-2449
->>> time_start = pyb.micros()          # return the number of microseconds
->>> pyb.elapsed_micros(time_start)     # calculate the elapsed time of microseconds
-1769000
->>> pyb.delay(1000)         # delay milliseconds
->>> pyb.udelay(1000*1000)   # delay microseconds
->>> pyb.hard_reset()        # hard reset, like push RESET button
+>>> machine.enable_irq()        # enable interrupt
+>>> machine.disable_irq()       # disable interrupt, WARNING: this operation is dangerous
+>>> machine.reset()        # hard reset, like push RESET button
 ```
 
 #### Pins and GPIO
 
-See [pyb.Pin](http://docs.micropython.org/en/latest/pyboard/library/pyb.Pin.html#pyb-pin).
+See [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.Pin.html).
 
 ```
 >>> from pyb import Pin
@@ -174,6 +166,9 @@ b'rt-thread\r'
 
 #####  I2C
 
+See [machine.I2C](http://docs.micropython.org/en/latest/pyboard/library/machine.I2C.html).
+
+`software I2C` :
 ```
 >>> from machine import Pin, I2C
 >>> clk = Pin(("clk", 43), Pin.OUT_OD)   # Select the 43 pin device as the clock
@@ -191,8 +186,19 @@ b'\x12'                               # starting at memory-address 8 in the slav
                                       # starting at address 2 in the slave
 ```
 
+`hardware I2C` :
+```
+>>> from machine import Pin, I2C
+>>> i2c = I2C(0)           # create I2C peripheral at frequency of 100kHz
+>>> i2c.scan()                        # scan for slaves, returning a list of 7-bit addresses
+[81]                                  # Decimal representation
+```
+
 #####  SPI
 
+See [machine.SPI](http://docs.micropython.org/en/latest/pyboard/library/machine.SPI.html).
+
+`software SPI` :
 ```
 >>> from machine import Pin, SPI
 >>> clk = Pin(("clk", 43), Pin.OUT_PP)
@@ -206,4 +212,20 @@ SoftSPI(baudrate=500000, polarity=0, phase=0, sck=clk, mosi=mosi, miso=miso)
 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 ```
 
-### Coming soon
+`hardware SPI` :
+```
+>>> from machine import SPI
+>>> spi = SPI(50)
+>>> print(spi)
+SPI(device port : spi50)
+>>> spi.write(b'\x9f')
+>>> spi.read(5)
+b'\xff\xff\xff\xff\xff'
+>>> buf = bytearray(1)
+>>> spi.write_readinto(b"\x9f",buf)
+>>> buf
+bytearray(b'\xef')
+>>> spi.init(100000,0,0,8,1)     # Resetting SPI parameter
+```
+
+### Coming soon 
