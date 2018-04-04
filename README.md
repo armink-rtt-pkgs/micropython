@@ -174,6 +174,7 @@ b'rt-thread\r'
 
 #####  I2C
 
+`软件 I2C` :
 ```
 >>> from machine import Pin, I2C
 >>> clk = Pin(("clk", 43), Pin.OUT_OD)   # Select the 43 pin device as the clock
@@ -191,8 +192,17 @@ b'\x12'                               # starting at memory-address 8 in the slav
                                       # starting at address 2 in the slave
 ```
 
-#####  SPI
+`硬件 I2C` :
+```
+>>> from machine import Pin, I2C
+>>> i2c = I2C(0)           # create I2C peripheral at frequency of 100kHz
+>>> i2c.scan()                        # scan for slaves, returning a list of 7-bit addresses
+[81]                                  # Decimal representation
+```
 
+
+#####  SPI
+`软件 SPI` :
 ```
 >>> from machine import Pin, SPI
 >>> clk = Pin(("clk", 43), Pin.OUT_PP)
@@ -206,4 +216,20 @@ SoftSPI(baudrate=500000, polarity=0, phase=0, sck=clk, mosi=mosi, miso=miso)
 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 ```
 
-### Coming soon
+`硬件 SPI` :
+```
+>>> from machine import SPI
+>>> spi = SPI(50)
+>>> print(spi)
+SPI(device port : spi50)
+>>> spi.write(b'\x9f')
+>>> spi.read(5)
+b'\xff\xff\xff\xff\xff'
+>>> buf = bytearray(1)
+>>> spi.write_readinto(b"\x9f",buf)
+>>> buf
+bytearray(b'\xef')
+>>> spi.init(100000,0,0,8,1)     #Resetting SPI parameter
+```
+
+### Coming soon 
