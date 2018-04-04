@@ -100,7 +100,7 @@ GC:
 See [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.Pin.html).
 
 ```
->>> from pyb import Pin
+>>> from machine import Pin
 >>> 
 >>> p_out = Pin(("X1", 33), Pin.OUT_PP)
 >>> p_out.value(1)              # set io high
@@ -110,61 +110,7 @@ See [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.
 >>> p_in.value()                # get value, 0 or 1
 ```
 
-#### uos– basic “operating system” services
-
-See [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html).
-
-```
->>> import uos
->>> uos.                        # Tab 
-__name__        uname           chdir           getcwd
-listdir         mkdir           remove          rmdir
-stat            unlink          mount           umount
->>> uos.mkdir("rtthread")
->>> uos.getcwd()
-'/'
->>> uos.chdir("rtthread")
->>> uos.getcwd()
-'/rtthread'
->>> uos.listdir()
-['web_root', 'rtthread', '11']
->>> uos.rmdir("11")
->>> uos.listdir()
-['web_root', 'rtthread']
->>> 
-```
-
-#### usocket– socketmodule
-
-See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html).
-
-##### TCP Server
-
-```
->>> import usocket 
->>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)  # Create STREAM TCP socket
->>> s.bind(('192.168.12.32', 6001))   
->>> s.listen(5)
->>> s.setblocking(True)
->>> sock,addr=s.accept()              
->>> sock.recv(10)                    
-b'rt-thread\r'
->>> s.close()
->>> 
-```
-
-##### TCP Client
-
-```
->>> import usocket 
->>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
->>> s.connect(("192.168.10.110",6000))  
->>> s.send("micropython")               
-11
->>> s.close()
-```
-
-#####  I2C
+#### I2C
 
 See [machine.I2C](http://docs.micropython.org/en/latest/pyboard/library/machine.I2C.html).
 
@@ -194,7 +140,7 @@ b'\x12'                               # starting at memory-address 8 in the slav
 [81]                                  # Decimal representation
 ```
 
-#####  SPI
+#### SPI
 
 See [machine.SPI](http://docs.micropython.org/en/latest/pyboard/library/machine.SPI.html).
 
@@ -226,6 +172,80 @@ b'\xff\xff\xff\xff\xff'
 >>> buf
 bytearray(b'\xef')
 >>> spi.init(100000,0,0,8,1)     # Resetting SPI parameter
+```
+
+### **_thread** - multithreading support
+
+```
+>>> ###  press CTRL + E to enter paste mode
+
+paste mode; Ctrl-C to cancel, Ctrl-D to finish
+=== import _thread
+=== import time
+=== 
+=== def testThread():
+===     while True:
+===         print("Hello from thread")
+===         time.sleep(2)
+=== 
+=== _thread.start_new_thread(testThread, ())
+=== while True:
+===     pass
+
+```
+
+### **uos** – basic “operating system” services
+
+See [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html).
+
+```
+>>> import uos
+>>> uos.                        # Tab 
+__name__        uname           chdir           getcwd
+listdir         mkdir           remove          rmdir
+stat            unlink          mount           umount
+>>> uos.mkdir("rtthread")
+>>> uos.getcwd()
+'/'
+>>> uos.chdir("rtthread")
+>>> uos.getcwd()
+'/rtthread'
+>>> uos.listdir()
+['web_root', 'rtthread', '11']
+>>> uos.rmdir("11")
+>>> uos.listdir()
+['web_root', 'rtthread']
+>>> 
+```
+
+### **usocket** – socketmodule
+
+See [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html).
+
+#### TCP Server
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)  # Create STREAM TCP socket
+>>> s.bind(('192.168.12.32', 6001))   
+>>> s.listen(5)
+>>> s.setblocking(True)
+>>> sock,addr=s.accept()              
+>>> sock.recv(10)                    
+b'rt-thread\r'
+>>> s.close()
+>>> 
+```
+
+#### TCP Client
+
+```
+>>> import usocket 
+>>> s = usocket.socket(usocket.AF_INET,usocket.SOCK_STREAM)
+>>> s.connect(("192.168.10.110",6000))  
+>>> s.send("micropython")               
+11
+>>> s.close()
 ```
 
 ### Coming soon 
