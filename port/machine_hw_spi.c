@@ -42,7 +42,7 @@ typedef struct _machine_hard_spi_obj_t {
 
 STATIC void machine_hard_spi_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
-    mp_printf(print," SPI(device port : %s)",self->spi_device->parent.parent.name);
+    mp_printf(print,"SPI(device port : %s)",self->spi_device->parent.parent.name);
 }
 
 mp_obj_t machine_hard_spi_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
@@ -63,12 +63,55 @@ mp_obj_t machine_hard_spi_make_new(const mp_obj_type_t *type, size_t n_args, siz
     return (mp_obj_t) self;
 }
 
+//SPI.init( baudrate=100000, polarity=0, phase=0, bits=8, firstbit=SPI.MSB/LSB )
 STATIC void machine_hard_spi_init(mp_obj_base_t *self_in, size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
+    rt_uint8_t mode = 0;
+    int baudrate = mp_obj_get_int(pos_args[0]);
+    int polarity = mp_obj_get_int(pos_args[1]);
+    int phase = mp_obj_get_int(pos_args[2]);
+    int bits = mp_obj_get_int(pos_args[3]);
+    int firstbit = mp_obj_get_int(pos_args[4]);
+
+    if(!polarity && !phase)
+    {
+        mode = RT_SPI_MODE_0;
+    }
+
+    if(!polarity && phase)
+    {
+        mode = RT_SPI_MODE_1;
+    }
+
+    if(polarity && !phase)
+    {
+        mode = RT_SPI_MODE_2;
+    }
+
+    if(polarity && phase)
+    {
+        mode = RT_SPI_MODE_3;
+    }
+
+    if(firstbit)
+    {
+        mode |= RT_SPI_MSB;
+    } else {
+        mode |= RT_SPI_LSB;
+    }
+
+    /* config spi */
+    {
+        struct rt_spi_configuration cfg;
+        cfg.data_width = bits;
+        cfg.mode = mode;
+        cfg.max_hz = baudrate;
+        rt_spi_configure(self->spi_device, &cfg);
+    }
 }
 
 STATIC void machine_hard_spi_deinit(mp_obj_base_t *self_in) {
-    machine_hard_spi_obj_t *self = (machine_hard_spi_obj_t*)self_in;
+    return;
 }
 
 STATIC void machine_hard_spi_transfer(mp_obj_base_t *self_in, size_t len, const uint8_t *src, uint8_t *dest) {
@@ -77,14 +120,14 @@ STATIC void machine_hard_spi_transfer(mp_obj_base_t *self_in, size_t len, const 
     if (src && dest) {
         rt_spi_send_then_recv(self->spi_device, src, len, dest, len);
     } else if (src) {
-		rt_spi_send(self->spi_device, src, len);	
+        rt_spi_send(self->spi_device, src, len);
     } else {
         rt_spi_recv(self->spi_device, dest, len);
     }
 }
 
 STATIC const mp_machine_spi_p_t machine_hard_spi_p = {
-    .init = NULL,
+    .init = machine_hard_spi_init,
     .deinit = NULL,
     .transfer = machine_hard_spi_transfer,
 };
