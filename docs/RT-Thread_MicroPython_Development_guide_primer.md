@@ -1,3 +1,5 @@
+[TOC]
+
 # RT-Thread MicroPython 开发指南：初级篇
 
 ## 1. 本文简介
@@ -13,9 +15,9 @@
 在 MicroPython 上运行 python 文件有以下要求：
 
 - 系统内使用了 rt-thread 的文件系统。
-- 开启 msh 功能。
+- 开启 `msh` 功能。
 
-符合以上两点，我们就可以使用 msh 命令行中的 `python` 命令加上 *.py 文件名来执行一个 python 文件了。
+符合以上两点，就可以使用 `msh` 命令行中的 `python` 命令加上 `*.py` 文件名来执行一个 python 文件了。
 
 ## 3. MicroPython 常用模块介绍
 
@@ -28,7 +30,7 @@
 下面是 micropython 的基本模块，运用这些模块，你可以使用 MicroPython 的基本功能。
 
 #### **rtthread** – 系统相关函数
-rtthread 模块提供了与 rt-thread 操作系统相关的功能，如查看栈使用情况等。
+`rtthread` 模块提供了与 rt-thread 操作系统相关的功能，如查看栈使用情况等。
 
 - rtthread.current_tid()
 返回当前线程的 id 。
@@ -61,7 +63,7 @@ timer        4  suspend 0x00000080 0x00000200    25%   0x00000009 000
 ----------
 
 #### **utime** – 时间相关函数
-utime 模块提供获取当前时间和日期、测量时间间隔和延迟的功能。
+`utime` 模块提供获取当前时间和日期、测量时间间隔和延迟的功能。
 
 更多内容可参考 [`time`](http://docs.micropython.org/en/latest/pyboard/library/utime.html#module-utime)  。
 
@@ -104,9 +106,9 @@ utime 模块提供获取当前时间和日期、测量时间间隔和延迟的�
 ----------
 
 #### **sys** – 系统特有功能函数
-提供系统相关的功能。
+`sys` 模块提供系统相关的功能。
 
-更多内容可参考 [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html) 。
+更多内容可参考 [sys](http://docs.micropython.org/en/latest/pyboard/library/sys.html) 。
 
 `函数`
 
@@ -149,7 +151,7 @@ utime 模块提供获取当前时间和日期、测量时间间隔和延迟的�
 符合的Python语言版本，如字符串。
 
 - sys.version_info
-Python语言版本，实现符合，作为一个元组的值。
+Python 语言版本，实现符合，作为一个元组的值。
 
 `example`:
 
@@ -176,9 +178,11 @@ stat            unlink          mount           umount
 ----------
 
 #### **math** – 数学函数
-用浮点数实现一些基本数学函数。
+`math` 模块提供了对 C 标准定义的数学函数的访问。
 
 **注意** : 需要带有硬件FPU，精度是32位，这个模块需要浮点功能支持。
+
+更多内容可参考  [math](https://docs.python.org/3.5/library/math.html?highlight=math#module-math) 。
 
 `函数`
 
@@ -307,7 +311,8 @@ Return the hyperbolic tangent of x.
 ----------
 
 #### **uio** – 输入/输出流
-包含流类型 (类似文件) 对象和帮助函数，更多的内容可参考  [uio](http://docs.micropython.org/en/latest/pyboard/library/uio.html) 。
+`uio` 模块包含流类型 (类似文件) 对象和帮助函数，
+更多内容可参考  [uio](http://docs.micropython.org/en/latest/pyboard/library/uio.html) 。
 
 `函数`
 
@@ -333,7 +338,7 @@ Return the hyperbolic tangent of x.
 ----------
 
 #### **ucollections** – 收集和容器类型
-这个模块实现了专门的容器数据类型，它提供了 Python 的通用内置容器的替代方案，包括了字典、列表、集合和元组。
+`ucollections` 模块实现了专门的容器数据类型，它提供了 Python 的通用内置容器的替代方案，包括了字典、列表、集合和元组。
 
 更多的内容可参考 [ucollections](http://docs.micropython.org/en/latest/pyboard/library/ucollections.html) 。
 
@@ -380,7 +385,7 @@ b 3
 
 #### **ustruct** – 打包和解包原始数据类型
 
-这个模块在 Python 值和以 Python 字节对象表示的 C 结构之间执行转换。
+`ustruct` 模块在 Python 值和以 Python 字节对象表示的 C 结构之间执行转换。
 
 更多的内容可参考  [struct](https://docs.python.org/3/library/struct.html) 。
 
@@ -407,10 +412,8 @@ b 3
 ----------
 
 #### **array** – 数字数据数组
-
-这个模块定义了一个对象类型，它可以简洁地表示基本值的数组：字符、整数、浮点数。
-
-更多的内容可参考  [array](https://docs.python.org/3/library/array.html) 。
+``array``  模块定义了一个对象类型，它可以简洁地表示基本值的数组：字符、整数、浮点数。
+更多内容可参考  [array](https://docs.python.org/3/library/array.html) 。
 
 支持代码格式: b, B, h, H, i, I, l, L, q, Q, f, d (后2个支持浮点数)。
 
@@ -428,6 +431,8 @@ b 3
 ----------
 
 #### **gc** – 控制垃圾回收
+`gc` 模块提供了垃圾收集器的控制接口。
+更多内容可参考  [gc](https://docs.python.org/3.5/library/gc.html#module-gc) 。
 
 `函数`
 
@@ -453,14 +458,14 @@ b 3
 下面是 MicroPython 硬件相关的模块，运用这些模块，你可以使用 MicroPython 轻松的操纵硬件。
 
 #### **machine** – 与硬件相关的功能
-machine 模块包含与特定开发板上的硬件相关的特定函数。 在这个模块中的大多数功能允许实现直接和不受限制地访问和控制系统上的硬件块（如CPU，定时器，总线等）。如果使用不当，会导致故障，死机，崩溃，在极端的情况下，硬件会损坏。
+`machine` 模块包含与特定开发板上的硬件相关的特定函数。 在这个模块中的大多数功能允许实现直接和不受限制地访问和控制系统上的硬件块（如CPU，定时器，总线等）。如果使用不当，会导致故障，死机，崩溃，在极端的情况下，硬件会损坏。
 
 更多内容可参考 [machine](http://docs.micropython.org/en/latest/pyboard/library/machine.html) 。
 
 `复位功能`
 
 - machine.reset()
-重置设备的方式类似类似按下rst按钮。
+重置设备的方式类似类似按下 rst 按钮。
 
 - machine.reset_cause()
 Get the reset cause. See constants for the possible return values.
@@ -528,7 +533,7 @@ GC:
 `类`
 
 - machine.Pin
-更多的内容可参考 [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.Pin.html)  。
+更多内容可参考 [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.Pin.html)  。
 
 `example`:
 ```
@@ -543,7 +548,7 @@ GC:
 ```
 
 - machine.I2C
-更多的内容可参考 [machine.I2C](http://docs.micropython.org/en/latest/pyboard/library/machine.I2C.html) 。
+更多内容可参考 [machine.I2C](http://docs.micropython.org/en/latest/pyboard/library/machine.I2C.html) 。
 
 `software I2C example ` :
 ```
@@ -572,7 +577,7 @@ b'\x12'                               # starting at memory-address 8 in the slav
 ```
 
 - machine.SPI
-更多的内容可参考 [machine.SPI](http://docs.micropython.org/en/latest/pyboard/library/machine.SPI.html) 。
+更多内容可参考 [machine.SPI](http://docs.micropython.org/en/latest/pyboard/library/machine.SPI.html) 。
 
 `software SPI example ` :
 ```
@@ -613,7 +618,7 @@ bytearray(b'\xef')
 下面是 MicroPython 系统相关的模块，运用这些模块，你可以使用系统相关的功能。
 
 #### **uos** – 基本的操作系统服务
-本模块包含了对文件系统的访问操作，是对应 CPython 模块的一个子集。
+`uos` 模块包含了对文件系统的访问操作，是对应 CPython 模块的一个子集。
 
 更多内容可参考 [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html) 。
 
@@ -678,7 +683,7 @@ stat            unlink          mount           umount
 ----------
 
 #### **uselect** – 等待流事件
-提供了在流上等待事件的功能（选择可操作的流），轮询是在多个对象上等待读/写活动的有效方法。
+`uselect` 模块提供了在流上等待事件的功能（选择可操作的流），轮询是在多个对象上等待读/写活动的有效方法。
 
 更多内容可参考 [select](https://docs.python.org/3.5/library/select.html#module-select) 。
 
@@ -692,8 +697,6 @@ stat            unlink          mount           umount
 
 提供的兼容性和效率不高,推荐使用 `Poll`。
 
-`类 Poll`
-
 `eventmask` 
 
 - select.POLLIN - 读取可用数据
@@ -704,6 +707,8 @@ stat            unlink          mount           umount
 
 - select.POLLHUP - 流结束/连接终止检测
 eventmask 默认 select.POLLIN | select.POLLOUT.
+
+`类 Poll`
 
 - poll.register(obj[, eventmask])
 登记轮询对象 obj 。 
@@ -720,7 +725,7 @@ eventmask 默认 select.POLLIN | select.POLLOUT.
 ----------
 
 #### **uctypes** – 以结构化的方式访问二进制数据
-本模块是 MicroPython 的外函数库，它提供C兼容的数据类型。
+`uctypes` 模块是 MicroPython 的外函数库，它提供 C 兼容的数据类型。
 
 更多内容可参考 [ctypes](https://docs.python.org/3/library/ctypes.html?highlight=ctypes#module-ctypes) 。
 
@@ -745,12 +750,11 @@ Capture memory at the given address and size as bytes object. As bytes object is
 - uctypes.bytearray_at(addr, size)
 Capture memory at the given address and size as bytearray object. Unlike bytes_at() function above, memory is captured by reference, so it can be both written too, and you will access current value at the given memory address.
 
-
 ----------
 
 #### **uerrno** – 系统错误码模块
 
-这个模块提供了标准的 errno 系统符号，每个符号的值是对应的整数值。
+`uerrno` 模块提供了标准的 errno 系统符号，每个符号的值是对应的整数值。
 
 更多内容可参考 [errno](https://docs.python.org/3/library/errno.html?highlight=errno#module-errno) 。
 
@@ -772,7 +776,7 @@ EEXIST
 ----------
 
 #### **_thread** – 多线程支持
-这个模块提供了用于处理多线程的基本方法——多个控制线程共享它们的全局数据空间。为了实现同步，提供了简单的锁（也称为互斥锁或二进制信号量）。
+`_thread` 模块提供了用于处理多线程的基本方法——多个控制线程共享它们的全局数据空间。为了实现同步，提供了简单的锁（也称为互斥锁或二进制信号量）。
 
 更多内容可参考 [_thread](https://docs.python.org/3/library/_thread.html?highlight=_thread#module-_thread)  。
 
@@ -802,7 +806,9 @@ paste mode; Ctrl-C to cancel, Ctrl-D to finish
 下面是 MicroPython 工具类模块，运用这些模块，你就可以方便的使用这些工具。
 
 #### **cmath** – 复数的数学函数
-cmath 提供了基本的复数运算功能，需要浮点库支持.
+`cmath` 模块提供了对复数的数学函数的访问。这个模块中的函数接受整数、浮点数或复数作为参数。他们还将接受任何有复杂（）或浮点（）方法的Python对象：这些方法分别用于将对象转换成复数或浮点数，然后将该函数应用到转换的结果中。
+
+更多内容可参考 [cmath](https://docs.python.org/3/library/cmath.html?highlight=cmath#module-cmath)  。
 
 `函数`
 
@@ -844,7 +850,10 @@ cmath 提供了基本的复数运算功能，需要浮点库支持.
 ----------
 
 #### **ubinascii** – 二进制/ ASCII转换
-实现了二进制数据以ASCII形式的各种编码之间的转换（两个方向）。
+`ubinascii` 模块包含许多在二进制和各种 ascii 编码的二进制表示之间转换的方法。
+
+更多内容可参考 [binascii](https://docs.python.org/3/library/binascii.html?highlight=binascii#module-binascii)  。
+
 
 `函数`
 
@@ -866,7 +875,11 @@ Base64编码的数据转换为二进制表示。返回字节串。
 ----------
 
 #### **uhashlib** – 哈希算法
-该模块实现了二进制数据哈希算法。精确可用的算法依赖于TPYBoard。其中的算法可能实施:
+`uhashlib` 模块实现了二进制数据哈希算法。
+
+更多内容可参考 [hashlib](https://docs.python.org/3/library/hashlib.html?highlight=hashlib#module-hashlib)  。
+
+其中的算法提供的功能有:
 
 SHA256 - The current generation, modern hashing algorithm (of SHA2 series). It is suitable for cryptographically-secure purposes. Included in the MicroPython core and any board is recommended to provide this, unless it has particular code size constraints.
 
@@ -874,7 +887,7 @@ SHA1 - A previous generation algorithm. Not recommended for new usages, but SHA1
 
 MD5 - A legacy algorithm, not considered cryptographically secure. Only selected boards, targetting interoperatibility with legacy applications, will offer this.
 
-`构造器`
+`函数`
 
 - class uhashlib.sha256([data])
 创建一个SHA256哈希对象并提供 data 赋值。
@@ -884,8 +897,6 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 - class uhashlib.md5([data])
 创建一个MD5哈希对象并提供 data 赋值。
-
-`方法`
 
 - hash.update(data)
 将更多二进制数据放入哈希表中。
@@ -900,8 +911,9 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 #### **uheapq** – 堆排序算法
 
-提供了堆排序算法。
-堆队列是一个列表，它的元素以特定的方式存储。
+`uheapq` 模块提供了堆排序相关算法，堆队列是一个列表，它的元素以特定的方式存储。
+
+更多内容可参考 [heapq](https://docs.python.org/3/library/heapq.html?highlight=heapq#module-heapq)  。
 
 `函数`
 
@@ -917,7 +929,9 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 ----------
 
 #### **ujson** – JSON编码与解码
-提供 Python 对象到 JSON（JavaScript Object Notation） 数据格式的转换。
+`ujson` 模块提供 Python 对象到 JSON（JavaScript Object Notation） 数据格式的转换。
+
+更多内容可参考 [json](https://docs.python.org/3/library/json.html?highlight=json#module-json)  。
 
 `函数`
 
@@ -930,7 +944,9 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 ----------
 
 #### **ure** – 正则表达式
-正则表达式用于测试字符串的某个模式，执行正则表达式操作。正则表达式支持 CPython 子集 re 模块 (实际是 POSIX 扩展正则表达式的子集)。更多内容可参考 [re](https://docs.python.org/3/library/re.html?highlight=re#module-re) 模块进行比较 。
+`ure` 模块用于测试字符串的某个模式，执行正则表达式操作。
+
+更多内容可参考 [re](https://docs.python.org/3/library/re.html?highlight=re#module-re)  。
 
 - 支持操作符:
 ``'.'``
@@ -964,14 +980,16 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 - ure.DEBUG
 标志值，显示表达式的调试信息。
 
-`正则表达式对象` :
+**正则表达式对象**:
+
 编译正则表达式，使用 `ure.compile()` 创建实例。
 
 - regex.match(string)
 - regex.search(string)
 - regex.split(string, max_split=-1)
 
-`匹配对象` :
+**匹配对象** :
+
 匹配对象是 match() 和 search() 方法的返回值。
 
 - match.group([index])
@@ -981,7 +999,9 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 #### **uzlib** – zlib 解压缩
 
-使用 DEFLATE 算法解压缩二进制数据 (常用的 zlib 库和 gzip 文档)。目前不支持压缩。
+`uzlib` 模块实现了使用 DEFLATE 算法解压缩二进制数据 (常用的 zlib 库和 gzip 文档)。目前不支持压缩。
+
+更多内容可参考 [zlib](https://docs.python.org/3/library/zlib.html?highlight=zlib#module-zlib) 。
 
 `函数`
 
@@ -991,7 +1011,11 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 ----------
 
 #### **urandom** - 随机数生成模块
-这个模块实现了伪随机数生成器，更多内容可参考 [random](https://docs.python.org/3/library/random.html?highlight=random#module-random) 模块进行比较。
+`urandom` 模块实现了伪随机数生成器。
+
+更多内容可参考 [random](https://docs.python.org/3/library/random.html?highlight=random#module-random) 。
+
+`函数` 
 
 - urandom.choice()
 Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
@@ -1025,22 +1049,9 @@ The end-point value b may or may not be included in the range depending on float
 下面是 MicroPython 网络类模块，通过这个基本模块，你可以使用网络连接的基本功能。
 
 #### **usocket** – 套接字模块
-提供的BSD套接字接口，更多的内容可参考 CPython 对应的 [socket](https://docs.python.org/3/library/socket.html) 模块进行比较。
+`usocket` 模块提供对BSD套接字接口的访问。
 
-`函数`
-
-- socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-创建新的套接字，使用指定的地址、类型和协议号。
-
-- socket.getaddrinfo(host, port)
-传递 主机/端口 到一个5个数据的元组。元组列表的结构如下:
-(family, type, proto, canonname, sockaddr)
-下面举例怎样连接到一个网址:
-
-```
-s = socket.socket()
-s.connect(socket.getaddrinfo('www.micropython.org', 80)[0][-1])
-```
+更多的内容可参考 [socket](https://docs.python.org/3/library/socket.html) 。
 
 `常数`
 
@@ -1068,8 +1079,14 @@ Socket options (an argument to setsockopt()). The exact inventory depends on a b
 - socket.IPPROTO_SEC
 Special protocol value to create SSL-compatible socket.
 
-`class socket`
-`方法`
+`函数`
+
+- socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+创建新的套接字，使用指定的地址、类型和协议号。
+
+- socket.getaddrinfo(host, port)
+传递 主机/端口 到一个5个数据的元组。元组列表的结构如下:
+(family, type, proto, canonname, sockaddr)
 
 - socket.close()
 关闭套接字。一旦关闭后，套接字所有的功能都将失效。远端将接收不到任何数据 (清理队列数据后)。 在回收垃圾时套接字会自动关闭，但还是推荐在必要时用 close() 去关闭，或, or to use a with statement around them。
@@ -1147,6 +1164,12 @@ b'rt-thread\r'
 >>> s.send("micropython")               
 11
 >>> s.close()
+```
+
+`connect to a web site example`:
+```
+s = socket.socket()
+s.connect(socket.getaddrinfo('www.micropython.org', 80)[0][-1])
 ```
 
 
