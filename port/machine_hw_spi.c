@@ -33,6 +33,10 @@
 
 #ifdef MICROPYTHON_USING_MACHINE_SPI
 
+#ifndef RT_USING_SPI
+#error "Please define the RT_USING_SPI on 'rtconfig.h'"
+#endif
+
 STATIC const mp_obj_type_t machine_hard_spi_type;
 
 typedef struct _machine_hard_spi_obj_t {
