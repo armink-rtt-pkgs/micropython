@@ -1,8 +1,6 @@
-[TOC]
-
 # RT-Thread MicroPython 开发指南：初级篇
 
-## 1. 本文简介
+## 1. 简介
 
 - 本文将介绍如何在 MicroPython 上运行一个完整的 python 文件。
 - 介绍 MicroPython 上常用模块的使用方式，带你熟悉开发 MicroPython 的基本方法。
