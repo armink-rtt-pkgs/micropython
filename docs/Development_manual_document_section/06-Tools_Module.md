@@ -10,39 +10,39 @@
 
 `函数`
 
-- cmath.cos(z)
+- cmath.cos(z)  
 返回``z``的余弦。
 
-- cmath.exp(z)
+- cmath.exp(z)  
 返回``z``的指数。
 
-- cmath.log(z)
+- cmath.log(z)  
 返回``z``的对数。
 
-- cmath.log10(z)
+- cmath.log10(z)  
 返回``z``的常用对数。
 
-- cmath.phase(z)
+- cmath.phase(z)  
 返回``z``的相位, 范围是(-pi, +pi]，以弧度表示。
 
-- cmath.polar(z)
+- cmath.polar(z)  
 返回``z``的极坐标.
 
-- cmath.rect(r, phi)
+- cmath.rect(r, phi)  
 返回`模量`r``和相位``phi``的复数。
 
-- cmath.sin(z)
+- cmath.sin(z)  
 返回``z``的正弦。
 
-- cmath.sqrt(z)
+- cmath.sqrt(z)  
 返回``z``的平方根。
 
 `常数`
 
-- cmath.e
+- cmath.e  
 自然对数的指数。
 
-- cmath.pi
+- cmath.pi  
 圆周率。
 
 ----------
@@ -55,19 +55,19 @@
 
 `函数`
 
-- ubinascii.hexlify(data[, sep])
+- ubinascii.hexlify(data[, sep])  
 将二进制数据转换为十六进制表示。
 
-- Difference to CPython
+- Difference to CPython  
 If additional argument, sep is supplied, it is used as a separator between hexadecimal values.
 
-- ubinascii.unhexlify(data)
+- ubinascii.unhexlify(data)  
 将十六进制数据转换为二进制表示。返回字节串 (换言之， 反二进制转换)
 
-- ubinascii.a2b_base64(data)
+- ubinascii.a2b_base64(data)  
 Base64编码的数据转换为二进制表示。返回字节串。
 
-- ubinascii.b2a_base64(data)
+- ubinascii.b2a_base64(data)  
 编码base64格式的二进制数据。返回的字符串。
 
 ----------
@@ -87,22 +87,22 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数`
 
-- class uhashlib.sha256([data])
+- class uhashlib.sha256([data])  
 创建一个SHA256哈希对象并提供 data 赋值。
 
-- class uhashlib.sha1([data])
+- class uhashlib.sha1([data])  
 创建一个SHA1哈希对象并提供 data 赋值。
 
-- class uhashlib.md5([data])
+- class uhashlib.md5([data])  
 创建一个MD5哈希对象并提供 data 赋值。
 
-- hash.update(data)
+- hash.update(data)  
 将更多二进制数据放入哈希表中。
 
-- hash.digest()
+- hash.digest()  
 返回字节对象哈希的所有数据。调用此方法后，将无法将更多数据送入哈希。
 
-- hash.hexdigest()
+- hash.hexdigest()  
 此方法没有实现， 使用 ubinascii.hexlify(hash.digest()) 达到类似效果。
 
 ----------
@@ -115,13 +115,13 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数`
 
-- uheapq.heappush(heap, item)
+- uheapq.heappush(heap, item)  
 把 item 推到 heap。
 
-- uheapq.heappop(heap)
+- uheapq.heappop(heap)  
 从 heap 弹出第一个元素并返回。 如果是堆时空的会抛出 IndexError。
 
-- uheapq.heapify(x)
+- uheapq.heapify(x)  
 将列表 x 转换成堆。
 
 ----------
@@ -133,10 +133,10 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数`
 
-- ujson.dumps(obj)
+- ujson.dumps(obj)  
 返回 obj JSON字符串。
 
-- ujson.loads(str)
+- ujson.loads(str)  
 解析 str 字符串并返回对象。如果字符串格式错误将引发 ValueError 异常。
 
 ----------
@@ -166,31 +166,31 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数`
 
-- ure.compile(regex)
+- ure.compile(regex)  
 编译正则表达式，返回 regex 对象。
 
-- ure.match(regex, string)
+- ure.match(regex, string)  
 用 string 匹配 regex，匹配总是从字符串的开始匹配。
 
-- ure.search(regex, string)
+- ure.search(regex, string)  
 在 string 中搜索 regex。不同于匹配，它搜索第一个匹配位置的正则表达式字符串 (结果可能会是0)。
 
-- ure.DEBUG
+- ure.DEBUG  
 标志值，显示表达式的调试信息。
 
 **正则表达式对象**:
 
 编译正则表达式，使用 `ure.compile()` 创建实例。
 
-- regex.match(string)
-- regex.search(string)
-- regex.split(string, max_split=-1)
+- regex.match(string)  
+- regex.search(string)  
+- regex.split(string, max_split=-1)  
 
 **匹配对象** :
 
 匹配对象是 match() 和 search() 方法的返回值。
 
-- match.group([index])
+- match.group([index])  
 只支持数字组。
 
 ----------
@@ -203,7 +203,7 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数`
 
-- uzlib.decompress(data)
+- uzlib.decompress(data)  
 返回解压后的 bytes 数据。
 
 ----------
@@ -215,27 +215,27 @@ MD5 - A legacy algorithm, not considered cryptographically secure. Only selected
 
 `函数` 
 
-- urandom.choice()
+- urandom.choice()  
 Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
 
-- urandom.getrandbits()
+- urandom.getrandbits()  
 Returns a Python integer with k random bits. This method is supplied with the MersenneTwister generator and some other generators may also provide it as an optional part of the API. When available, getrandbits() enables randrange() to handle arbitrarily large ranges.
 
-- urandom.randint()
+- urandom.randint()  
 Return a random integer N such that a <= N <= b. Alias for randrange(a, b+1).
 
-- urandom.random()
+- urandom.random()  
 Return the next random floating point number in the range [0.0, 1.0).
 
-- urandom.randrange()
+- urandom.randrange()  
 Return a randomly selected element from range(start, stop, step). This is equivalent to choice(range(start, stop, step)), but doesn’t actually build a range object.
 
 
-- urandom.seed()
+- urandom.seed()  
 Initialize the random number generator.
 If a is omitted or None, the current system time is used. If randomness sources are provided by the operating system, they are used instead of the system time (see the os.urandom() function for details on availability).
 
-- urandom.uniform()
+- urandom.uniform()  
 Return a random floating point number N such that a <= N <= b for a <= b and b <= N <= a for b < a.
 The end-point value b may or may not be included in the range depending on floating-point rounding in the equation a + (b-a) * random().
 

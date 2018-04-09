@@ -11,32 +11,32 @@
 
 `复位功能`
 
-- machine.reset()
+- machine.reset()  
 重置设备的方式类似类似按下 rst 按钮。
 
-- machine.reset_cause()
+- machine.reset_cause()  
 Get the reset cause. See constants for the possible return values.
 
 `中断功能`
 
-- machine.disable_irq()
+- machine.disable_irq()  
 Disable interrupt requests. Returns the previous IRQ state which should be considered an opaque value. This return value should be passed to the enable_irq function to restore interrupts to their original state, before disable_irq was called.
 
-- machine.enable_irq(state)
+- machine.enable_irq(state)  
 Re-enable interrupt requests. The state parameter should be the value that was returned from the most recent call to the disable_irq function.
 
 `有效的相关功能`
 
-- machine.freq()
+- machine.freq()  
 Returns CPU frequency in hertz.
 
-- machine.idle()
+- machine.idle()  
 Gates the clock to the CPU, useful to reduce power consumption at any time during short or long periods. Peripherals continue working and execution resumes as soon as any interrupt is triggered (on many ports this includes system timer interrupt occurring at regular intervals on the order of millisecond).
 
-- machine.sleep()
+- machine.sleep()  
 Stops the CPU and disables all peripherals except for WLAN. Execution is resumed from the point where the sleep was requested. For wake up to actually happen, wake sources should be configured first.
 
-- machine.deepsleep()
+- machine.deepsleep()  
 Stops the CPU and all peripherals (including networking interfaces, if any). Execution is resumed from the main script, just as with a reset. The reset cause can be checked to know that we are coming from machine.DEEPSLEEP. For wake up to actually happen, wake sources should be configured first, like Pin change or RTC timeout.
 
 `example`:
@@ -77,7 +77,7 @@ GC:
 
 `类`
 
-- machine.Pin
+- machine.Pin  
 更多内容可参考 [machine.Pin](http://docs.micropython.org/en/latest/pyboard/library/machine.Pin.html)  。
 
 `example`:
@@ -92,7 +92,7 @@ GC:
 >>> p_in.value()                # get value, 0 or 1
 ```
 
-- machine.I2C
+- machine.I2C  
 更多内容可参考 [machine.I2C](http://docs.micropython.org/en/latest/pyboard/library/machine.I2C.html) 。
 
 `software I2C example ` :
@@ -121,7 +121,7 @@ b'\x12'                               # starting at memory-address 8 in the slav
 [81]                                  # Decimal representation
 ```
 
-- machine.SPI
+- machine.SPI  
 更多内容可参考 [machine.SPI](http://docs.micropython.org/en/latest/pyboard/library/machine.SPI.html) 。
 
 `software SPI example ` :
@@ -154,6 +154,6 @@ bytearray(b'\xef')
 >>> spi.init(100000,0,0,8,1)     # Resetting SPI parameter
 ```
 
-- machine.UART
+- machine.UART  
 
 ----------
