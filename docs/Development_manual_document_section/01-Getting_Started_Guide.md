@@ -1,4 +1,4 @@
-# RT-Thread MicroPython 入门指南
+# RT-Thread MicroPython 快速上手
 
 ## 1. 简介
 ### 1.1 主要特性
@@ -23,7 +23,8 @@
 
 ## 2. 开始使用 MicroPython
 
-注意 RT-Thread MicroPython 需要运行在 **RT-Thread 3.0** 版本以上。
+!!! note "注意"
+     RT-Thread MicroPython 需要运行在 **RT-Thread 3.0** 版本以上。
 
 ### 2.1 选择合适的 BSP 平台
 
@@ -71,7 +72,7 @@ RT-Thread MicroPython mini 版本最小资源占用要求为：
 
 输入代码：
 
-```
+```python
 for i in range(1,10):
     print(i)
 ```
@@ -87,7 +88,8 @@ for i in range(1,10):
 
 ![elect_micropytho](./figures/use_buildin_module.png)
 
-- 注：默认下载的 MicroPython  软件包为 mini 版本，为 RT-Thread 推出的最小版本的 MicroPython ，如果想使用更多的 MicroPython 模块，可以在 menuconfig 配置项中打开更多的模块选项。
+!!! tip "提示"
+     默认下载的 MicroPython  软件包为 mini 版本，为 RT-Thread 推出的最小版本的 MicroPython ，如果想使用更多的 MicroPython 模块，可以在 menuconfig 配置项中打开更多的模块选项。
 
 ## 4. MicroPython 例程
 

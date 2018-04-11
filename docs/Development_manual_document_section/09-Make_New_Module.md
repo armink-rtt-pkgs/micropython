@@ -1,1 +1,1 @@
-# RT-Thread MicroPython 新模块的创建
+# RT-Thread MicroPython 创建新模块
