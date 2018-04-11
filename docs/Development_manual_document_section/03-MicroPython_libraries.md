@@ -14,24 +14,6 @@ MicroPython 的模块（函数和类库）有以下几类 :
 - 扩展模块：实现 micropython 的 Python 标准库。
 - 硬件驱动模块: 特定端口或者硬件驱动的模块，因此不可移植。
 
-Note about the availability of modules and their contents: This documentation
-in general aspires to describe all modules and functions/classes which are
-implemented in MicroPython. However, MicroPython is highly configurable, and
-each port to a particular board/embedded system makes available only a subset
-of MicroPython libraries. For officially supported ports, there is an effort
-to either filter out non-applicable items, or mark individual descriptions
-with "Availability:" clauses describing which ports provide a given feature.
-With that in mind, please still be warned that some functions/classes
-in a module (or even the entire module) described in this documentation may be
-unavailable in a particular build of MicroPython on a particular board. The
-best place to find general information of the availability/non-availability
-of a particular feature is the "General Information" section which contains
-information pertaining to a specific port.
-
-Beyond the built-in libraries described in this documentation, many more
-modules from the Python standard library, as well as further MicroPython
-extensions to it, can be found in the [micropython-lib repository](https://github.com/micropython/micropython-lib).
-
 ## 2. Python 标准库和微型库
 
 标准的 Python 库被 “微型化”后，就是 micropython 标准库。它们仅仅提供了该模块的核心功能。一些模块没有直接使用标准的 Python 的名字，而是冠以"u"，例如``ujson``代替``json``。也就是说 micropython 标准库（=微型库），只实现了一部分模块功能。通过他们的名字不同，用户有选择的去写一个 Python 级模块扩展功能，也是为实现更好的兼容性。
