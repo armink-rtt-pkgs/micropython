@@ -1,30 +1,21 @@
 # MicroPython 模块
 
-!!! abstract "摘要"
+!!! abstract "简介"
     - MicroPython 提供丰富的模块，每个模块提供特定的功能。了解开发的过程中一些常用的模块的使用方式，可以让你很好的使用 MicroPython 的功能。
 
     - 这些模块可以通过 env 工具的 menuconfig 功能来开启和关闭，如果你需要使用特定的模块，在 menuconfig 中选中模块名，保存退出后，重新编译运行即可。
 
-## 1. MicroPython 模块的类别
+## 1. Python 标准库和微型库
 
-MicroPython 的模块（函数和类库）有以下几类 :
+Python 的标准库被 “微型化”后，就是 MicroPython 标准库，也称 MicroPython 模块。它们仅仅提供了该模块的核心功能，用来替代 Python 标准库 。一些模块使用 Python  标准库的名字，但是加上了前缀 "u"，例如``ujson``代替``json``。也就是说 MicroPython 的标准库(微型库)，只实现了一部分模块功能。通过给这些库以不同的方式命名，用户可以写一个 Python 级的模块来扩展微型库的功能，以便于兼容 CPython 的标准库（这项工作就是 [micropython-lib](https://github.com/micropython/micropython-lib) 项目的正在做的）。
 
-- 内置模块：标准 Python 功能的子集，用户不能扩展。
-- 扩展模块：实现了 Python 功能的一个子集，并提供用户扩展（通过Python代码）。
-- 扩展模块：实现 micropython 的 Python 标准库。
-- 硬件驱动模块: 特定端口或者硬件驱动的模块，因此不可移植。
+在一些嵌入式平台上，可添加 Python 级别封装库从而实现命名兼容 CPython，使用 MicroPython 标准库既可使用他们的 u-name，也可以使用 non-u-name。使用 non-u-name 的模块可以被库路径文件夹里面的同名模块所覆盖。
 
-## 2. Python 标准库和微型库
+例如，当``import json``时，首先会在库路径文件夹中搜索一个 ``json.py`` 文件或 ``json`` 目录进行加载。如果没有找到，它才会去加载内置 ``ujson`` 模块。
 
-标准的 Python 库被 “微型化”后，就是 micropython 标准库。它们仅仅提供了该模块的核心功能。一些模块没有直接使用标准的 Python 的名字，而是冠以"u"，例如``ujson``代替``json``。也就是说 micropython 标准库（=微型库），只实现了一部分模块功能。通过他们的名字不同，用户有选择的去写一个 Python 级模块扩展功能，也是为实现更好的兼容性。
+## 2. RT-Thread MicroPython 模块
 
-在嵌入式平台上，可添加 Python 级别封装库从而实现命名兼容 CPython，微模块即可调用他们的 u-name，也可以调用 non-u-name。根据 non-u-name 包路径的文件可重写。
-
-例如，``import json``的话，首先搜索一个``json.py``文件或``json``目录进行加载。如果没有找到，它回退到加载内置``ujson``模块。
-
-## 3. RT-Thread MicroPython 模块列表
-
-### 1、系统模块
+### 2.1 系统模块
 - [rtthread][1] – RT-Thread 系统相关函数
 - [utime][2]  – 时间相关函数
 - [sys][3]  – 系统特有功能函数
@@ -35,21 +26,21 @@ MicroPython 的模块（函数和类库）有以下几类 :
 - [array][8]  – 数字数据数组
 - [gc][9]  – 控制垃圾回收
 
-### 2、硬件模块
+### 2.2 硬件模块
 - [machine][10] – 与硬件相关的功能
 - [machine.Pin][11]
 - [machine.I2C][12]
 - [machine.SPI][13]
 - [machine.UART][14]
 
-### 3、系统模块
+### 2.3 系统模块
 - [uos][15] – 基本的 “操作系统” 服务
 - [select][16] – 等待流事件
 - [uctypes][17] – 以结构化的方式访问二进制数据
 - [uerrno][18] – 系统错误码模块
 - [_thread][19] – 多线程支持
 
-### 4、工具模块
+### 2.4 工具模块
 - [cmath][20] – 复数的数学函数
 - [ubinascii][21] – 二进制/ ASCII转换
 - [uhashlib][22] – 哈希算法
@@ -59,7 +50,7 @@ MicroPython 的模块（函数和类库）有以下几类 :
 - [uzlib][26] – zlib 解压缩
 - [urandom][27] – 随机数生成模块
 
-### 5、网络模块
+### 2.5 网络模块
 - [usocket][28] – 套接字模块
 
 [1]: 03-Basic_Module/01-rtthread.md
@@ -90,9 +81,6 @@ MicroPython 的模块（函数和类库）有以下几类 :
 [26]: 06-Tools_Module/07-uzlib.md
 [27]: 06-Tools_Module/08-urandom.md
 [28]: 07-Network_Module/01-usocket.md
-
-
-
 
 
 
