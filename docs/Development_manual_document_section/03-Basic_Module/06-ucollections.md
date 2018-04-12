@@ -1,13 +1,14 @@
 # **ucollections** – 收集和容器类型
 
-!!! tip "简介"
-    `ucollections` 模块实现了专门的容器数据类型，它提供了 Python 的通用内置容器的替代方案，包括了字典、列表、集合和元组。
+!!! abstract "简介"
+    **ucollections** 模块实现了专门的容器数据类型，它提供了 Python 的通用内置容器的替代方案，包括了字典、列表、集合和元组。
 
 ## 类
 
 ### **ucollections.namedtuple**(name, fields)  
-这是工厂函数创建一个新的 `namedtuple` 型与一个特定的字段名称和集合。`namedtuple` 是元组允许子类要访问它的字段不仅是数字索引，而且还具有属性使用符号字段名访问语法。 字段是字符串序列指定字段名称。为了兼容的实现也可以用空间分隔的字符串命名的字段（但效率较低） 使用示例:
+这是工厂函数创建一个新的 `namedtuple` 型与一个特定的字段名称和集合。`namedtuple` 是元组允许子类要访问它的字段不仅是数字索引，而且还具有属性使用符号字段名访问语法。 字段是字符串序列指定字段名称。为了兼容的实现也可以用空间分隔的字符串命名的字段（但效率较低） 。
 
+代码示例：
 ```python
 from ucollections import namedtuple
 
@@ -20,7 +21,8 @@ ucollections.OrderedDict(...)
 
 ```
 
-dict 类型的子类，记住并保留键的追加顺序。keys/items 返回的顺序被加入:
+### **ucollections.OrderedDict**(...)  
+字典类型的子类，会记住并保留键/值的追加顺序。当有序的字典被迭代输出时，键/值 会按照他们被添加的顺序返回 :
 
 ```python
 from ucollections import OrderedDict

@@ -1,10 +1,10 @@
 # **ustruct** – 打包和解包原始数据类型
 
-!!! tip "简介"
-    `ustruct` 模块在 Python 值和以 Python 字节对象表示的 C 结构之间执行转换。
+!!! abstract "简介"
+    **ustruct** 模块在 Python 值和以 Python 字节对象表示的 C 结构之间执行转换。
 
 - 支持 size/byte 的前缀: @, <, >, !.
-- 支持的格式代码: b, B, h, H, i, I, l, L, q, Q, s, P, f, d (最后2个需要浮点库支持).
+- 支持的格式代码: b, B, h, H, i, I, l, L, q, Q, s, P, f, d (最后2个需要支持浮点数).
 
 ## 函数
 
