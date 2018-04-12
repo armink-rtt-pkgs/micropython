@@ -7,15 +7,15 @@
 
 ## 类
 
-- class array.array(typecode[, iterable])  
+### **class array.array**(typecode[, iterable])  
   指定类型创建数组元素。用可选项［］做为数组的初始值，可选项［］未指定的，则创建空数组。
 
-- append(val)  
+### **append**(val)  
   将新元素添加到数组的结尾，并将其扩展。
 
-- extend(iterable)  
+### **extend**(iterable)  
   使用迭代方式将新元素添加到数组的结尾，并将其扩展。
-  
+
 更多内容可参考  [array](https://docs.python.org/3/library/array.html) 。
 
 ----------
