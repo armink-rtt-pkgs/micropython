@@ -2,7 +2,7 @@
 
 
 !!! abstract "简介"
-     **rtthread** 模块提供了与 rt-thread 操作系统相关的功能，如查看栈使用情况等。
+     **rtthread** 模块提供了与 RT-Thread 操作系统相关的功能，如查看栈使用情况等。
 
 
 ## 函数
