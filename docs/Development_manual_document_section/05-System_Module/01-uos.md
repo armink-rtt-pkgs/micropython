@@ -1,5 +1,7 @@
-# **uos** – 基本的操作系统服务
-`uos` 模块包含了对文件系统的访问操作，是对应 CPython 模块的一个子集。
+# **uos** – 基本的"操作系统"服务
+
+!!! abstract "简介"
+    `uos` 模块包含了对文件系统的访问操作，是对应 CPython 模块的一个子集。
 
 更多内容可参考 [uos](http://docs.micropython.org/en/latest/pyboard/library/uos.html) 。
 
