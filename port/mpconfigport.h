@@ -138,6 +138,10 @@
 #define MICROPY_PY_MACHINE_SPI_MAKE_NEW machine_hard_spi_make_new
 #endif
 
+#ifdef MICROPYTHON_USING_MACHINE_UART
+#define MICROPY_PY_MACHINE_UART      (1)
+#endif
+
 /*****************************************************************************/
 /* System Module                                                             */
 
