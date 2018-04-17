@@ -37,18 +37,28 @@
 ### 1.3.2 教育
 
 - MicroPython  使用简单、方便，性能好，非常适合于编程入门。在校学生或者业余爱好者都可以通过 MicroPython 快速的开发一些好玩的项目，在开发的过程中学习编程思想，提高自己的动手能力。
+- 下面是一些 MicroPython  教育项目：
+    - [从TurnipBit开始完成编程启蒙](https://www.cnblogs.com/xxosu/p/7206414.html)
+    - [MicroBit 创意编程](http://microbit.org/)
 
 ### 1.3.3 创客 DIY
 
 - MicroPython 无需复杂的设置，不需要安装特别的软件和额外的硬件，使用任何文本编辑器就可以进行编程。大部分硬件功能，使用一个命令就能驱动，不用了解硬件底层就能快速开发。这些特性使得 MicroPython 非常适合创客使用来开发一些有创意的项目。
 
+- 下面是使用 MicroPython 制作的一些 DIY 项目：
+    - [显示温湿度的 WIFI 时钟](https://www.bilibili.com/video/av15929152?from=search&seid=16285206333541196172)
+    - [OpenMV 智能摄像头](https://www.bilibili.com/video/av16418889?from=search&seid=16285206333541196172)
+    - [手机遥控车](https://www.bilibili.com/video/av15008143?from=search&seid=16285206333541196172)
+    - [搭建 MQTT 服务器](http://www.360doc.com/content/17/1218/22/8473307_714341237.shtml)
+
 # 2. MicroPython 开发资源
 
+- [RT-Thread MicroPython 源码](https://github.com/RT-Thread-packages/micropython)
+- [RT-Thread MicroPython 论坛](https://www.rt-thread.org/qa/forum.php)
 - [MicroPython 官方网站](https://micropython.org/)
-- [在线文档](http://docs.micropython.org/en/latest/pyboard/)
+- [官方在线文档](http://docs.micropython.org/en/latest/pyboard/)
 - [MicroPython 在线演示](https://micropython.org/unicorn)
 - [MicroPython 源码](https://github.com/micropython/micropython)
 - [MicroPython 官方论坛](http://forum.micropython.org/)
 - [MicroPython 中文社区](http://www.micropython.org.cn/)
-- [RT-Thread MicroPython 论坛](https://www.rt-thread.org/qa/forum.php)
 
