@@ -76,9 +76,9 @@
 将 `buf` 里的数据写入 `addr` 指定的从机的 `memaddr` 地址中。 
 这个方法没有返回值。
 
-## 示例 
+## 示例
 
-### `软件模拟 I2C ` 
+### `软件模拟 I2C `
 ```
 >>> from machine import Pin, I2C
 >>> clk = Pin(("clk", 43), Pin.OUT_OD)   # Select the 43 pin device as the clock
@@ -87,7 +87,7 @@
 >>> i2c.scan()                        # scan for slaves, returning a list of 7-bit addresses
 [81]                                  # Decimal representation
 >>> i2c.writeto(0x51, b'123')         # write 3 bytes to slave with 7-bit address 42
-3 
+3
 >>> i2c.readfrom(0x51, 4)             # read 4 bytes from slave with 7-bit address 42
 b'X\x08\x105'
 >>> i2c.readfrom_mem(0x51, 0x02, 1)   # read 1 bytes from memory of slave 0x51(7-bit),
@@ -96,10 +96,10 @@ b'\x12'                               # starting at memory-address 8 in the slav
                                       # starting at address 2 in the slave
 ```
 
-### `硬件 I2C ` 
+### `硬件 I2C `
 
 需要先开启 `I2C` 设备驱动，查找设备可以在 `msh` 中输入`list_device` 命令。  
-在构造函数的第一个参数传入 '0'，系统就会搜索名为 'i2c0' 的设备，找到之后使用这个设备来构建 `I2C` 对象：
+在构造函数的第一个参数传入 `0`，系统就会搜索名为 `i2c0` 的设备，找到之后使用这个设备来构建 `I2C` 对象：
 
 ```
 >>> from machine import Pin, I2C

@@ -26,8 +26,8 @@
 用给定的参数初始化`SPI`总线：
 
 - **baudrate** ：`SCK` 时钟频率。
-- **polarity** ：极性可以是 '0' 或 '1'，是时钟空闲时所处的电平。
-- **phase** ：相位可以是 '0' 或 '1'，分别在第一个或者第二个时钟边缘采集数据。
+- **polarity** ：极性可以是 `0` 或 `1`，是时钟空闲时所处的电平。
+- **phase** ：相位可以是 `0` 或 `1`，分别在第一个或者第二个时钟边缘采集数据。
 - **bits** ：每次传输的数据长度，一般是 8 位。
 - **firstbit** ：传输数据从高位开始还是从低位开始，可以是 `SPI.MSB` 或者 `SPI.LSB`。
 - **sck** ：用于 `sck` 的 `machine.Pin` 对象。
@@ -63,7 +63,7 @@
 
 ## 示例
 
-### `软件模拟 SPI ` 
+### `软件模拟 SPI `
 ```
 >>> from machine import Pin, SPI
 >>> clk = Pin(("clk", 43), Pin.OUT_PP)
@@ -77,10 +77,10 @@ SoftSPI(baudrate=500000, polarity=0, phase=0, sck=clk, mosi=mosi, miso=miso)
 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 ```
 
-### `硬件 SPI ` 
+### `硬件 SPI `
 
 需要先开启 `SPI` 设备驱动，查找设备可以在 `msh` 中输入`list_device` 命令。  
-在构造函数的第一个参数传入  '50'，系统就会搜索名为 'spi50' 的设备，找到之后使用这个设备来构建 `SPI` 对象：
+在构造函数的第一个参数传入 `50`，系统就会搜索名为 `spi50` 的设备，找到之后使用这个设备来构建 `SPI` 对象：
 
 ```
 >>> from machine import SPI
