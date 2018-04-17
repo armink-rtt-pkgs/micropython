@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 SummerGift <zhangyuan@rt-thread.com>
+ * Copyright (c) 2018 SummerGift <zhangyuan@rt-thread.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,9 +36,6 @@
 #include <stdarg.h>
 #include "machine_uart.h"
 
-/******************************************************************************/
-/* MicroPython bindings                                                       */
-
 STATIC void machine_uart_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_uart_obj_t *self = (machine_uart_obj_t*) self_in;
     mp_printf(print, "uart( device port : %s,baud_rate = %d, data_bits = %d, parity = %d, stop_bits = %d )",
@@ -67,32 +64,91 @@ STATIC mp_obj_t machine_uart_make_new(const mp_obj_type_t *type, size_t n_args, 
     return (mp_obj_t) self;
 }
 
-STATIC mp_obj_t machine_uart_init(size_t n_args, const mp_obj_t *args) {
-    mp_obj_base_t *self = (mp_obj_base_t*) MP_OBJ_TO_PTR(args[0]);
-    struct rt_serial_device *uart_p = ((machine_uart_obj_t *) self)->uart_device;
-    struct serial_configure config;
+/// \method init(baudrate, bits=8, parity=None, stop=1, *, timeout=1000, timeout_char=0, flow=0, read_buf_len=64)
+///
+/// Initialise the UART bus with the given parameters:
+///
+///   - `baudrate` is the clock rate.
+///   - `bits` is the number of bits per byte, 7, 8 or 9.
+///   - `parity` is the parity, `None`, 0 (even) or 1 (odd).
+///   - `stop` is the number of stop bits, 1 or 2.
+///   - `timeout` is the timeout in milliseconds to wait for the first character.
+///   - `timeout_char` is the timeout in milliseconds to wait between characters.
+///   - `flow` is RTS | CTS where RTS == 256, CTS == 512
+///   - `read_buf_len` is the character length of the read buffer (0 to disable).
+///
+STATIC mp_obj_t machine_uart_init_helper(machine_uart_obj_t *self, size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_baudrate, MP_ARG_REQUIRED | MP_ARG_INT, {.u_int = 9600} },
+        { MP_QSTR_bits, MP_ARG_INT, {.u_int = 8} },
+        { MP_QSTR_parity, MP_ARG_OBJ, {.u_obj = mp_const_none} },
+        { MP_QSTR_stop, MP_ARG_INT, {.u_int = 1} },
+        { MP_QSTR_flow, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 0} },        // rt-thread does not support
+        { MP_QSTR_timeout, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 1000} },
+        { MP_QSTR_timeout_char, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_read_buf_len, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 64} },
+    };
 
-    int baudrate  = mp_obj_get_int(args[1]);
-    int bits = mp_obj_get_int(args[2]);
-    int parity  = mp_obj_get_int(args[3]);
-    int stop  = mp_obj_get_int(args[4]);
+    // parse args
+    struct {
+        mp_arg_val_t baudrate, bits, parity, stop, flow, timeout, timeout_char, read_buf_len;
+    } args;
+    mp_arg_parse_all(n_args, pos_args, kw_args,
+        MP_ARRAY_SIZE(allowed_args), allowed_args, (mp_arg_val_t*)&args);
 
-    config.baud_rate = baudrate;
-    config.data_bits = bits;
-    config.parity = parity;
-    config.stop_bits = stop;
+    // set the UART configuration values
+    struct rt_serial_device *uart_p = self->uart_device;
+    struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
+
+    // baudrate
+    config.baud_rate = args.baudrate.u_int;
+
+    // parity
+    mp_int_t bits = args.bits.u_int;
+    if (args.parity.u_obj == mp_const_none) {
+        config.parity = PARITY_NONE;
+    } else {
+        mp_int_t parity = mp_obj_get_int(args.parity.u_obj);
+        config.parity = (parity & 1) ? PARITY_ODD : PARITY_EVEN;
+        //bits += 1; // STs convention has bits including parity, not all mcu
+    }
+
+    // number of bits
+    if (bits == 8) {
+        config.data_bits = DATA_BITS_8;
+    } else if (bits == 9) {
+        config.data_bits = DATA_BITS_9;
+    } else if (bits == 7) {
+        config.data_bits = DATA_BITS_7;
+    } else {
+        mp_raise_ValueError("unsupported combination of bits and parity");
+    }
+
+    // stop bits
+    switch (args.stop.u_int) {
+        case 1: config.stop_bits = STOP_BITS_1; break;
+        default: config.stop_bits = STOP_BITS_2; break;
+    }
+
+    //buffer size
+    config.bufsz = args.read_buf_len.u_int;
 
     rt_device_control((struct rt_device *) uart_p, RT_DEVICE_CTRL_CONFIG, &config);
-
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(machine_uart_init_obj, 5, 5, machine_uart_init);
 
+
+STATIC mp_obj_t machine_uart_init(size_t n_args, const mp_obj_t *args, mp_map_t *kw_args) {
+    return machine_uart_init_helper(args[0], n_args - 1, args + 1, kw_args);
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_KW(machine_uart_init_obj, 1, machine_uart_init);
 
 STATIC mp_obj_t machine_uart_deinit(mp_obj_t self_in) {
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(machine_uart_deinit_obj, machine_uart_deinit);
+
+#define RETRY_TIMES 500
 
 STATIC mp_obj_t machine_uart_writechar(mp_obj_t self_in, mp_obj_t char_in) {
     machine_uart_obj_t *self = self_in;
@@ -104,24 +160,21 @@ STATIC mp_obj_t machine_uart_writechar(mp_obj_t self_in, mp_obj_t char_in) {
         len = rt_device_write((struct rt_device *)(self->uart_device), 0, &data, 1);
         timeout++;
     }
-    while (len != 1 && timeout < 500);
+    while (len != 1 && timeout < RETRY_TIMES);
 
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(machine_uart_writechar_obj, machine_uart_writechar);
 
-/* 串口接收事件标志 */
 #define UART_RX_EVENT (1 << 0)
-/* 事件控制块 */
 static struct rt_event event;
 
 STATIC mp_obj_t machine_uart_readchar(mp_obj_t self_in) {
     machine_uart_obj_t *self = self_in;
     rt_uint32_t e;
     rt_uint8_t ch;
-    /* 读取1字节数据 */
+
     while (rt_device_read((struct rt_device *)(self->uart_device), 0, &ch, 1) != 1) {
-        /* 接收事件 */
         rt_event_recv(&event, UART_RX_EVENT, RT_EVENT_FLAG_AND |
         RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, &e);
     }
@@ -175,7 +228,7 @@ STATIC mp_uint_t machine_uart_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint
 STATIC const mp_stream_p_t uart_stream_p = {
     .read = machine_uart_read,
     .write = machine_uart_write,
-    .ioctl = NULL,
+    .ioctl = machine_uart_ioctl,
     .is_text = false,
 };
 
