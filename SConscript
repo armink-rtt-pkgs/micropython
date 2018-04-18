@@ -10,6 +10,7 @@ src    += Glob('lib/utils/*.c')
 src    += Glob('extmod/*.c')
 src    += Glob('port/*.c')
 src    += Glob('lib/netutils/*.c')
+src    += Glob('lib/timeutils/*.c')
 src    += Glob('drivers/bus/*.c')
 
 path    = [cwd + '/']
