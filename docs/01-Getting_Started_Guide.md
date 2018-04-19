@@ -7,10 +7,10 @@
 
 ### 1.1 选择合适的 BSP 平台
 
-RT-Thread MicroPython mini 版本最小资源占用要求为：
+RT-Thread MicroPython mini 版本占用资源最大不超过：
 
-- 1、ROM < 190KB
-- 2、RAM < 8KB
+- 1、ROM : 190KB
+- 2、RAM :  8KB
 
 常见的许多开发板都可以运行 MicroPython，如 `stm32f10x` 、`stm32f40x` 、`stm32f429-apollo`、`imxrt1052-evk`  、`iot-camera` 等。 
 
