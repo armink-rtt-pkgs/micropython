@@ -23,7 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifdef MICROPYTHON_USING_MACHINE_UART
 
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +35,7 @@
 #include <stdarg.h>
 #include "machine_uart.h"
 
-STATIC const mp_obj_type_t machine_uart_type;
+#ifdef MICROPYTHON_USING_MACHINE_UART
 
 typedef struct _machine_uart_obj_t {
     mp_obj_base_t base;
