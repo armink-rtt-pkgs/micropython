@@ -1,4 +1,4 @@
-# RT-Thread Micropython 开发手册介绍
+# RT-Thread MicroPython 开发手册介绍
 
 ----------
 
