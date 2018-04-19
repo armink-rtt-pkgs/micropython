@@ -24,18 +24,13 @@
  * THE SOFTWARE.
  */
 
-#ifndef _MACHINE_UART_H
-#define _MACHINE_UART_H
+#ifndef MICROPY_INCLUDED_MACHINE_UART_H
+#define MICROPY_INCLUDED_MACHINE_UART_H
 
 #include "py/obj.h"
 #include <rtthread.h>
 
-typedef struct _machine_uart_obj_t {
-    mp_obj_base_t base;
-    struct rt_serial_device *uart_device;
-};
-
 extern const mp_obj_type_t machine_uart_type;
-typedef struct _machine_uart_obj_t machine_uart_obj_t;
+extern const mp_obj_dict_t machine_uart_locals_dict;
 
 #endif // _MACHINE_UART_H

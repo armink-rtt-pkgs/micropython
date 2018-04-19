@@ -36,6 +36,13 @@
 #include <stdarg.h>
 #include "machine_uart.h"
 
+STATIC const mp_obj_type_t machine_uart_type;
+
+typedef struct _machine_uart_obj_t {
+    mp_obj_base_t base;
+    struct rt_serial_device *uart_device;
+}machine_uart_obj_t;
+
 STATIC void machine_uart_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_uart_obj_t *self = (machine_uart_obj_t*) self_in;
     mp_printf(print, "uart( device port : %s,baud_rate = %d, data_bits = %d, parity = %d, stop_bits = %d )",
