@@ -59,7 +59,17 @@ int machine_hard_i2c_readfrom(mp_obj_base_t *self_in, uint16_t addr, uint8_t *de
 }
 
 int machine_hard_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_t *src, size_t len, bool stop) {
+    uint8_t buf[1] = {0};
     machine_hard_i2c_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    if (len == 0){
+        len = 1;
+        if (src == NULL){
+            src = buf;
+        }
+        return !rt_i2c_master_send(self->i2c_bus, addr, 0, src, len);
+    } else if (src == NULL){
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "buf must not NULL"));
+    }
     return rt_i2c_master_send(self->i2c_bus, addr, 0, src, len);
 }
 
