@@ -89,7 +89,7 @@
 >>> i2c.writeto(0x51, b'123')         # write 3 bytes to slave with 7-bit address 42
 3
 >>> i2c.readfrom(0x51, 4)             # read 4 bytes from slave with 7-bit address 42
-b'X\x08\x105'
+b'\xf8\xc0\xc0\xc0'
 >>> i2c.readfrom_mem(0x51, 0x02, 1)   # read 1 bytes from memory of slave 0x51(7-bit),
 b'\x12'                               # starting at memory-address 8 in the slave
 >>> i2c.writeto_mem(0x51, 2, b'\x10') # write 1 byte to memory of slave 42,
