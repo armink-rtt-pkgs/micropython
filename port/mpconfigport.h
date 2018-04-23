@@ -305,7 +305,7 @@ extern const struct _mp_obj_fun_builtin_fixed_t machine_soft_reset_obj;
 
 #if MICROPY_PY_MODUOS
 #define MODUOS_PORT_BUILTINS                     { MP_ROM_QSTR(MP_QSTR_open), MP_ROM_PTR(&mp_builtin_open_obj) },
-#define MODUOS_PORT_BUILTIN_MODULES              { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) },
+#define MODUOS_PORT_BUILTIN_MODULES              { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_uos) },
 #define MODUOS_PORT_BUILTIN_MODULE_WEAK_LINKS    { MP_ROM_QSTR(MP_QSTR_os), MP_ROM_PTR(&mp_module_uos) },
 #define mp_import_stat(x)                        mp_posix_import_stat(x)
 #else
