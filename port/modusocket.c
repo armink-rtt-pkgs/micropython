@@ -336,6 +336,16 @@ STATIC mp_obj_t socket_setsockopt(size_t n_args, const mp_obj_t *args) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(socket_setsockopt_obj, 4, 4, socket_setsockopt);
 
+int _socket_settimeout(int sock_fd, uint timeout_ms) {
+    struct timeval timeout = {
+        .tv_sec = 0,
+        .tv_usec = timeout_ms
+    };
+    setsockopt(sock_fd, SOL_SOCKET, SO_SNDTIMEO, (const void *)&timeout, sizeof(timeout));
+    setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const void *)&timeout, sizeof(timeout));
+    return fcntl(sock_fd, F_SETFL, timeout_ms ? 0 : O_NONBLOCK);
+}
+
 // method socket.settimeout(value)
 // timeout=0 means non-blocking
 // timeout=None means blocking
@@ -343,6 +353,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(socket_setsockopt_obj, 4, 4, socket_s
 STATIC mp_obj_t socket_settimeout(mp_obj_t self_in, mp_obj_t timeout_in) {
     posix_socket_obj_t *self = self_in;
     int timeout;
+    int _errno;
 
     if (timeout_in == mp_const_none) {
         timeout = -1;
@@ -353,16 +364,13 @@ STATIC mp_obj_t socket_settimeout(mp_obj_t self_in, mp_obj_t timeout_in) {
         timeout = 1000 * mp_obj_get_int(timeout_in);
         #endif
     }
-    int _errno;
 
-    int flags = ioctl(self->fd, F_GETFL, NULL);
     if (timeout < 0) {
-        _errno = ioctl(self->fd, F_SETFL, (void *)(flags & (~O_NONBLOCK)));
+        _errno = _socket_settimeout(self->fd, UINT32_MAX);
     } else if (timeout > 0) {
-        //TODO
-        MP_RTT_NOT_IMPL_PRINT;
+        _errno = _socket_settimeout(self->fd, timeout);
     } else {
-        _errno = ioctl(self->fd, F_SETFL, (void *)(flags | O_NONBLOCK));
+        _errno = _socket_settimeout(self->fd, 0);
     }
 
     if (_errno < 0) {
