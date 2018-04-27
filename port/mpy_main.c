@@ -29,15 +29,17 @@
 #include <string.h>
 
 #include <rtthread.h>
+#include <dfs_posix.h>
 #include <shell.h>
 
-#include "py/compile.h"
-#include "py/runtime.h"
-#include "py/repl.h"
-#include "py/gc.h"
-#include "py/mperrno.h"
-#include "py/stackctrl.h"
-#include "lib/utils/pyexec.h"
+#include <py/compile.h>
+#include <py/runtime.h>
+#include <py/repl.h>
+#include <py/gc.h>
+#include <py/mperrno.h>
+#include <py/stackctrl.h>
+#include <py/frozenmod.h>
+#include <lib/utils/pyexec.h>
 #include "rtt_getchar.h"
 
 #if MICROPY_ENABLE_COMPILER
@@ -97,23 +99,35 @@ void mpy_main(const char *filename) {
     if (filename) {
         pyexec_file(filename);
     } else {
-        #if MICROPY_ENABLE_COMPILER
-        #if MICROPY_REPL_EVENT_DRIVEN
-        pyexec_event_repl_init();
-        for (;;) {
-            int c = mp_hal_stdin_rx_chr();
-            if (pyexec_event_repl_process_char(c)) {
-                break;
+#ifdef MICROPYTHON_USING_UOS
+        // run boot-up scripts
+        void *frozen_data;
+        const char *_boot_file = "_boot.py", *boot_file = "boot.py", *main_file = "main.py";
+        if (mp_find_frozen_module(_boot_file, strlen(_boot_file), &frozen_data) != MP_FROZEN_NONE) {
+            pyexec_frozen_module(_boot_file);
+        }
+        if (!access(boot_file, 0)) {
+            pyexec_file(boot_file);
+        }
+        // run main scripts
+        if (!access(main_file, 0)) {
+            if (pyexec_mode_kind == PYEXEC_MODE_FRIENDLY_REPL) {
+                pyexec_file(main_file);
             }
         }
-        #else
-        pyexec_friendly_repl();
-        #endif
-//      do_str("print('hello world!', list(x+1 for x in range(10)), end='eol\\n')", MP_PARSE_SINGLE_INPUT);
-//      do_str("for i in range(10):\r\n  print(i)", MP_PARSE_FILE_INPUT);
-        #else
-        pyexec_frozen_module("frozentest.py");
-        #endif
+#endif /* MICROPYTHON_USING_UOS */
+
+        for (;;) {
+            if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
+                if (pyexec_raw_repl() != 0) {
+                    break;
+                }
+            } else {
+                if (pyexec_friendly_repl() != 0) {
+                    break;
+                }
+            }
+        }
     }
 
 #if MICROPY_PY_THREAD
