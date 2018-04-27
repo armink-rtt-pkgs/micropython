@@ -27,26 +27,6 @@
 #include <rtthread.h>
 #include <drivers/pin.h>
 
-static inline mp_uint_t mp_hal_ticks_us(void) {
-    return rt_tick_get() * 1000;
-}
-
-static inline mp_uint_t mp_hal_ticks_ms(void) {
-    return rt_tick_get() * 1000 / RT_TICK_PER_SECOND;
-}
-
-static inline mp_uint_t mp_hal_ticks_cpu(void) {
-    return rt_tick_get();
-}
-
-static inline void mp_hal_delay_us(mp_uint_t delay) {
-    rt_thread_delay(rt_tick_from_millisecond(delay / 1000));
-}
-
-static inline void mp_hal_delay_ms(mp_uint_t delay) {
-    rt_thread_delay(rt_tick_from_millisecond(delay));
-}
-
 #define MP_HAL_PIN_FMT                 "%s"
 
 extern void mp_hal_set_interrupt_char (int c);

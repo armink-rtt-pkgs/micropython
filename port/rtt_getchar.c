@@ -33,13 +33,13 @@
 
 #define UART_FIFO_SIZE 256
 
-static struct rt_semaphore notice;
 static struct rt_ringbuffer *rx_fifo = NULL;
 static rt_err_t (*odev_rx_ind)(rt_device_t dev, rt_size_t size) = NULL;
 
 static rt_err_t getchar_rx_ind(rt_device_t dev, rt_size_t size) {
     uint8_t ch;
     rt_size_t i;
+    rt_base_t int_lvl;
 
     for (i = 0; i < size; i++) {
         /* read a char */
@@ -47,8 +47,9 @@ static rt_err_t getchar_rx_ind(rt_device_t dev, rt_size_t size) {
             if (ch == mp_interrupt_char) {
                 mp_keyboard_interrupt();
             } else {
+                int_lvl = rt_hw_interrupt_disable();
                 rt_ringbuffer_put_force(rx_fifo, &ch, 1);
-                rt_sem_release(&notice);
+                rt_hw_interrupt_enable(int_lvl);
             }
         }
     }
@@ -58,8 +59,6 @@ static rt_err_t getchar_rx_ind(rt_device_t dev, rt_size_t size) {
 void rtt_getchar_init(void) {
     rt_base_t int_lvl;
     rt_device_t console;
-
-    rt_sem_init(&notice, "uart_notice", 0, RT_IPC_FLAG_FIFO);
 
     /* create RX FIFO */
     rx_fifo = rt_ringbuffer_create(UART_FIFO_SIZE);
@@ -81,7 +80,6 @@ void rtt_getchar_deinit(void) {
     rt_base_t int_lvl;
     rt_device_t console;
 
-    rt_sem_detach(&notice);
     rt_ringbuffer_destroy(rx_fifo);
 
     int_lvl = rt_hw_interrupt_disable();
@@ -95,9 +93,13 @@ void rtt_getchar_deinit(void) {
 
 int rtt_getchar(void) {
     uint8_t ch;
+    rt_base_t int_lvl;
 
-    rt_sem_take(&notice, RT_WAITING_FOREVER);
-    rt_ringbuffer_getchar(rx_fifo, &ch);
+    int_lvl = rt_hw_interrupt_disable();
+    if (!rt_ringbuffer_getchar(rx_fifo, &ch)) {
+        ch = 0xFF;
+    }
+    rt_hw_interrupt_enable(int_lvl);
 
     return ch;
 

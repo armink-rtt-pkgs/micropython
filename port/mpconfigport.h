@@ -226,8 +226,22 @@
 #define MICROPY_PY_USSL             (0)
 #define MICROPY_SSL_MBEDTLS         (0)
 
-#define MICROPY_EVENT_POLL_HOOK rt_thread_delay(1);
-#define MICROPY_THREAD_YIELD() rt_thread_delay(1)
+#if MICROPY_PY_THREAD
+#define MICROPY_EVENT_POLL_HOOK \
+    do { \
+        extern void mp_handle_pending(void); \
+        mp_handle_pending(); \
+        MP_THREAD_GIL_EXIT(); \
+        MP_THREAD_GIL_ENTER(); \
+    } while (0);
+#else
+#define MICROPY_EVENT_POLL_HOOK \
+    do { \
+        extern void mp_handle_pending(void); \
+        mp_handle_pending(); \
+        rt_thread_delay(1); \
+    } while (0);
+#endif
 
 #if defined(__CC_ARM)
 #include <sys/types.h>

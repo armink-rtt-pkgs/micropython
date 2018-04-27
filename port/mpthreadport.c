@@ -131,7 +131,6 @@ void mp_thread_create_ex(void *(*entry)(void*), void *arg, size_t *stack_size, i
 
         level = rt_hw_interrupt_disable();
 
-
         node->thread = th;
         rt_list_insert_before(&thread_list, &(node->list));
 
