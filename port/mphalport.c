@@ -25,6 +25,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include <rtthread.h>
 #include <py/mpconfig.h>
@@ -45,41 +46,36 @@ int mp_hal_stdin_rx_chr(void) {
     return ch;
 }
 
-void mp_hal_stdout_tx_char(char c) {
-    rt_device_t console;
-
-    console = rt_console_get_device();
-    rt_device_write(console, 0, &c, 1);
-}
-
-void mp_hal_stdout_tx_str(const char *str) {
-    MP_THREAD_GIL_EXIT();
-    while (*str) {
-        mp_hal_stdout_tx_char(*str++);
-    }
-    MP_THREAD_GIL_ENTER();
-}
-
-void mp_hal_stdout_tx_strn_cooked(const char *str, uint32_t len) {
-    MP_THREAD_GIL_EXIT();
-    while (len--) {
-        if (*str == '\n') {
-            mp_hal_stdout_tx_char('\r');
-        }
-        mp_hal_stdout_tx_char(*str++);
-    }
-    MP_THREAD_GIL_ENTER();
-}
-
 // Send string of given length
 void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
     rt_device_t console;
 
     console = rt_console_get_device();
     if (console) {
-        MP_THREAD_GIL_EXIT();
         rt_device_write(console, 0, str, len);
-        MP_THREAD_GIL_ENTER();
+    }
+}
+
+void mp_hal_stdout_tx_str(const char *str) {
+    mp_hal_stdout_tx_strn(str, strlen(str));
+}
+
+void mp_hal_stdout_tx_strn_cooked(const char *str, uint32_t len) {
+    const char *last = str;
+    while (len--) {
+        if (*str == '\n') {
+            if (str > last) {
+                mp_hal_stdout_tx_strn(last, str - last);
+            }
+            mp_hal_stdout_tx_strn("\r\n", 2);
+            ++str;
+            last = str;
+        } else {
+            ++str;
+        }
+    }
+    if (str > last) {
+        mp_hal_stdout_tx_strn(last, str - last);
     }
 }
 
