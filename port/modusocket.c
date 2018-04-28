@@ -95,10 +95,10 @@ STATIC mp_obj_t socket_make_new(const mp_obj_type_t *type, size_t n_args, size_t
 // method socket.close()
 STATIC mp_obj_t socket_close(mp_obj_t self_in) {
     posix_socket_obj_t *self = self_in;
-    if (fd_get(self->fd)) {
+
+    if (self->fd >= 0) {
         closesocket(self->fd);
-    } else {
-        rt_kprintf("fd error,fd == NULL\n");
+        self->fd = -1;
     }
     return mp_const_none;
 }
