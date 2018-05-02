@@ -1,10 +1,9 @@
 # **uerrno** – 系统错误码模块
 
-`uerrno` 模块提供了标准的 errno 系统符号，每个符号的值是对应的整数值。
+!!! abstract "简介"
+    `uerrno` 模块提供了标准的 errno 系统符号，每个符号都有对应的整数值。
 
-更多内容可参考 [errno](https://docs.python.org/3/library/errno.html?highlight=errno#module-errno) 。
-
-`Usage example` :
+## 示例
 
 ```
 try:
@@ -18,5 +17,6 @@ Dictionary mapping numeric error codes to strings with symbolic error code (see 
 >>> print(uerrno.errorcode[uerrno.EEXIST])
 EEXIST
 ```
+更多内容可参考 [uerrno](http://docs.micropython.org/en/latest/pyboard/library/uerrno.html) 。
 
 ----------

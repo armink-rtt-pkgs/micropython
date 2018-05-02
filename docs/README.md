@@ -56,12 +56,20 @@
 
 # 2. MicroPython 开发资源
 
-- [RT-Thread MicroPython 源码](https://github.com/RT-Thread-packages/micropython)
-- [RT-Thread MicroPython 论坛](https://www.rt-thread.org/qa/forum.php)
-- [MicroPython 官方网站](https://micropython.org/)
-- [官方在线文档](http://docs.micropython.org/en/latest/pyboard/)
-- [MicroPython 在线演示](https://micropython.org/unicorn)
-- [MicroPython 源码](https://github.com/micropython/micropython)
-- [MicroPython 官方论坛](http://forum.micropython.org/)
-- [MicroPython 中文社区](http://www.micropython.org.cn/)
+- [RT-Thread MicroPython 开发手册](https://www.rt-thread.org/document/site/rtthread-development-guide/micropython/docs/README/)
 
+- [RT-Thread MicroPython 源码](https://github.com/RT-Thread-packages/micropython)
+
+- [RT-Thread MicroPython 论坛](https://www.rt-thread.org/qa/forum.php)
+
+- [MicroPython 官方网站](https://micropython.org/)
+
+- [官方在线文档](http://docs.micropython.org/en/latest/pyboard/)
+
+- [MicroPython 在线演示](https://micropython.org/unicorn)
+
+- [MicroPython 源码](https://github.com/micropython/micropython)
+
+- [MicroPython 官方论坛](http://forum.micropython.org/)
+
+- [MicroPython 中文社区](http://www.micropython.org.cn/)
