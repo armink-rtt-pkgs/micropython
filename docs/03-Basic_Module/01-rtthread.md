@@ -4,17 +4,16 @@
 !!! abstract "简介"
      **rtthread** 模块提供了与 RT-Thread 操作系统相关的功能，如查看栈使用情况等。
 
-
 ## 函数
 
-- rtthread.current_tid()  
-  返回当前线程的 id 。
+### rtthread.current_tid()  
+返回当前线程的 id 。
 
-- rtthread.is_preempt_thread()  
-  返回是否是可抢占线程。
+### rtthread.is_preempt_thread()  
+返回是否是可抢占线程。
 
-- rtthread.stacks_analyze()  
-  返回当前系统线程和栈使用信息。
+### rtthread.stacks_analyze()  
+返回当前系统线程和栈使用信息。
 
 ## 示例 
 
