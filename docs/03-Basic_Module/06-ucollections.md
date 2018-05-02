@@ -18,7 +18,6 @@ t2 = MyTuple(2, "bar")
 print(t1.name)
 assert t2.name == t2[1]
 ucollections.OrderedDict(...)
-
 ```
 
 ### **ucollections.OrderedDict**(...)  
