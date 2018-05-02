@@ -49,6 +49,6 @@
 ### **match.group**([index])  
 只支持数字组。
 
-更多内容可参考 [re](https://docs.python.org/3/library/re.html?highlight=re#module-re)  。
+更多内容可参考 [ure](http://docs.micropython.org/en/latest/pyboard/library/ure.html)  。
 
 ----------

@@ -128,6 +128,6 @@
 ### **math.pi**  
   圆周率
 
-更多内容可参考  [math](https://docs.python.org/3.5/library/math.html?highlight=math#module-math) 。
+更多内容可参考  [math](http://docs.micropython.org/en/latest/pyboard/library/math.html) 。
 
 ----------

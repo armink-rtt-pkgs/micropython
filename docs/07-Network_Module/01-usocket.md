@@ -123,6 +123,6 @@ s = socket.socket()
 s.connect(socket.getaddrinfo('www.micropython.org', 80)[0][-1])
 ```
 
-更多的内容可参考 [socket](https://docs.python.org/3/library/socket.html) 。
+更多的内容可参考 [usocket](http://docs.micropython.org/en/latest/pyboard/library/usocket.html) 。
 
 ----------

@@ -10,6 +10,6 @@
 ### **ujson.loads**(str)  
 解析 str 字符串并返回对象。如果字符串格式错误将引发 ValueError 异常。
 
-更多内容可参考 [json](https://docs.python.org/3/library/json.html?highlight=json#module-json)  。
+更多内容可参考 [ujson](http://docs.micropython.org/en/latest/pyboard/library/ujson.html)  。
 
 ----------

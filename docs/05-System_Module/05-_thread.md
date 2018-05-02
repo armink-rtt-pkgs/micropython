@@ -22,6 +22,6 @@ paste mode; Ctrl-C to cancel, Ctrl-D to finish
 
 ```
 
-更多内容可参考 [_thread](https://docs.python.org/3/library/_thread.html?highlight=_thread#module-_thread)  。
+更多内容可参考 [_thread](http://docs.micropython.org/en/latest/pyboard/library/_thread.html)  。
 
 ----------

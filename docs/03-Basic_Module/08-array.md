@@ -16,6 +16,6 @@
 ### **extend**(iterable)  
   使用迭代方式将新元素添加到数组的结尾，将数组扩展。
 
-更多内容可参考  [array](https://docs.python.org/3/library/array.html) 。
+更多内容可参考  [array](http://docs.micropython.org/en/latest/pyboard/library/array.html) 。
 
 ----------

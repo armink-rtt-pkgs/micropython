@@ -14,6 +14,6 @@
 ### **uheapq.heapify**(x)  
 将列表 x 转换成堆。
 
-更多内容可参考 [heapq](https://docs.python.org/3/library/heapq.html?highlight=heapq#module-heapq)  。
+更多内容可参考 [uheapq](http://docs.micropython.org/en/latest/pyboard/library/uheapq.html)  。
 
 ----------

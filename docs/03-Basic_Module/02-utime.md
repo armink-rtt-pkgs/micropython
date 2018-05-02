@@ -105,6 +105,6 @@ while pin.value() == 0:
 1073741823
 ```
 
-更多内容可参考 [`time`](http://docs.micropython.org/en/latest/pyboard/library/utime.html#module-utime)  。
+更多内容可参考 [`utime`](http://docs.micropython.org/en/latest/pyboard/library/utime.html#module-utime)  。
 
 ----------

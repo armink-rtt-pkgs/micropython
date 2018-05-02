@@ -33,6 +33,6 @@ A legacy algorithm, not considered cryptographically secure. Only selected board
 ### **hash.hexdigest**()  
 此方法没有实现， 使用 ubinascii.hexlify(hash.digest()) 达到类似效果。
 
-更多内容可参考 [hashlib](https://docs.python.org/3/library/hashlib.html?highlight=hashlib#module-hashlib)  。
+更多内容可参考 [uhashlib](http://docs.micropython.org/en/latest/pyboard/library/uhashlib.html)  。
 
 ----------

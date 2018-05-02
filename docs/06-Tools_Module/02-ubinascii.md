@@ -19,6 +19,6 @@ Base64编码的数据转换为二进制表示。返回字节串。
 ### **ubinascii.b2a_base64**(data)  
 编码base64格式的二进制数据。返回的字符串。
 
-更多内容可参考 [binascii](https://docs.python.org/3/library/binascii.html?highlight=binascii#module-binascii)  。
+更多内容可参考 [ubinascii](http://docs.micropython.org/en/latest/pyboard/library/ubinascii.html)  。
 
 ----------

@@ -26,6 +26,6 @@ Capture memory at the given address and size as bytes object. As bytes object is
 ### **uctypes.bytearray_at**(addr, size)  
 Capture memory at the given address and size as bytearray object. Unlike bytes_at() function above, memory is captured by reference, so it can be both written too, and you will access current value at the given memory address.
 
-更多内容可参考 [ctypes](https://docs.python.org/3/library/ctypes.html?highlight=ctypes#module-ctypes) 。
+更多内容可参考 [uctypes](http://docs.micropython.org/en/latest/pyboard/library/uctypes.html) 。
 
 ----------

@@ -23,6 +23,6 @@
 ### **ustruct.unpack_from**(fmt, data, offset=0)  
   从 fmt 的 offset 开始解压数据，如果 offset 是负数就是从缓冲区末尾开始计算。 返回值是解压后参数元组。
 
-更多的内容可参考  [struct](https://docs.python.org/3/library/struct.html) 。
+更多的内容可参考  [ustruct](http://docs.micropython.org/en/latest/pyboard/library/ustruct.html) 。
 
 ----------

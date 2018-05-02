@@ -27,6 +27,6 @@ If a is omitted or None, the current system time is used. If randomness sources 
 Return a random floating point number N such that a <= N <= b for a <= b and b <= N <= a for b < a.
 The end-point value b may or may not be included in the range depending on floating-point rounding in the equation a + (b-a) * random().
 
-更多内容可参考 [random](https://docs.python.org/3/library/random.html?highlight=random#module-random) 。
+更多内容可参考 [urandom](https://docs.python.org/3/library/random.html?highlight=random#module-random) 。
 
 ----------

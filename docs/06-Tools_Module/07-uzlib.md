@@ -8,7 +8,7 @@
 ### **uzlib.decompress**(data)  
 返回解压后的 bytes 数据。
 
-更多内容可参考 [zlib](https://docs.python.org/3/library/zlib.html?highlight=zlib#module-zlib) 。
+更多内容可参考 [uzlib](http://docs.micropython.org/en/latest/pyboard/library/uzlib.html) 。
 
 ----------
 

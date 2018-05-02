@@ -39,6 +39,6 @@
 ### **cmath.pi**  
 圆周率。
 
-更多内容可参考 [cmath](https://docs.python.org/3/library/cmath.html?highlight=cmath#module-cmath)  。
+更多内容可参考 [cmath](http://docs.micropython.org/en/latest/pyboard/library/cmath.html)  。
 
 ----------
