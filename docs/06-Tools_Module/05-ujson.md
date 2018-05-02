@@ -5,6 +5,9 @@
 ## 函数
 
 ### **ujson.dumps**(obj)  
+
+将 dict 类型转换成 str。
+
 ```
 obj：要转换的对象
 ```

@@ -77,19 +77,6 @@ address：服务器地址和端口号的元组或列表
 bytes：bytes类型数据
 ```
 
-### **socket.sendall**(bytes)  
-与 send() 函数类似，不同的是 sendall() 函数尝试以 chunk 的方式发送所有的数据。
-
-```
-bytes：bytes类型数据
-```
-
-示例：
-
-```
-s.sendall("hello RT-Thread, I am TCP Client")
-```
-
 ### **socket.recv**(bufsize)  
 接收数据，返回接收到的数据对象。
 
