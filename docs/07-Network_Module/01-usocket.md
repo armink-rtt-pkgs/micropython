@@ -42,7 +42,7 @@
 ```
 
 ### **socket.close**()  
-关闭套接字。一旦关闭后，套接字所有的功能都将失效。远端将接收不到任何数据 (清理队列数据后)。 在回收垃圾时套接字会自动关闭，但还是推荐在必要时用 close() 去关闭，或, or to use a with statement around them。
+关闭套接字。一旦关闭后，套接字所有的功能都将失效。远端将接收不到任何数据 (清理队列数据后)。 虽然在垃圾回收时套接字会自动关闭，但还是推荐在必要时用 close() 去关闭。
 
 ### **socket.bind**(address)  
 将套接字绑定到地址，套接字不能是已经绑定的。
@@ -56,7 +56,7 @@ backlog：接受套接字的最大个数，至少为0，如果没有指定，则
 ### **socket.accept**()  
 接收连接请求。 
 **注意：** 
-   只能在绑定地址端口号和监听后调用，返回conn和address。
+   只能在绑定地址端口号和监听后调用，返回 conn 和 address。
 
 ```
 conn：新的套接字对象，可以用来收发消息
@@ -87,7 +87,7 @@ bytes：bytes类型数据
 示例：
 
 ```
-s.sendall("hello DFRobot, I am TCP Client")
+s.sendall("hello RT-Thread, I am TCP Client")
 ```
 
 ### **socket.recv**(bufsize)  
@@ -114,7 +114,7 @@ address：目标地址和端口号的元组
 示例：
 
 ```
-data = sendto("hello DFRobot", ("192.168.3.147", 100))
+data = sendto("hello RT-Thread", ("192.168.10.110", 100))
 ```
 
 ### **socket.recvfrom**(bufsize)  
