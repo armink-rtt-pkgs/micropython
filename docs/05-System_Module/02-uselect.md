@@ -41,7 +41,7 @@ def selectTest():
 ## Poll 类
 
 ### **select.poll**()  
-创建轮询实例。
+创建 poll 实例。
 
 示例：
 
