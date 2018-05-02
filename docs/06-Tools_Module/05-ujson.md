@@ -5,10 +5,38 @@
 ## 函数
 
 ### **ujson.dumps**(obj)  
-返回对象的 JSON 字符串。
+将 dict 类型的数据转换成 str，因为如果直接将 dict 类型的数据写入 json 文件中会发生报错，因此在将数据写入时需要用到该函数。 
+
+```
+obj：要转换的对象
+```
+
+示例：
+
+```
+>>> obj = {1:2, 3:4, "a":6}
+>>> print(type(obj), obj) #原来为dict类型
+<class 'dict'> {3: 4, 1: 2, 'a': 6}
+>>> jsObj = json.dumps(obj) #将dict类型转换成str
+>>> print(type(jsObj), jsObj)
+<class 'str'> {3: 4, 1: 2, "a": 6}
+```
 
 ### **ujson.loads**(str)  
-解析 str 字符串并返回对象。如果字符串格式错误将引发 ValueError 异常。
+解析 JSON 字符串并返回对象。如果字符串格式错误将引发 ValueError 异常。 
+示例：
+
+```
+>>> obj = {1:2, 3:4, "a":6}
+>>> jsDumps = json.dumps(obj)
+>>> jsLoads = json.loads(jsDumps)
+>>> print(type(obj), obj)
+<class 'dict'> {3: 4, 1: 2, 'a': 6}
+>>> print(type(jsDumps), jsDumps)
+<class 'str'> {3: 4, 1: 2, "a": 6}
+>>> print(type(jsLoads), jsLoads)
+<class 'dict'> {'a': 6, 1: 2, 3: 4}
+```
 
 更多内容可参考 [ujson](http://docs.micropython.org/en/latest/pyboard/library/ujson.html)  。
 

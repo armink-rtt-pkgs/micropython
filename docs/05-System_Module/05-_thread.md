@@ -4,23 +4,25 @@
 
 ## 示例
 
-```
->>> ###  press CTRL + E to enter paste mode
+```python
+import _thread
+import time
+def testThread():
+    while True:
+        print("Hello from thread")
+        time.sleep(2)
 
-paste mode; Ctrl-C to cancel, Ctrl-D to finish
-=== import _thread
-=== import time
-=== 
-=== def testThread():
-===     while True:
-===         print("Hello from thread")
-===         time.sleep(2)
-=== 
-=== _thread.start_new_thread(testThread, ())
-=== while True:
-===     pass
-
+_thread.start_new_thread(testThread, ())
+while True:
+    pass
 ```
+输出结果（启动新的线程，每隔两秒打印字符）： 
+
+Hello from thread  
+Hello from thread  
+Hello from thread  
+Hello from thread  
+Hello from thread  
 
 更多内容可参考 [_thread](http://docs.micropython.org/en/latest/pyboard/library/_thread.html)  。
 

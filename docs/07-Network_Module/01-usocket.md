@@ -4,38 +4,42 @@
 
 ## 常数
 
-### **socket.AF_INET**  
-### **socket.AF_INET6**  
+### 地址簇
+- socket.AF_INET =2 — TCP/IP – IPv4
+- socket.AF_INET6 =10 — TCP/IP – IPv6
 
-`TCP类型定义`
+### 套接字类型
+- socket.SOCK_STREAM =1 — TCP流
+- socket.SOCK_DGRAM =2 — UDP数据报
+- socket.SOCK_RAW =3 — 原始套接字
+- socket.SO_REUSEADDR =4 — socket可重用
 
-### **socket.SOCK_STREAM**  
-### **socket.SOCK_DGRAM**  
+### IP协议号
+- socket.IPPROTO_TCP =16
+- socket.IPPROTO_UDP =17
 
-`Socket类型`
-
-### **socket.IPPROTO_UDP**  
-### **socket.IPPROTO_TCP**  
-
-`IP协议号`
-
-### **socket.SOL_***  
-Socket option levels (an argument to setsockopt()). The exact inventory depends on a board.
-
-### **socket.SO_***  
-Socket options (an argument to setsockopt()). The exact inventory depends on a board.
-
-### **socket.IPPROTO_SEC**  
-Special protocol value to create SSL-compatible socket.
+### 套接字选项级别
+- socket.SOL_SOCKET =4095
 
 ## 函数
 
 ### **socket.socket**(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)  
 创建新的套接字，使用指定的地址、类型和协议号。
 
-### **socket.getaddrinfo**(host, port)  
-传递 主机/端口 到一个5个数据的元组。元组列表的结构如下:
+### **socket.getaddrinfo**(host, port) 
+将主机域名（host）和端口（port）转换为用于创建套接字的5元组序列。元组列表的结构如下:
+
+```
 (family, type, proto, canonname, sockaddr)
+```
+
+示例：
+
+```
+>>> info = socket.getaddrinfo("127.0.0.1", 10000)
+>>> print(info)
+[(2, 1, 0, '127.0.0.1', ('127.0.0.1', 10000))]
+```
 
 ### **socket.close**()  
 关闭套接字。一旦关闭后，套接字所有的功能都将失效。远端将接收不到任何数据 (清理队列数据后)。 在回收垃圾时套接字会自动关闭，但还是推荐在必要时用 close() 去关闭，或, or to use a with statement around them。
@@ -44,34 +48,110 @@ Special protocol value to create SSL-compatible socket.
 将套接字绑定到地址，套接字不能是已经绑定的。
 
 ### **socket.listen**([backlog])  
-允许服务器接收连接。如果指定了 backlog，它不能小于0 (如果小于0将自动设置为0)；超出后系统将拒绝新的连接。如果没有指定，将使用默认值。
+监听套接字，使服务器能够接收连接。
+```
+backlog：接受套接字的最大个数，至少为0，如果没有指定，则默认一个合理值。
+```
 
 ### **socket.accept**()  
-接收连接。套接字需要指定地址并监听连接。返回值是 (conn, address)，其中conn是用来接收和发送数据的套接字，address是绑定到另一端的套接字。
+接收连接请求。 
+**注意：** 
+   只能在绑定地址端口号和监听后调用，返回conn和address。
+
+```
+conn：新的套接字对象，可以用来收发消息
+address：连接到服务器的客户端地址
+```
 
 ### **socket.connect**(address)  
-连接到指定地址的远端套接字。
+连接服务器。
+
+```
+address：服务器地址和端口号的元组或列表
+```
 
 ### **socket.send**(bytes)  
-发送数据。套接字需要已连接到远程。
+发送数据，并返回发送的字节数。
+
+```
+bytes：bytes类型数据
+```
 
 ### **socket.sendall**(bytes)  
-发送数据。套接字已连接到远程。 Unlike send(), this method will try to send all of data, by sending data chunk by chunk consecutively.
+与 send() 函数类似，区别是 sendall() 函数通过数据块连续发送数据。
+
+```
+bytes：bytes类型数据
+```
+
+示例：
+
+```
+s.sendall("hello DFRobot, I am TCP Client")
+```
 
 ### **socket.recv**(bufsize)  
-接收数据，返回值是数据字节对象。bufsize是接收数据的最大数量。
+接收数据，返回接收到的数据对象。
+
+```
+bufsize：指定一次接收的最大数据量
+```
+
+示例：
+
+```
+data = conn.recv(1024)
+```
 
 ### **socket.sendto**(bytes, address)  
-发送数据。套接字没有连接到远程，目标套接字由地址参数指定。
+发送数据，目标由address决定，用于UDP通信，返回发送的数据大小。
+
+```
+bytes：bytes类型数据
+address：目标地址和端口号的元组
+```
+
+示例：
+
+```
+data = sendto("hello DFRobot", ("192.168.3.147", 100))
+```
 
 ### **socket.recvfrom**(bufsize)  
-接收数据。返回值是 (bytes, address)，其中 bytes 是字节对象，address 是发送数据的套接字。
+接收数据，用于UDP通信，并返回接收到的数据对象和对象的地址。
+
+```
+bufsize：指定一次接收的最大数据量
+```
+
+示例：
+
+```
+data,addr=fd.recvfrom(1024)
+```
 
 ### **socket.setsockopt**(level, optname, value)  
-设置套接字参数。需要的符号常数定义在套接字模块 (SO_* 等)。value 可以是整数或字节对象。
+根据选项值设置套接字。
+
+```
+level：套接字选项级别
+optname：套接字的选项
+value：可以是一个整数，也可以是一个表示缓冲区的bytes类对象。
+```
+
+示例：
+
+```
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+```
 
 ### **socket.settimeout**(value)  
-设置阻塞套接字超时时间。value 参数可以是代表秒的正浮点数或 None。如果设定大于 0 的参数，在后面套接字操作超出指定时间后将引起 timeout 异常。如果参数是 0，套接字将使用非阻塞模式。如果是 None，套接字使用阻塞模式。
+设置超时时间，单位：秒。 
+示例：
+
+```
+s.settimeout(2)
+```
 
 ### **socket.setblocking**(flag)  
 设置阻塞或非阻塞模式: 如果 flag 是 false，设置非阻塞模式。
@@ -84,11 +164,10 @@ Read bytes into the buf. If nbytes is specified then read at most that many byte
 Return value: number of bytes read and stored into buf.
 
 ### **socket.readline**()  
-读取一行，以换行符结束，返回读取的数据行。
+接收一行数据，遇换行符结束，并返回接收数据的对象 。 
 
 ### **socket.write**(buf)  
-Write the buffer of bytes to the socket. This function will try to write all data to a socket (no “short writes”). This may be not possible with a non-blocking socket though, and returned value will be less than the length of buf.
-Return value: number of bytes written.
+将字节类型数据写入套接字，并返回写入数据的大小。 
 
 ## 示例
 

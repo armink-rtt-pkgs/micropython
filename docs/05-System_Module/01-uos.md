@@ -24,7 +24,7 @@
 删除目录。
 
 ### **uos.rename**(old_path, new_path)  
-重命名文件。
+重命名文件或者文件夹。
 
 ### **uos.stat**(path)  
 获取文件或目录的状态。
