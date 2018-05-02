@@ -5,13 +5,38 @@
 ## 函数
 
 ### **ubinascii.hexlify**(data[, sep])  
-将二进制数据转换为十六进制表示。
+将字符串转换为十六进制表示的字符串。 
 
-### **Difference to CPython**  
-If additional argument, sep is supplied, it is used as a separator between hexadecimal values.
+示例：
+
+```
+>>> ubinascii.hexlify('hello RT-Thread')
+b'68656c6c6f2052542d546872656164'
+>>> ubinascii.hexlify('summer')
+b'73756d6d6572'
+```
+如果指定了第二个参数sep，它将用于分隔两个十六进制数。 
+
+示例：
+
+```
+如果指定了第二个参数sep，它将用于分隔两个十六进制数。 
+示例：
+>>> ubinascii.hexlify('hello RT-Thread'," ")
+b'68 65 6c 6c 6f 20 52 54 2d 54 68 72 65 61 64'
+>>> ubinascii.hexlify('hello RT-Thread',",")
+b'68,65,6c,6c,6f,20,52,54,2d,54,68,72,65,61,64'
+```
 
 ### **ubinascii.unhexlify**(data)  
-将十六进制数据转换为二进制表示。返回字节串 (换言之， 反二进制转换)
+转换十六进制字符串为二进制字符串，功能和 hexlify 相反。 
+
+示例：
+
+```
+>>> ubinascii.unhexlify('73756d6d6572')
+b'summer'
+```
 
 ### **ubinascii.a2b_base64**(data)  
 Base64编码的数据转换为二进制表示。返回字节串。
