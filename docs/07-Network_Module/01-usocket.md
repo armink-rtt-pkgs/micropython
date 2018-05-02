@@ -36,9 +36,9 @@
 示例：
 
 ```
->>> info = socket.getaddrinfo("127.0.0.1", 10000)
+>>> info = socket.getaddrinfo("rt-thread.org", 10000)
 >>> print(info)
-[(2, 1, 0, '127.0.0.1', ('127.0.0.1', 10000))]
+[(2, 1, 0, '', ('118.31.15.152', 10000))]
 ```
 
 ### **socket.close**()  
@@ -71,14 +71,14 @@ address：服务器地址和端口号的元组或列表
 ```
 
 ### **socket.send**(bytes)  
-发送数据，并返回发送的字节数。
+发送数据，并返回成功发送的字节数，返回字节数可能比发送的数据长度少。
 
 ```
 bytes：bytes类型数据
 ```
 
 ### **socket.sendall**(bytes)  
-与 send() 函数类似，区别是 sendall() 函数通过数据块连续发送数据。
+与 send() 函数类似，不同的是 sendall() 函数尝试以 chunk 的方式发送所有的数据。
 
 ```
 bytes：bytes类型数据
@@ -104,7 +104,7 @@ data = conn.recv(1024)
 ```
 
 ### **socket.sendto**(bytes, address)  
-发送数据，目标由address决定，用于UDP通信，返回发送的数据大小。
+发送数据，目标由address决定，常用于UDP通信，返回发送的数据大小。
 
 ```
 bytes：bytes类型数据
@@ -118,7 +118,7 @@ data = sendto("hello RT-Thread", ("192.168.10.110", 100))
 ```
 
 ### **socket.recvfrom**(bufsize)  
-接收数据，用于UDP通信，并返回接收到的数据对象和对象的地址。
+接收数据，常用于UDP通信，并返回接收到的数据对象和对象的地址。
 
 ```
 bufsize：指定一次接收的最大数据量
@@ -167,7 +167,7 @@ Return value: number of bytes read and stored into buf.
 接收一行数据，遇换行符结束，并返回接收数据的对象 。 
 
 ### **socket.write**(buf)  
-将字节类型数据写入套接字，并返回写入数据的大小。 
+将字节类型数据写入套接字，并返回写入成功的数据大小。 
 
 ## 示例
 
