@@ -39,6 +39,7 @@
 #include <py/mperrno.h>
 #include <py/stackctrl.h>
 #include <py/frozenmod.h>
+#include <lib/mp-readline/readline.h>
 #include <lib/utils/pyexec.h>
 #include "rtt_getchar.h"
 
@@ -71,12 +72,12 @@ void mpy_main(const char *filename) {
     rtt_getchar_init();
 
 #if MICROPY_PY_THREAD
-    mp_thread_init();
+    mp_thread_init(rt_thread_self()->stack_addr, rt_thread_self()->stack_size / 4);
 #endif
 
     mp_stack_set_top(stack_top);
     // Make MicroPython's stack limit somewhat smaller than full stack available
-	mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 512);
+	mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 1024);
 
     #if MICROPY_ENABLE_GC
     heap = rt_malloc(MICROPY_HEAP_SIZE);
@@ -95,6 +96,7 @@ void mpy_main(const char *filename) {
     mp_obj_list_append(mp_sys_path, MP_OBJ_NEW_QSTR(MP_QSTR_)); // current dir (or base dir of the script)
     mp_obj_list_append(mp_sys_path, mp_obj_new_str(MICROPY_PY_PATH, strlen(MICROPY_PY_PATH)));
     mp_obj_list_init(mp_sys_argv, 0);
+    readline_init0();
 
     if (filename) {
         pyexec_file(filename);
@@ -139,17 +141,6 @@ void mpy_main(const char *filename) {
     rt_free(heap);
 
     rtt_getchar_deinit();
-}
-
-void gc_collect(void) {
-    // WARNING: This gc_collect implementation doesn't try to get root
-    // pointers from CPU registers, and thus may function incorrectly.
-    void *dummy;
-    gc_collect_start();
-    gc_collect_root(&dummy, ((mp_uint_t)stack_top - (mp_uint_t)&dummy) / sizeof(mp_uint_t));
-
-    gc_collect_end();
-    gc_dump_info();
 }
 
 #if !MICROPY_PY_MODUOS_FILE
