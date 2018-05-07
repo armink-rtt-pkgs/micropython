@@ -16,7 +16,7 @@
 
 如果使用 upip 工具下载，可使用 `upip.install("micropython-urequests")` 命令，下载过程如图所示：
 
-![1525655577680](figures/install_urequests.png)
+![1525690379859](figures/1525690379859.png)
 
 upip 工具将自动下载并安装  `urequests` 模块，接下来我们就可以按照模块说明来使用了。
 
@@ -82,9 +82,9 @@ r.close()
 MQTT 是一种基于发布/订阅（publish/subscribe）模式的“轻量级”通讯协议 。想要在 RT-Thread MicroPython 上使用 MQTT 功能需要安装 `umqtt.simple` 模块。
 
 ### 获取并安装 umqtt.simple 模块
-同样的可以使用包管理中的两种方式来获取，使用 upip 安装的方式如图：
+同样的可以使用包管理中的两种方式来获取，使用 upip 安装的方式可使用  `upip.install("micropython-umqtt.simple")`如图：
 
-![1525662300970](figures/install_umqtt_simple.png)
+![1525690229174](figures/install_umqtt_simple.png)
 
 ### umqtt.simple 模块的使用
 
@@ -143,3 +143,18 @@ if __name__ == "__main__":
     main()
 
 ```
+
+## 云平台对接(onenet)
+
+本节介绍如何使用 RT-Thread MicroPython 来对接 onenet 云平台，本次示例使用的接入协议为 MQTT。
+
+产品ID：135636| 
+设备接入协议：MQTT| 
+创建时间：2018-05-05 12:56:55| 
+APIKey：tV12Ggpj7l9hjSsBdMkNpVg6OY0= | 
+用户ID (user id)：39052
+
+正式环境注册码  ： 0vxwc3uy7LZsqblMe
+
+mqtt.heclouds.com
+
