@@ -37,6 +37,10 @@
 
 #ifdef MICROPYTHON_USING_MACHINE_UART
 
+#ifndef RT_USING_SERIAL
+#error "Please define the RT_USING_SERIAL on 'rtconfig.h'"
+#endif
+
 typedef struct _machine_uart_obj_t {
     mp_obj_base_t base;
     struct rt_serial_device *uart_device;
