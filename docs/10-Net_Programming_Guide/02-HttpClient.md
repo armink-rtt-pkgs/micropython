@@ -1,5 +1,3 @@
-## Http Client
-
 !!! abstract "简介"
     本节介绍如何在 RT-Thread MicroPython 上使用 Http Client 功能，本章主要使用的模块为 `urequests` 。
 

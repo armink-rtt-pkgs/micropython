@@ -1,5 +1,3 @@
-## MQTT
-
 !!! abstract "简介"
     MQTT 是一种基于发布/订阅（publish/subscribe）模式的“轻量级”通讯协议 。本章介绍如何在 RT-Thread MicroPython 上使用 MQTT 功能，使用到的模块为 `umqtt.simple` 模块。
 

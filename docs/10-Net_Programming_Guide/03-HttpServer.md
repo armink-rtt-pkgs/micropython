@@ -1,5 +1,3 @@
-## Http Server
-
 !!! abstract "简介"
     本章介绍如何使用 RT-Thread MicroPython 搭建一个 Web 服务器，需要使用到的模块为 MicroWebSrv 模块。
 
