@@ -42,7 +42,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- 使用 python 命令执行上述代码文件，就会连接上 Mqtt 服务器，可收到我们从另一个客户端发布的以 `foo_topic`为主题的内容
+- 使用 python 命令执行上述代码文件，就会连接上 MQTT 服务器，可收到我们从另一个客户端发布的以 `foo_topic`为主题的内容
 
 ![1525665942426](../figures/sub_topic.png)
 
