@@ -1,6 +1,7 @@
 ## Http Client
 
-在这里我们需要使用的模块是 `urequests` 。
+!!! abstract "简介"
+    本节介绍如何在 RT-Thread MicroPython 上使用 Http Client 功能，本章主要使用的模块为 `urequests` 。
 
 ### 获取并安装 urequests 模块
 
@@ -16,7 +17,7 @@
 
 ### urequests 模块的使用
 
-下面示例程序使用 `get` 命令来抓取 `http://www.baidu.com/` 的首页信息，并按照一定格式输出：
+下面示例程序使用 `get` 命令来抓取 `http://www.baidu.com/` 的首页信息，并格式化输出：
 
 ```python
 try:
