@@ -6,7 +6,7 @@
 ## 准备工作
 
 - 首先需要安装 `urequests`  模块和 `umqtt.simple` 模块，安装方法参考前面第二节和第四节。
-- 本章实例代码在最后一节的附录中，可以复制到 main.py 文件中在 MSH 中使用 python 命令来执行。
+- 本章实例代码在最后一节的附录中，可以在添加必要的注册信息后复制到 main.py 文件中在 MSH 中使用 python 命令来执行。
 
 ## 产品创建
 
@@ -101,7 +101,6 @@ import ujson as json
 import time
 
 class Register():
-    
     def __init__(self, url='', title='', sn='', mac=''):
         self.url = url
         self.title = title
@@ -134,7 +133,6 @@ class Register():
             return -1
 
 class OneNetMqtt:
-
     failed_count = 0
 
     def __init__(self, client_id='', username='', password=''):
@@ -178,7 +176,7 @@ class OneNetMqtt:
         self.mqttClient.subscribe(self.topic)
         print("Connected to %s, subscribed to %s topic." % (self.server, self.topic))
         try:
-            while 1:
+            while True:
                 self.mqttClient.check_msg()
                 print("pubdata")
                 self.pubData('x')
@@ -201,6 +199,6 @@ def main():
     else:
         print('Error: No Client ID!')
 
-main()
-
+if __name__ == "__main__":
+    main()
 ```
