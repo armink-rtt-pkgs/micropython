@@ -11,14 +11,13 @@
 
 获取该模块有两种方式，详细操作可参考包管理章节：
 
-- 使用 upip 包管理工具下载。
-- 从 MicroPython-lib 中复制到开发板上文件系统的 `/libs/mpy` 目录下。
+- 方法1：使用 upip 包管理工具下载，这里使用 `upip.install("micropython-urequests")` 命令，upip 工具将自动下载并安装  `urequests` 模块，下载过程如图所示：
 
-如果使用 upip 工具下载，可使用 `upip.install("micropython-urequests")` 命令，下载过程如图所示：
+![1525690379859](figures/install_urequests.png)
 
-![1525690379859](figures/1525690379859.png)
+- 方法2：从 MicroPython-lib 中复制到开发板上文件系统的 `/libs/mpy` 目录下。
 
-upip 工具将自动下载并安装  `urequests` 模块，接下来我们就可以按照模块说明来使用了。
+接下来 `urequests` 模块就可以被导入使用了。
 
 ### urequests 模块的使用
 
@@ -147,14 +146,4 @@ if __name__ == "__main__":
 ## 云平台对接(onenet)
 
 本节介绍如何使用 RT-Thread MicroPython 来对接 onenet 云平台，本次示例使用的接入协议为 MQTT。
-
-产品ID：135636| 
-设备接入协议：MQTT| 
-创建时间：2018-05-05 12:56:55| 
-APIKey：tV12Ggpj7l9hjSsBdMkNpVg6OY0= | 
-用户ID (user id)：39052
-
-正式环境注册码  ： 0vxwc3uy7LZsqblMe
-
-mqtt.heclouds.com
 
