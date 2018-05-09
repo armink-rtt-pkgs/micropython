@@ -67,8 +67,6 @@ void mpy_main(const char *filename) {
     int stack_dummy;
     stack_top = (char*)&stack_dummy;
 
-    rt_kprintf("\n");
-
     rtt_getchar_init();
 
 #if MICROPY_PY_THREAD
@@ -77,7 +75,7 @@ void mpy_main(const char *filename) {
 
     mp_stack_set_top(stack_top);
     // Make MicroPython's stack limit somewhat smaller than full stack available
-	mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 1024);
+    mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 1024);
 
     #if MICROPY_ENABLE_GC
     heap = rt_malloc(MICROPY_HEAP_SIZE);
@@ -119,6 +117,7 @@ void mpy_main(const char *filename) {
         }
 #endif /* MICROPYTHON_USING_UOS */
 
+        rt_kprintf("\n");
         for (;;) {
             if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
                 if (pyexec_raw_repl() != 0) {

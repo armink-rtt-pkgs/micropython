@@ -1,5 +1,3 @@
-## 云平台对接(OneNET)
-
 !!! abstract "简介"
     本节介绍如何使用 RT-Thread MicroPython 来将设备接入 OneNET 云平台，本次示例使用的接入协议为 MQTT。
 
