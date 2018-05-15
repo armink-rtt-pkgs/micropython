@@ -1,6 +1,6 @@
 # RT-Thread MicroPython 基础知识
 
-## 1. 运行 python 文件
+## 运行 python 文件
 
 在 MicroPython 上运行 Python文件有以下要求：
 
@@ -9,7 +9,7 @@
 
 符合以上两点，就可以使用 `msh` 命令行中的 `python` 命令加上 `*.py` 文件名来执行一个 Python文件了。
 
-## 2. 术语表
+## 术语表
 
 ### board
 
