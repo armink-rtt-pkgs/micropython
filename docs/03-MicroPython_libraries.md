@@ -5,7 +5,7 @@
 
     - 这些模块可以通过 env 工具的 menuconfig 功能来开启和关闭，如果你需要使用特定的模块，在 menuconfig 中选中模块名，保存退出后，重新编译运行即可。
 
-## 1. Python 标准库和微型库
+## Python 标准库和微型库
 
 Python 的标准库被 “微型化”后，就是 MicroPython 标准库，也称 MicroPython 模块。它们仅仅提供了该模块的核心功能，用来替代 Python 标准库 。一些模块使用 Python  标准库的名字，但是加上了前缀 "u"，例如``ujson``代替``json``。也就是说 MicroPython 的标准库(微型库)，只实现了一部分模块功能。通过给这些库以不同的方式命名，用户可以写一个 Python 级的模块来扩展微型库的功能，以便于兼容 CPython 的标准库（这项工作就是 [micropython-lib](https://github.com/micropython/micropython-lib) 项目的正在做的）。
 
@@ -13,9 +13,9 @@ Python 的标准库被 “微型化”后，就是 MicroPython 标准库，也�
 
 例如，当``import json``时，首先会在库路径文件夹中搜索一个 ``json.py`` 文件或 ``json`` 目录进行加载。如果没有找到，它才会去加载内置 ``ujson`` 模块。
 
-## 2. RT-Thread MicroPython 模块
+## RT-Thread MicroPython 模块
 
-### 2.1 系统模块
+### 系统模块
 - [rtthread][1] – RT-Thread 系统相关函数
 - [utime][2]  – 时间相关函数
 - [sys][3]  – 系统特有功能函数
@@ -26,21 +26,21 @@ Python 的标准库被 “微型化”后，就是 MicroPython 标准库，也�
 - [array][8]  – 数字数据数组
 - [gc][9]  – 控制垃圾回收
 
-### 2.2 硬件模块
+### 硬件模块
 - [machine][10] – 与硬件相关的功能
 - [machine.Pin][11]
 - [machine.I2C][12]
 - [machine.SPI][13]
 - [machine.UART][14]
 
-### 2.3 系统模块
+### 系统模块
 - [uos][15] – 基本的 “操作系统” 服务
 - [select][16] – 等待流事件
 - [uctypes][17] – 以结构化的方式访问二进制数据
 - [uerrno][18] – 系统错误码模块
 - [_thread][19] – 多线程支持
 
-### 2.4 工具模块
+### 工具模块
 - [cmath][20] – 复数的数学函数
 - [ubinascii][21] – 二进制/ ASCII转换
 - [uhashlib][22] – 哈希算法
@@ -50,7 +50,7 @@ Python 的标准库被 “微型化”后，就是 MicroPython 标准库，也�
 - [uzlib][26] – zlib 解压缩
 - [urandom][27] – 随机数生成模块
 
-### 2.5 网络模块
+### 网络模块
 - [usocket][28] – 套接字模块
 
 [1]: 03-Basic_Module/01-rtthread.md
