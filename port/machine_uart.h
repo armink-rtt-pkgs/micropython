@@ -31,6 +31,5 @@
 #include <rtthread.h>
 
 extern const mp_obj_type_t machine_uart_type;
-extern const mp_obj_dict_t machine_uart_locals_dict;
 
 #endif // _MACHINE_UART_H
