@@ -235,7 +235,7 @@ STATIC mp_uint_t machine_uart_write(mp_obj_t self_in, const void *buf_in, mp_uin
     return rt_device_write((struct rt_device *)(self->uart_device), -1, buf, size);
 }
 
-STATIC mp_uint_t machine_uart_ioctl(mp_obj_t self_in, mp_uint_t request, mp_uint_t arg, int *errcode) {
+STATIC mp_uint_t machine_uart_ioctl(mp_obj_t obj, mp_uint_t request, uintptr_t arg, int *errcode) {
     return NULL;
 }
 
