@@ -68,7 +68,7 @@ STATIC mp_obj_t machine_uart_make_new(const mp_obj_type_t *type, size_t n_args, 
     }
 	
     rt_err_t result;
-    result = rt_device_open((rt_device_t)rt_serial_device, RT_DEVICE_OFLAG_RDWR);
+    result = rt_device_open((rt_device_t)rt_serial_device, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_INT_RX );
     if (result != RT_EOK)
     {
         rt_kprintf("ERROR: UART device %s can't open!\n", uart_dev_name);
