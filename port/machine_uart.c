@@ -66,6 +66,14 @@ STATIC mp_obj_t machine_uart_make_new(const mp_obj_type_t *type, size_t n_args, 
         rt_kprintf("ERROR: UART device %s not found!\n", uart_dev_name);
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "UART(%s) doesn't exist", uart_dev_name));
     }
+	
+    rt_err_t result;
+    result = rt_device_open((rt_device_t)rt_serial_device, RT_DEVICE_OFLAG_RDWR);
+    if (result != RT_EOK)
+    {
+        rt_kprintf("ERROR: UART device %s can't open!\n", uart_dev_name);
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "UART(%s) can't open", uart_dev_name));
+    }
 
     // create new uart object
     machine_uart_obj_t *self = m_new_obj(machine_uart_obj_t);
