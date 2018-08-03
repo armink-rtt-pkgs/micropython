@@ -231,7 +231,7 @@ STATIC mp_uint_t machine_uart_read(mp_obj_t self_in, void *buf_in, mp_uint_t siz
     machine_uart_obj_t *self = self_in;
     byte *buf = buf_in;
     //TODO dfs sync read
-    MP_RTT_NOT_IMPL_PRINT;
+    //MP_RTT_NOT_IMPL_PRINT;
     return rt_device_read((struct rt_device *)(self->uart_device), -1, buf, size);
 }
 
@@ -239,7 +239,7 @@ STATIC mp_uint_t machine_uart_write(mp_obj_t self_in, const void *buf_in, mp_uin
     machine_uart_obj_t *self = self_in;
     const byte *buf = buf_in;
     //TODO dfs sync write
-    MP_RTT_NOT_IMPL_PRINT;
+    //MP_RTT_NOT_IMPL_PRINT;
     return rt_device_write((struct rt_device *)(self->uart_device), -1, buf, size);
 }
 
