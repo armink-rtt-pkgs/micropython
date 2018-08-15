@@ -60,5 +60,5 @@ void gc_collect(void) {
 #endif
 
     gc_collect_end();
-    gc_dump_info();
+    // gc_dump_info();
 }
