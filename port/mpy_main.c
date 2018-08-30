@@ -80,14 +80,14 @@ void mpy_main(const char *filename) {
     // Make MicroPython's stack limit somewhat smaller than full stack available
     mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 1024);
 
-    #if MICROPY_ENABLE_GC
+#if MICROPY_ENABLE_GC
     heap = rt_malloc(MICROPY_HEAP_SIZE);
     if (!heap) {
         rt_kprintf("No memory for MicroPython Heap!\n");
         return;
     }
     gc_init(heap, heap + MICROPY_HEAP_SIZE);
-    #endif
+#endif
 
     /* MicroPython initialization */
     mp_init();
@@ -100,7 +100,11 @@ void mpy_main(const char *filename) {
     readline_init0();
 
     if (filename) {
+#ifndef MICROPYTHON_USING_UOS
+        rt_kprintf("Please enable uos module in sys module option first.\n");
+#else
         pyexec_file(filename);
+#endif
     } else {
 #ifdef MICROPYTHON_USING_UOS
         // run boot-up scripts
