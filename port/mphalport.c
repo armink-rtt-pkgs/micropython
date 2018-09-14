@@ -80,7 +80,7 @@ void mp_hal_stdout_tx_strn_cooked(const char *str, uint32_t len) {
 }
 
 mp_uint_t mp_hal_ticks_us(void) {
-    return rt_tick_get() * 1000000UL / RT_TICK_PER_SECOND ;
+    return rt_tick_get() * 1000000UL / RT_TICK_PER_SECOND;
 }
 
 mp_uint_t mp_hal_ticks_ms(void) {
