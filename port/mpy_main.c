@@ -142,6 +142,8 @@ void mpy_main(const char *filename) {
     mp_thread_deinit();
 #endif
 
+    gc_sweep_all();
+
     mp_deinit();
 
     rt_free(heap);
@@ -164,6 +166,12 @@ NORETURN void nlr_jump_fail(void *val) {
 void MP_WEAK __assert_func(const char *file, int line, const char *func, const char *expr) {
     rt_kprintf("Assertion '%s' failed, at file %s:%d\n", expr, file, line);
     RT_ASSERT(0);
+}
+#endif
+
+#if !MICROPY_VFS
+mp_lexer_t *mp_lexer_new_from_file(const char *filename) {
+    mp_raise_OSError(MP_ENOENT);
 }
 #endif
 

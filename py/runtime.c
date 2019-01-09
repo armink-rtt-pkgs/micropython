@@ -83,8 +83,10 @@ void mp_init(void) {
     MICROPY_PORT_INIT_FUNC;
 #endif
 
+    #if MICROPY_ENABLE_COMPILER
     // optimization disabled by default
     MP_STATE_VM(mp_optimise_value) = 0;
+    #endif
 
     // init global module dict
     mp_obj_dict_init(&MP_STATE_VM(mp_loaded_modules_dict), 3);
@@ -106,7 +108,6 @@ void mp_init(void) {
     for (size_t i = 0; i < MICROPY_PY_OS_DUPTERM; ++i) {
         MP_STATE_VM(dupterm_objs[i]) = MP_OBJ_NULL;
     }
-    MP_STATE_VM(dupterm_arr_obj) = MP_OBJ_NULL;
     #endif
 
     #if MICROPY_FSUSERMOUNT
@@ -128,11 +129,13 @@ void mp_init(void) {
 }
 
 void mp_deinit(void) {
+    MP_THREAD_GIL_EXIT();
+
     //mp_obj_dict_free(&dict_main);
     //mp_map_deinit(&MP_STATE_VM(mp_loaded_modules_map));
 
     // call port specific deinitialization if any
-#ifdef MICROPY_PORT_INIT_FUNC
+#ifdef MICROPY_PORT_DEINIT_FUNC
     MICROPY_PORT_DEINIT_FUNC;
 #endif
 }
@@ -170,7 +173,7 @@ mp_obj_t mp_load_global(qstr qst) {
                 mp_raise_msg(&mp_type_NameError, "name not defined");
             } else {
                 nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_NameError,
-                    "name '%q' is not defined", qst));
+                    "name '%q' isn't defined", qst));
             }
         }
     }
@@ -227,6 +230,7 @@ mp_obj_t mp_unary_op(mp_unary_op_t op, mp_obj_t arg) {
             case MP_UNARY_OP_HASH:
                 return arg;
             case MP_UNARY_OP_POSITIVE:
+            case MP_UNARY_OP_INT:
                 return arg;
             case MP_UNARY_OP_NEGATIVE:
                 // check for overflow
@@ -264,12 +268,23 @@ mp_obj_t mp_unary_op(mp_unary_op_t op, mp_obj_t arg) {
                 return result;
             }
         }
+        // With MP_UNARY_OP_INT, mp_unary_op() becomes a fallback for mp_obj_get_int().
+        // In this case provide a more focused error message to not confuse, e.g. chr(1.0)
         if (MICROPY_ERROR_REPORTING == MICROPY_ERROR_REPORTING_TERSE) {
-            mp_raise_TypeError("unsupported type for operator");
+            if (op == MP_UNARY_OP_INT) {
+                mp_raise_TypeError("can't convert to int");
+            } else {
+                mp_raise_TypeError("unsupported type for operator");
+            }
         } else {
-            nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
-                "unsupported type for %q: '%s'",
-                mp_unary_op_method_name[op], mp_obj_get_type_str(arg)));
+            if (op == MP_UNARY_OP_INT) {
+                nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
+                    "can't convert %s to int", mp_obj_get_type_str(arg)));
+            } else {
+                nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
+                    "unsupported type for %q: '%s'",
+                    mp_unary_op_method_name[op], mp_obj_get_type_str(arg)));
+            }
         }
     }
 }
@@ -495,11 +510,11 @@ mp_obj_t mp_binary_op(mp_binary_op_t op, mp_obj_t lhs, mp_obj_t rhs) {
                 default:
                     goto unsupported_op;
             }
-            // TODO: We just should make mp_obj_new_int() inline and use that
+            // This is an inlined version of mp_obj_new_int, for speed
             if (MP_SMALL_INT_FITS(lhs_val)) {
                 return MP_OBJ_NEW_SMALL_INT(lhs_val);
             } else {
-                return mp_obj_new_int(lhs_val);
+                return mp_obj_new_int_from_ll(lhs_val);
             }
 #if MICROPY_PY_BUILTINS_FLOAT
         } else if (mp_obj_is_float(rhs)) {
@@ -580,7 +595,7 @@ unsupported_op:
     }
 
 zero_division:
-    mp_raise_msg(&mp_type_ZeroDivisionError, "division by zero");
+    mp_raise_msg(&mp_type_ZeroDivisionError, "divide by zero");
 }
 
 mp_obj_t mp_call_function_0(mp_obj_t fun) {
@@ -617,7 +632,7 @@ mp_obj_t mp_call_function_n_kw(mp_obj_t fun_in, size_t n_args, size_t n_kw, cons
         mp_raise_TypeError("object not callable");
     } else {
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
-            "'%s' object is not callable", mp_obj_get_type_str(fun_in)));
+            "'%s' object isn't callable", mp_obj_get_type_str(fun_in)));
     }
 }
 
@@ -748,8 +763,8 @@ void mp_call_prepare_args_n_kw_var(bool have_self, size_t n_args_n_kw, const mp_
             if (MP_MAP_SLOT_IS_FILLED(map, i)) {
                 // the key must be a qstr, so intern it if it's a string
                 mp_obj_t key = map->table[i].key;
-                if (MP_OBJ_IS_TYPE(key, &mp_type_str)) {
-                    key = mp_obj_str_intern(key);
+                if (!MP_OBJ_IS_QSTR(key)) {
+                    key = mp_obj_str_intern_checked(key);
                 }
                 args2[args2_len++] = key;
                 args2[args2_len++] = map->table[i].value;
@@ -778,8 +793,8 @@ void mp_call_prepare_args_n_kw_var(bool have_self, size_t n_args_n_kw, const mp_
             }
 
             // the key must be a qstr, so intern it if it's a string
-            if (MP_OBJ_IS_TYPE(key, &mp_type_str)) {
-                key = mp_obj_str_intern(key);
+            if (!MP_OBJ_IS_QSTR(key)) {
+                key = mp_obj_str_intern_checked(key);
             }
 
             // get the value corresponding to the key
@@ -1084,6 +1099,22 @@ void mp_load_method(mp_obj_t base, qstr attr, mp_obj_t *dest) {
     }
 }
 
+// Acts like mp_load_method_maybe but catches AttributeError, and all other exceptions if requested
+void mp_load_method_protected(mp_obj_t obj, qstr attr, mp_obj_t *dest, bool catch_all_exc) {
+    nlr_buf_t nlr;
+    if (nlr_push(&nlr) == 0) {
+        mp_load_method_maybe(obj, attr, dest);
+        nlr_pop();
+    } else {
+        if (!catch_all_exc
+            && !mp_obj_is_subclass_fast(MP_OBJ_FROM_PTR(((mp_obj_base_t*)nlr.ret_val)->type),
+                MP_OBJ_FROM_PTR(&mp_type_AttributeError))) {
+            // Re-raise the exception
+            nlr_raise(MP_OBJ_FROM_PTR(nlr.ret_val));
+        }
+    }
+}
+
 void mp_store_attr(mp_obj_t base, qstr attr, mp_obj_t value) {
     DEBUG_OP_printf("store attr %p.%s <- %p\n", base, qstr_str(attr), value);
     mp_obj_type_t *type = mp_obj_get_type(base);
@@ -1140,7 +1171,7 @@ mp_obj_t mp_getiter(mp_obj_t o_in, mp_obj_iter_buf_t *iter_buf) {
         mp_raise_TypeError("object not iterable");
     } else {
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
-            "'%s' object is not iterable", mp_obj_get_type_str(o_in)));
+            "'%s' object isn't iterable", mp_obj_get_type_str(o_in)));
     }
 }
 
@@ -1162,7 +1193,7 @@ mp_obj_t mp_iternext_allow_raise(mp_obj_t o_in) {
                 mp_raise_TypeError("object not an iterator");
             } else {
                 nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
-                    "'%s' object is not an iterator", mp_obj_get_type_str(o_in)));
+                    "'%s' object isn't an iterator", mp_obj_get_type_str(o_in)));
             }
         }
     }
@@ -1198,7 +1229,7 @@ mp_obj_t mp_iternext(mp_obj_t o_in) {
                 mp_raise_TypeError("object not an iterator");
             } else {
                 nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError,
-                    "'%s' object is not an iterator", mp_obj_get_type_str(o_in)));
+                    "'%s' object isn't an iterator", mp_obj_get_type_str(o_in)));
             }
         }
     }
@@ -1231,15 +1262,8 @@ mp_vm_return_kind_t mp_resume(mp_obj_t self_in, mp_obj_t send_value, mp_obj_t th
     if (send_value == mp_const_none) {
         mp_load_method_maybe(self_in, MP_QSTR___next__, dest);
         if (dest[0] != MP_OBJ_NULL) {
-            nlr_buf_t nlr;
-            if (nlr_push(&nlr) == 0) {
-                *ret_val = mp_call_method_n_kw(0, 0, dest);
-                nlr_pop();
-                return MP_VM_RETURN_YIELD;
-            } else {
-                *ret_val = MP_OBJ_FROM_PTR(nlr.ret_val);
-                return MP_VM_RETURN_EXCEPTION;
-            }
+            *ret_val = mp_call_method_n_kw(0, 0, dest);
+            return MP_VM_RETURN_YIELD;
         }
     }
 
@@ -1248,10 +1272,6 @@ mp_vm_return_kind_t mp_resume(mp_obj_t self_in, mp_obj_t send_value, mp_obj_t th
     if (send_value != MP_OBJ_NULL) {
         mp_load_method(self_in, MP_QSTR_send, dest);
         dest[2] = send_value;
-        // TODO: This should have exception wrapping like __next__ case
-        // above. Not done right away to think how to optimize native
-        // generators better, see:
-        // https://github.com/micropython/micropython/issues/2628
         *ret_val = mp_call_method_n_kw(1, 0, dest);
         return MP_VM_RETURN_YIELD;
     }
@@ -1282,7 +1302,7 @@ mp_vm_return_kind_t mp_resume(mp_obj_t self_in, mp_obj_t send_value, mp_obj_t th
         // will be propagated up. This behavior is approved by test_pep380.py
         // test_delegation_of_close_to_non_generator(),
         //  test_delegating_throw_to_non_generator()
-        *ret_val = throw_value;
+        *ret_val = mp_make_raise_obj(throw_value);
         return MP_VM_RETURN_EXCEPTION;
     }
 }
@@ -1313,7 +1333,7 @@ mp_obj_t mp_import_name(qstr name, mp_obj_t fromlist, mp_obj_t level) {
     args[1] = mp_const_none; // TODO should be globals
     args[2] = mp_const_none; // TODO should be locals
     args[3] = fromlist;
-    args[4] = level; // must be 0; we don't yet support other values
+    args[4] = level;
 
     // TODO lookup __import__ and call that instead of going straight to builtin implementation
     return mp_builtin___import__(5, args);
@@ -1355,15 +1375,8 @@ import_error:
     qstr dot_name_q = qstr_from_strn(dot_name, dot_name_len);
     mp_local_free(dot_name);
 
-    mp_obj_t args[5];
-    args[0] = MP_OBJ_NEW_QSTR(dot_name_q);
-    args[1] = mp_const_none; // TODO should be globals
-    args[2] = mp_const_none; // TODO should be locals
-    args[3] = mp_const_true; // Pass sentinel "non empty" value to force returning of leaf module
-    args[4] = MP_OBJ_NEW_SMALL_INT(0);
-
-    // TODO lookup __import__ and call that instead of going straight to builtin implementation
-    return mp_builtin___import__(5, args);
+    // For fromlist, pass sentinel "non empty" value to force returning of leaf module
+    return mp_import_name(dot_name_q, mp_const_true, MP_OBJ_NEW_SMALL_INT(0));
 
     #else
 
@@ -1377,12 +1390,16 @@ void mp_import_all(mp_obj_t module) {
     DEBUG_printf("import all %p\n", module);
 
     // TODO: Support __all__
-    mp_map_t *map = mp_obj_dict_get_map(MP_OBJ_FROM_PTR(mp_obj_module_get_globals(module)));
+    mp_map_t *map = &mp_obj_module_get_globals(module)->map;
     for (size_t i = 0; i < map->alloc; i++) {
         if (MP_MAP_SLOT_IS_FILLED(map, i)) {
-            qstr name = MP_OBJ_QSTR_VALUE(map->table[i].key);
-            if (*qstr_str(name) != '_') {
-                mp_store_name(name, map->table[i].value);
+            // Entry in module global scope may be generated programmatically
+            // (and thus be not a qstr for longer names). Avoid turning it in
+            // qstr if it has '_' and was used exactly to save memory.
+            const char *name = mp_obj_str_get_str(map->table[i].key);
+            if (*name != '_') {
+                qstr qname = mp_obj_str_get_qstr(map->table[i].key);
+                mp_store_name(qname, map->table[i].value);
             }
         }
     }

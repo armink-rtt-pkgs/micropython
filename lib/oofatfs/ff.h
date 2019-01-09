@@ -50,8 +50,6 @@ typedef uint32_t DWORD;
 /* This type MUST be 64-bit (Remove this for C89 compatibility) */
 typedef uint64_t QWORD;
 
-#define FFCONF_H "lib/oofatfs/ffconf.h"
-
 #include FFCONF_H          /* FatFs configuration options */
 
 #if _FATFS != _FFCONF

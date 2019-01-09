@@ -56,29 +56,6 @@ void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
     }
 }
 
-void mp_hal_stdout_tx_str(const char *str) {
-    mp_hal_stdout_tx_strn(str, strlen(str));
-}
-
-void mp_hal_stdout_tx_strn_cooked(const char *str, uint32_t len) {
-    const char *last = str;
-    while (len--) {
-        if (*str == '\n') {
-            if (str > last) {
-                mp_hal_stdout_tx_strn(last, str - last);
-            }
-            mp_hal_stdout_tx_strn("\r\n", 2);
-            ++str;
-            last = str;
-        } else {
-            ++str;
-        }
-    }
-    if (str > last) {
-        mp_hal_stdout_tx_strn(last, str - last);
-    }
-}
-
 mp_uint_t mp_hal_ticks_us(void) {
     return rt_tick_get() * 1000000UL / RT_TICK_PER_SECOND;
 }
