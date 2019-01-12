@@ -29,7 +29,10 @@
 
 #include "rtthread.h"
 
-typedef struct rt_mutex mp_thread_mutex_t;
+typedef struct _mp_thread_mutex_t {
+    struct rt_mutex mutex;
+    int is_init;
+} mp_thread_mutex_t;
 
 void mp_thread_init(void *stack, uint32_t stack_len);
 void mp_thread_gc_others(void);

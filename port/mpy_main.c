@@ -138,13 +138,13 @@ void mpy_main(const char *filename) {
         }
     }
 
-#if MICROPY_PY_THREAD
-    mp_thread_deinit();
-#endif
-
     gc_sweep_all();
 
     mp_deinit();
+
+#if MICROPY_PY_THREAD
+    mp_thread_deinit();
+#endif
 
     rt_free(heap);
 
