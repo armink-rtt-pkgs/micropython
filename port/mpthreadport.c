@@ -38,7 +38,7 @@
 
 #define MP_THREAD_MIN_STACK_SIZE                 (4 * 1024)
 #define MP_THREAD_DEFAULT_STACK_SIZE             (MP_THREAD_MIN_STACK_SIZE + 1024)
-#define MP_THREAD_PRIORITY                       (RT_THREAD_PRIORITY_MAX / 2)
+#define MP_THREAD_PRIORITY                       (RT_THREAD_PRIORITY_MAX - 1)
 
 #define MP_THREAD_STATUS_READY                   0
 #define MP_THREAD_STATUS_RUNNING                 1
