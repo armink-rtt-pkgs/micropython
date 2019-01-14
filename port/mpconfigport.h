@@ -41,6 +41,7 @@
 #define MICROPY_HEAP_SIZE (8 * 1024)
 #endif
 
+#define MP_ENDIANNESS_LITTLE        (1)
 #define MICROPY_STACK_CHECK         (1)
 #define MICROPY_PY_MICROPYTHON_STACK_USE (1)
 #define MICROPY_QSTR_BYTES_IN_HASH  (1)
@@ -244,7 +245,6 @@
 
 #if defined(__CC_ARM)
 #include <sys/types.h>
-#define __LITTLE_ENDIAN__
 #define MICROPY_NO_ALLOCA           1
 #define MP_WEAK                     RT_WEAK
 #define MP_NOINLINE
@@ -292,6 +292,9 @@ typedef long mp_off_t;
 #define MICROPY_HW_BOARD_NAME "Universal python platform"
 #define MICROPY_HW_MCU_NAME   "RT-Thread"
 #define MICROPY_PY_PATH       "/libs/mpy/"
+
+#define MICROPY_BEGIN_ATOMIC_SECTION()     rt_hw_interrupt_disable()
+#define MICROPY_END_ATOMIC_SECTION(state)  rt_hw_interrupt_enable(state)
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)

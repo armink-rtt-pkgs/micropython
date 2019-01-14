@@ -36,8 +36,6 @@
 #include "py/objstr.h"
 #include "py/mperrno.h"
 #include "lib/timeutils/timeutils.h"
-#include "lib/oofatfs/ff.h"
-#include "lib/oofatfs/diskio.h"
 #include "extmod/misc.h"
 #include "genhdr/mpversion.h"
 #include "portmodules.h"

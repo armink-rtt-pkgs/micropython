@@ -73,7 +73,7 @@ void mpy_main(const char *filename) {
     rtt_getchar_init();
 
 #if MICROPY_PY_THREAD
-    mp_thread_init(rt_thread_self()->stack_addr, (rt_uint32_t)(stack_top - rt_thread_self()->stack_addr) / 4);
+    mp_thread_init(rt_thread_self()->stack_addr, ((rt_uint32_t)stack_top - (rt_uint32_t)rt_thread_self()->stack_addr) / 4);
 #endif
 
     mp_stack_set_top(stack_top);
@@ -166,12 +166,6 @@ NORETURN void nlr_jump_fail(void *val) {
 void MP_WEAK __assert_func(const char *file, int line, const char *func, const char *expr) {
     rt_kprintf("Assertion '%s' failed, at file %s:%d\n", expr, file, line);
     RT_ASSERT(0);
-}
-#endif
-
-#if !MICROPY_VFS
-mp_lexer_t *mp_lexer_new_from_file(const char *filename) {
-    mp_raise_OSError(MP_ENOENT);
 }
 #endif
 
