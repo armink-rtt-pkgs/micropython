@@ -63,17 +63,17 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
 }
 #endif
 
-static char *stack_top = RT_NULL;
+static void *stack_top = RT_NULL;
 static char *heap = RT_NULL;
 
 void mpy_main(const char *filename) {
     int stack_dummy;
-    stack_top = (char*)&stack_dummy;
+    stack_top = (void *)&stack_dummy;
 
     rtt_getchar_init();
 
 #if MICROPY_PY_THREAD
-    mp_thread_init(rt_thread_self()->stack_addr, rt_thread_self()->stack_size / 4);
+    mp_thread_init(rt_thread_self()->stack_addr, (rt_uint32_t)(stack_top - rt_thread_self()->stack_addr) / 4);
 #endif
 
     mp_stack_set_top(stack_top);

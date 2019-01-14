@@ -61,8 +61,8 @@ STATIC thread_t *thread_root; // root pointer, handled by mp_thread_gc_others
 /**
  * thread port initialization
  *
- * @param stack MicroPython main thread stack
- * @param stack_len MicroPython main thread stack
+ * @param stack MicroPython main thread stack start address
+ * @param stack_len number of words in the stack
  */
 void mp_thread_init(void *stack, uint32_t stack_len) {
     mp_thread_set_state(&mp_state_ctx.thread);
@@ -82,20 +82,18 @@ void mp_thread_gc_others(void) {
 
     mp_thread_mutex_lock(&thread_mutex, 1);
     for (thread_t *th = thread_root; th != NULL; th = th->next) {
-        if (th == &thread_root_node) {
-            continue;
+        // the root node not using the mpy heap
+        if (th != &thread_root_node) {
+            gc_collect_root((void**)&th, 1);
+            gc_collect_root(&th->arg, 1); // probably not needed
         }
-        gc_collect_root((void**)&th, 1);
-        gc_collect_root(&th->arg, 1); // probably not needed
 
-        if (th->id == rt_thread_self()) {
+        if (th->status == MP_THREAD_STATUS_READY) {
             continue;
         }
-        if (th->status != MP_THREAD_STATUS_FINISH) {
-            continue;
-        }
-        gc_collect_root((void**)&th->id, 1); // probably not needed
-        gc_collect_root((void**)&th->stack, th->stack_len); // probably not needed
+
+        gc_collect_root((void**) &th->id, 1); // probably not needed
+        gc_collect_root(th->stack, th->stack_len); // probably not needed
     }
     mp_thread_mutex_unlock(&thread_mutex);
 }
@@ -150,7 +148,7 @@ void mp_thread_create_ex(void *(*entry)(void*), void *arg, size_t *stack_size, i
     // add thread to linked list of all threads
     th->status = MP_THREAD_STATUS_READY;
     th->arg = arg;
-    th->stack_len = *stack_size;
+    th->stack_len = *stack_size / 4;
     th->next = thread_root;
     thread_root = th;
 
