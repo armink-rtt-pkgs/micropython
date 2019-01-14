@@ -186,6 +186,12 @@ int DEBUG_printf(const char *format, ...)
     return 0;
 }
 
+#ifndef MICROPYTHON_USING_UOS
+mp_lexer_t *mp_lexer_new_from_file(const char *filename) {
+    mp_raise_OSError(MP_ENOENT);
+}
+#endif
+
 #if defined(RT_USING_FINSH) && defined(FINSH_USING_MSH)
 #include <finsh.h>
 static void python(uint8_t argc, char **argv) {
