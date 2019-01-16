@@ -29,7 +29,6 @@
 #include <string.h>
 
 #include <rtthread.h>
-#include <shell.h>
 
 #ifdef RT_USING_DFS
 #include <dfs_posix.h>
@@ -78,7 +77,7 @@ void mpy_main(const char *filename) {
 
     mp_stack_set_top(stack_top);
     // Make MicroPython's stack limit somewhat smaller than full stack available
-    mp_stack_set_limit(FINSH_THREAD_STACK_SIZE - 1024);
+    mp_stack_set_limit(rt_thread_self()->stack_size - 1024);
 
 #if MICROPY_ENABLE_GC
     heap = rt_malloc(MICROPY_HEAP_SIZE);

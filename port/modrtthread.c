@@ -50,8 +50,13 @@ STATIC mp_obj_t mod_current_tid(void) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_current_tid_obj, mod_current_tid);
 
 STATIC mp_obj_t mod_stacks_analyze(void) {
+#ifdef RT_USING_FINSH
     extern long list_thread(void);
     list_thread();
+#else
+    rt_kprintf("Not available when FINSH module disable\n");
+#endif
+
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_stacks_analyze_obj, mod_stacks_analyze);

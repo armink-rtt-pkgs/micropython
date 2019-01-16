@@ -38,7 +38,6 @@
 
 #define MP_THREAD_MIN_STACK_SIZE                 (4 * 1024)
 #define MP_THREAD_DEFAULT_STACK_SIZE             (MP_THREAD_MIN_STACK_SIZE + 1024)
-#define MP_THREAD_PRIORITY                       (FINSH_THREAD_PRIORITY - 1)
 
 #define MP_THREAD_STATUS_READY                   0
 #define MP_THREAD_STATUS_RUNNING                 1
@@ -160,12 +159,17 @@ void mp_thread_create_ex(void *(*entry)(void*), void *arg, size_t *stack_size, i
 
 void mp_thread_create(void *(*entry)(void*), void *arg, size_t *stack_size) {
     static uint8_t count = 0;
+    int priority = rt_thread_self()->current_priority;
     char name[RT_NAME_MAX];
+
+    if (priority > 0) {
+        priority --;
+    }
 
     /* build name */
     rt_snprintf(name, sizeof(name), "mp%02d", count++);
 
-    mp_thread_create_ex(entry, arg, stack_size, MP_THREAD_PRIORITY, name);
+    mp_thread_create_ex(entry, arg, stack_size, priority, name);
 }
 
 void mp_thread_finish(void) {

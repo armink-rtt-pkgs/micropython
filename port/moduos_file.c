@@ -161,8 +161,6 @@ mp_obj_t mp_posix_mkdir(mp_obj_t path_in) {
 MP_DEFINE_CONST_FUN_OBJ_1(mp_posix_mkdir_obj, mp_posix_mkdir);
 
 mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
-    extern void rm(const char *filename);
-
     int index;
     if (n_args == 0) {
         rt_kprintf("Usage: rm FILE...\n");
@@ -171,7 +169,7 @@ mp_obj_t mp_posix_remove(uint n_args, const mp_obj_t *arg) {
     }
     for (index = 0; index < n_args; index++) {
         //rt_kprintf("Remove %s.\n", mp_obj_str_get_str(arg[index]));
-        rm(mp_obj_str_get_str(arg[index]));
+        unlink(mp_obj_str_get_str(arg[index]));
     }
     // TODO  recursive deletion
     return mp_const_none;
