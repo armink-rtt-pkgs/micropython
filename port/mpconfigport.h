@@ -286,12 +286,12 @@ typedef unsigned mp_uint_t; // must be pointer size
 
 typedef long mp_off_t;
 
-#define MP_PLAT_PRINT_STRN(str, len) mp_hal_stdout_tx_strn_cooked(str, len)
+#define MP_PLAT_PRINT_STRN(str, len)   mp_hal_stdout_tx_strn_stream(str, len)
 
-#define MICROPY_PY_SYS_PLATFORM "rt-thread"
-#define MICROPY_HW_BOARD_NAME "Universal python platform"
-#define MICROPY_HW_MCU_NAME   "RT-Thread"
-#define MICROPY_PY_PATH       "/libs/mpy/"
+#define MICROPY_PY_SYS_PLATFORM        "rt-thread"
+#define MICROPY_HW_BOARD_NAME          "Universal python platform"
+#define MICROPY_HW_MCU_NAME            "RT-Thread"
+#define MICROPY_PY_PATH                "/libs/mpy/"
 
 #define MICROPY_BEGIN_ATOMIC_SECTION()     rt_hw_interrupt_disable()
 #define MICROPY_END_ATOMIC_SECTION(state)  rt_hw_interrupt_enable(state)

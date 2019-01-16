@@ -56,6 +56,10 @@ void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
     }
 }
 
+void mp_hal_stdout_tx_strn_stream(const char *str, size_t len) {
+    rt_kprintf("%.*s", len, str);
+}
+
 mp_uint_t mp_hal_ticks_us(void) {
     return rt_tick_get() * 1000000UL / RT_TICK_PER_SECOND;
 }
