@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
+#include <rthw.h>
 #include <rtthread.h>
 #include <stdint.h>
 #include <stdio.h>
